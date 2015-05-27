@@ -5,11 +5,11 @@ Java Library for easy creation of RESTful interfaces for interactive data visual
 InteractiveData is divided into multiple sub projects. The the table below for more information on every project.
 ```
 . InteractiveData
-??? api 
+├── api 
 |    Generic API that can be used by various implementations
-??? spring-data-interactive 
+├── spring-data-interactive 
 |    Implementation of the api for use with spring-data
-??? sample
+└── sample
      Sample demonstrating the use of this library
 ```
 
