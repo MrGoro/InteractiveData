@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.schuermann.interactivedata</groupId>
+    <artifactId>interactive-data</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Interactive Data</name>
+
+    <modules>
+        <module>interactive-data-api</module>
+        <module>interactive-data-spring</module>
+        <module>interactive-data-spring-sample</module>
+    </modules>
+
+    <properties>
+        <project.type>multi</project.type>
+        <dist.id>interactive-data</dist.id>
+
+        <springdata.commons>1.11.0.BUILD-SNAPSHOT</springdata.commons>
+        <springdata.jpa>1.9.0.BUILD-SNAPSHOT</springdata.jpa>
+        <springdata.mongodb>1.8.0.BUILD-SNAPSHOT</springdata.mongodb>
+        <springdata.neo4j>3.4.0.BUILD-SNAPSHOT</springdata.neo4j>
+        <springdata.gemfire>1.7.0.BUILD-SNAPSHOT</springdata.gemfire>
+        <springdata.solr>1.5.0.BUILD-SNAPSHOT</springdata.solr>
+        <springdata.cassandra>1.3.0.BUILD-SNAPSHOT</springdata.cassandra>
+
+        <hibernate.version>4.3.5.Final</hibernate.version>
+    </properties>
+
+    <developers>
+        <developer>
+            <id>philippschuermann</id>
+            <name>Philipp Schürmann</name>
+            <email>mail at mrgoro.de</email>
+            <organization>Monday Consulting GmbH</organization>
+            <organizationUrl>http://www.monday-consulting.com</organizationUrl>
+            <roles>
+                <role>Project Lead</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+
+    <dependencies>
+    </dependencies>
+
+</project>
