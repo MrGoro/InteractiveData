@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
 
     <name>Interactive Data</name>
+    <description>Root Project of Interactive Data Library containing specific sub modules</description>
 
     <modules>
         <module>interactive-data-api</module>

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Controller for a RESTful API to output all Users.
  *
- * Created by philipp on 27.05.2015.
+ * @author Philipp Schürmann
  */
 @RestController
 @RequestMapping("/rest")

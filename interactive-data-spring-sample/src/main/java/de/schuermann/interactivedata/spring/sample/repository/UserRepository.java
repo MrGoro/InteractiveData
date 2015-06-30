@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 /**
  * Spring Data JPA Repository for accessing users from database.
  *
- * Created by philipp on 27.05.2015.
+ * @author Philipp Schürmann
  */
 public interface UserRepository extends CrudRepository<User, Long> {
 }

@@ -7,5 +7,6 @@
     <version>1.0-SNAPSHOT</version>
 
     <name>Interactive Data API</name>
+    <description>Interactive Data API declaration that can be implemented by various Implementations</description>
 
 </project>

@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.api.granularity;
 
 /**
- * Created by philipp on 27.05.2015.
+ * @author Philipp Schürmann
  */
 public @interface TimeGranularity {
 }

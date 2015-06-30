@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Data Entity for users
  *
- * Created by philipp on 27.05.2015.
+ * @author Philipp Schürmann
  */
 @Entity
 public class User {
