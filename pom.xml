@@ -20,16 +20,6 @@
     <properties>
         <project.type>multi</project.type>
         <dist.id>interactive-data</dist.id>
-
-        <springdata.commons>1.11.0.BUILD-SNAPSHOT</springdata.commons>
-        <springdata.jpa>1.9.0.BUILD-SNAPSHOT</springdata.jpa>
-        <springdata.mongodb>1.8.0.BUILD-SNAPSHOT</springdata.mongodb>
-        <springdata.neo4j>3.4.0.BUILD-SNAPSHOT</springdata.neo4j>
-        <springdata.gemfire>1.7.0.BUILD-SNAPSHOT</springdata.gemfire>
-        <springdata.solr>1.5.0.BUILD-SNAPSHOT</springdata.solr>
-        <springdata.cassandra>1.3.0.BUILD-SNAPSHOT</springdata.cassandra>
-
-        <hibernate.version>4.3.5.Final</hibernate.version>
     </properties>
 
     <developers>
@@ -41,6 +31,7 @@
             <organizationUrl>http://www.monday-consulting.com</organizationUrl>
             <roles>
                 <role>Project Lead</role>
+                <role>Developer</role>
             </roles>
             <timezone>+1</timezone>
         </developer>
