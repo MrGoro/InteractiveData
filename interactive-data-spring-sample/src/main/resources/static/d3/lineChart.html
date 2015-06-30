@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Line Chart Demo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <style>
+        .axis path {
+            fill: none;
+            stroke: #777;
+            shape-rendering: crispEdges;
+        }
+        .axis text {
+            font-size: 12px;
+        }
+        .legend {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .glyphicon.spinning {
+            font-size: 50px;
+            animation: spin 1s infinite linear;
+            -webkit-animation: spin2 1s infinite linear;
+        }
+
+        @keyframes spin {
+            from { transform: scale(1) rotate(0deg);}
+            to { transform: scale(1) rotate(360deg);}
+        }
+
+        @-webkit-keyframes spin2 {
+            from { -webkit-transform: rotate(0deg);}
+            to { -webkit-transform: rotate(360deg);}
+        }
+
+        .spinner{
+            position: absolute;
+            height: 100px;
+            width: 100px;
+            top: 50%;
+            left: 50%;
+            margin-left: -50px;
+            margin-top: -50px;
+            z-index: 11;
+        }
+
+        #graph {
+            position: relative;
+        }
+
+        .overlay {
+            opacity: .5;
+            filter:Alpha(Opacity=50);
+            background-color: #f6f6f6;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>InteractiveData - Sample</h1>
+    <h2>Line Chart with multiple Lines</h2>
+
+    <div class="form-inline">
+        <label for="filter">Filter: </label>
+        <input type="date" name="dateFrom" id="dateFrom" class="form-control" />
+        <input type="date" name="dateTo" id="dateTo" class="form-control" />
+        <button id="btnResetTimeFilter" class="btn btn-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></button>
+
+        <label for="granularity">Granularity: </label>
+        <select name="granularity" class="form-control">
+            <option>Second</option>
+            <option>Minute</option>
+            <option>Hour</option>
+            <option>Day</option>
+            <option>Month</option>
+            <option>Year</option>
+        </select>
+
+        <label for="aggregation">Aggregation: </label>
+        <select name="aggregation" class="form-control">
+            <option>Sum</option>
+            <option>Average</option>
+        </select>
+
+        <button id="btnApply" class="btn btn-primary"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+        <button id="save" class="btn btn-primary"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button>
+    </div>
+
+    <div id="spinner" class="spinner">
+        <span class="glyphicon glyphicon-refresh spinning"></span>
+    </div>
+    <div id="graph" class="overlay">
+        <svg id="visualisation" width="1000" height="500"></svg>
+    </div>
+
+    <div id="svgdataurl" class="hidden"></div>
+    <div id="pngdataurl" class="hidden"></div>
+    <canvas width="960" height="500" class="hidden"></canvas>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
+<script src="http://code.jquery.com/jquery-2.1.4.min.js" charset="utf-8"></script>
+<script>
+    $("#btnResetTimeFilter").click(function() {
+        $("#dateFrom").val("");
+        $("#dateTo").val("");
+    });
+    $("#btnApply").click(function() {
+        loadData();
+    });
+
+    function loading(state) {
+        if(state) {
+            $("#spinner").show();
+            $("#graph").addClass("overlay");
+        } else {
+            $("#spinner").hide();
+            $("#graph").removeClass("overlay");
+        }
+    }
+
+    function loadData() {
+        loading(true);
+        $.ajax({
+            url: "data.json",
+            dataType: "json",
+        })
+                .success(function(data) {
+                    drawChart(data);
+                })
+                .fail(function() {
+                    alert("Error Loading data...");
+                })
+                .complete(function() {
+                    loading(false);
+                });
+    }
+
+    function drawChart(data) {
+        var dataGroup = d3.nest()
+                .key(function(d) {
+                    return d.Client;
+                })
+                .entries(data);
+
+        var color = d3.scale.category10();
+
+        var vis = d3.select("#visualisation");
+        var WIDTH = 1000;
+        var HEIGHT = 500;
+        var MARGINS = {
+            top: 50,
+            right: 20,
+            bottom: 50,
+            left: 50
+        };
+
+        var lSpace = WIDTH/dataGroup.length;
+
+        var xScale = d3.time.scale().range([MARGINS.left, WIDTH - MARGINS.right])
+                .domain([
+                    d3.min(data, function(d) {
+                        return new Date(d.year);
+                    }),
+                    d3.max(data, function(d) {
+                        return new Date(d.year);
+                    })
+                ]);
+        var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom])
+                .domain([
+                    d3.min(data, function(d) {
+                        return d.sale;
+                    }),
+                    d3.max(data, function(d) {
+                        return d.sale;
+                    })
+                ]);
+
+        var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .ticks(d3.time.year, 1)
+                .tickFormat(d3.time.format('%Y'));
+        var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .orient("left");
+
+        vis.append("svg:g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+                .call(xAxis);
+        vis.append("svg:g")
+                .attr("class", "y axis")
+                .attr("transform", "translate(" + (MARGINS.left) + ",0)")
+                .call(yAxis);
+        var lineGen = d3.svg.line()
+                .x(function(d) {
+                    return xScale(new Date(d.year));
+                })
+                .y(function(d) {
+                    return yScale(d.sale);
+                })
+                .interpolate("basis");
+
+        dataGroup.forEach(function(d, i) {
+            vis.append('svg:path')
+                    .attr('d', lineGen(d.values))
+                    .attr('stroke', function(d, j) {
+                        return "hsl(" + Math.random() * 360 + ", 100%, 50%)";
+                    })
+                    .attr('stroke-width', 2)
+                    .attr('fill', 'none')
+                    .attr('id', 'line_'+d.key);
+            vis.append("text")
+                    .attr("x", (lSpace / 2) + i * lSpace)
+                    .attr("y", HEIGHT)
+                    .style("fill", "black")
+                    .attr("class", "legend")
+                    .on('click',function(){
+                        var active   = d.active ? false : true;
+                        var opacity = active ? 0 : 1;
+                        d3.select("#line_" + d.key).style("opacity", opacity);
+                        d.active = active;
+                    })
+                    .text(d.key);
+        });
+    }
+
+    d3.select("#save").on("click", function(){
+        var html = d3.select("svg")
+                .attr("version", 1.1)
+                .attr("xmlns", "http://www.w3.org/2000/svg")
+                .node().parentNode.innerHTML;
+
+        var imgsrc = 'data:image/svg+xml;base64,'+ btoa(html);
+        var img = '<img src="'+imgsrc+'">';
+        d3.select("#svgdataurl").html(img);
+
+
+        var canvas = document.querySelector("canvas"),
+                context = canvas.getContext("2d");
+
+        var image = new Image;
+        image.src = imgsrc;
+        image.onload = function() {
+            context.drawImage(image, 0, 0);
+
+            var canvasdata = canvas.toDataURL("image/png");
+
+            var pngimg = '<img src="'+canvasdata+'">';
+            d3.select("#pngdataurl").html(pngimg);
+
+            var a = document.createElement("a");
+            a.download = "multi-line-chart-export.png";
+            a.href = canvasdata;
+            document.body.appendChild(a);
+            a.click();
+        };
+    });
+
+    loadData();
+</script>
+</body>
+</html>
