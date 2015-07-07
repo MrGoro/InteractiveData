@@ -1,6 +1,7 @@
 package de.schuermann.interactivedata.spring.sample.chartapi;
 
 import de.schuermann.interactivedata.api.ChartApi;
+import de.schuermann.interactivedata.api.chart.types.Chart;
 import de.schuermann.interactivedata.api.chart.types.line.Axis;
 import de.schuermann.interactivedata.api.chart.types.line.LineChart;
 import de.schuermann.interactivedata.api.chart.types.line.LineChartData;
@@ -16,29 +17,34 @@ import java.util.Date;
  *
  * @author Philipp Schürmann
  */
-@ChartApi(name="counter")
+@ChartApi("counter")
 public class CounterVisualization {
 
+    @Chart("line")
     @LineChart(
         dataSource = RepositoryDataSource.class,
         axis = {
             @Axis(
-                    dataField = "date",
-                    dataType = Date.class,
-                    type = Axis.Type.X,
-                    filter = TimeFilter.class,
-                    granularity = TimeGranularity.class
+                dataField = "date",
+                dataType = Date.class,
+                type = Axis.Type.X,
+                filter = TimeFilter.class,
+                granularity = TimeGranularity.class
             ),
             @Axis(
-                    dataField = "value",
-                    dataType = Integer.class,
-                    type = Axis.Type.Y,
-                    functions = Average.class
+                dataField = "value",
+                dataType = Integer.class,
+                type = Axis.Type.Y,
+                functions = Average.class
             )
         }
     )
     public LineChartData lineChart(LineChartData data) {
         // Further enhance data before sending
         return data;
+    }
+
+    public void testMethodWithoutAnnotation() {
+        // do nothing
     }
 }

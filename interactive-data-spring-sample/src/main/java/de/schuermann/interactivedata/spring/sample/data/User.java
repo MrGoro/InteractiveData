@@ -18,7 +18,8 @@ public class User {
     private String firstName;
     private String lastName;
 
-    @OneToMany
+    // TODO Lazy Loading
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Action> actions;
 
     public Long getId() {

@@ -1,5 +1,6 @@
 package de.schuermann.interactivedata.spring.sample.controller;
 
+import de.schuermann.interactivedata.spring.sample.UserService;
 import de.schuermann.interactivedata.spring.sample.data.User;
 import de.schuermann.interactivedata.spring.sample.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,10 @@ import java.util.List;
 public class UserRestController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public List<User> getAllUsers() {
-        List<User> list = new ArrayList<>();
-        Iterable<User> users = userRepository.findAll();
-        users.forEach(list::add);
-        return list;
+        return userService.findAll();
     }
 }

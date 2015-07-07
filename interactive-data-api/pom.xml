@@ -9,4 +9,8 @@
     <name>Interactive Data API</name>
     <description>Interactive Data API declaration that can be implemented by various implementations</description>
 
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
 </project>

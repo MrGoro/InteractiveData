@@ -19,6 +19,6 @@ public @interface ChartApi {
      *
      * @return Path String
      */
-    String name();
+    String value();
 
 }
