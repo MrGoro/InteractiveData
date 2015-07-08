@@ -79,20 +79,33 @@ public class ReflectionUtil {
      * @return Classes implementing @Link AnnotationsProcessor} Interface
      */
     public static Class<? extends AnnotationProcessor> getAnnotationProcessor(Annotation chartAnnotation, String path) {
-        List<Class<? extends AnnotationProcessor>> annotationProcessors = new ArrayList<>();
-        List<Class<?>> foundClasses = ReflectionUtil.findAssignableClasses(path, AnnotationProcessor.class);
-        for(Class<?> clazz : foundClasses) {
-            Class<? extends AnnotationProcessor> processor = (Class<? extends AnnotationProcessor>) clazz;
-            annotationProcessors.add(processor);
-        }
-        for (Class<? extends AnnotationProcessor> processorClass : annotationProcessors) {
+        return (Class<? extends AnnotationProcessor>) getGenericImplementation(AnnotationProcessor.class, chartAnnotation.annotationType(), path);
+    }
+
+    public static Class<?> getGenericImplementation(Class clazz1, Class clazz2, String path) {
+        List<Class<?>> foundClasses = ReflectionUtil.findAssignableClasses(path, clazz1);
+        for (Class<?> processorClass : foundClasses) {
             Type[] interfaceTypes = processorClass.getGenericInterfaces();
             for (Type interfaceType : interfaceTypes) {
                 ParameterizedType parameterizedType = (ParameterizedType) interfaceType;
                 for(Type genericType : parameterizedType.getActualTypeArguments()) {
-                    if (genericType == chartAnnotation.annotationType()) {
+                    if (genericType == clazz2) {
                         return processorClass;
                     }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Class<?> getGenericExtention(Class clazz1, Class clazz2, String path) {
+        List<Class<?>> foundClasses = ReflectionUtil.findAssignableClasses(path, clazz1);
+        for (Class<?> processorClass : foundClasses) {
+            Type interfaceType = processorClass.getGenericSuperclass();
+            ParameterizedType parameterizedType = (ParameterizedType) interfaceType;
+            for(Type genericType : parameterizedType.getActualTypeArguments()) {
+                if (genericType == clazz2) {
+                    return processorClass;
                 }
             }
         }

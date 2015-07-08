@@ -1,6 +1,7 @@
 package de.schuermann.interactivedata.spring.config;
 
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
+import de.schuermann.interactivedata.spring.service.ApiService;
 import de.schuermann.interactivedata.spring.service.ReflectionService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,15 +29,15 @@ public class ApiConfig extends ResourceConfig {
     private Log log = LogFactory.getLog(ResourceConfig.class);
 
     @Autowired
-    public ApiConfig(ServletContext servletContext, ReflectionService reflectionService) {
-        List<AbstractChartDefinition> chartDefinitions = reflectionService.getChartDefinitions();
-
+    public ApiConfig(ServletContext servletContext, ReflectionService reflectionService, ApiService apiService) {
         List<Resource> resources = new ArrayList<>();
+
+        List<AbstractChartDefinition> chartDefinitions = reflectionService.getChartDefinitions();
+        for(AbstractChartDefinition chartDefinition : chartDefinitions) {
+            resources.add(apiService.buildApiResource(chartDefinition));
+        }
         WebApplicationContext springFactory = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         resources.forEach(this::registerResources);
     }
-
-
-
 
 }

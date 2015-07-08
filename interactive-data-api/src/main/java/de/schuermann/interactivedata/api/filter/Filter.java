@@ -3,8 +3,8 @@ package de.schuermann.interactivedata.api.filter;
 /**
  * @author Philipp Schürmann
  */
-public interface Filter<T extends FilterData> {
+public interface Filter<D extends FilterData> {
 
-    void doFilter(T filterData);
+    void doFilter(D filterData);
 
 }
