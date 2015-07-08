@@ -29,12 +29,16 @@ public class ApiService {
 
     public Resource buildApiResource(AbstractChartDefinition chartDefinition) {
         Class<? extends AbstractApiBuilder> apiBuilderClass = processorService.findApiBuilder(chartDefinition.getClass());
-        try {
-            Constructor constructor = apiBuilderClass.getConstructor(chartDefinition.getClass());
-            ApiBuilder apiBuilder = (ApiBuilder) constructor.newInstance(chartDefinition);
-            return apiBuilder.build();
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            log.error("API Builder was unable to build API for ChartDefinition [" + chartDefinition.getName() + "]: " + e.getMessage());
+        if(apiBuilderClass != null) {
+            try {
+                Constructor constructor = apiBuilderClass.getConstructor(chartDefinition.getClass());
+                ApiBuilder apiBuilder = (ApiBuilder) constructor.newInstance(chartDefinition);
+                return apiBuilder.build();
+            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                log.error("ApiBuilder was unable to build API for ChartDefinition [" + chartDefinition.getClass() + "]: " + e.getMessage());
+            }
+        } else {
+            log.error("Could not find ApiBuilder for ChartDefinition [" + chartDefinition.getClass() + "]");
         }
         return null;
     }

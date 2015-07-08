@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * @author Philipp Schürmann
  */
-public abstract class AbstractApiBuilder<T extends AbstractChartDefinition> implements ApiBuilder {
+public abstract class AbstractApiBuilder<T extends AbstractChartDefinition> implements ApiBuilder<T> {
 
     protected final Resource.Builder resourceBuilder = Resource.builder();
     protected final T chartDefinition;
@@ -20,6 +20,7 @@ public abstract class AbstractApiBuilder<T extends AbstractChartDefinition> impl
         this.chartDefinition = chartDefinition;
         resourceBuilder.path(chartDefinition.getName());
         addMetaInformation();
+        addDataMethod();
     }
 
     protected void addMetaInformation() {
@@ -34,6 +35,16 @@ public abstract class AbstractApiBuilder<T extends AbstractChartDefinition> impl
                 });
         methodBuilder.build();
     }
+
+    protected void addDataMethod() {
+        final ResourceMethod.Builder methodBuilder = resourceBuilder.addMethod("GET");
+        methodBuilder
+                .produces(MediaType.APPLICATION_JSON)
+                .handledBy(getRequestHandler());
+        methodBuilder.build();
+    }
+
+    public abstract AbstractRequestHandler getRequestHandler();
 
     public Resource build() {
         return resourceBuilder.build();

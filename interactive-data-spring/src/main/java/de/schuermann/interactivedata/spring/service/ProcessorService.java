@@ -5,6 +5,7 @@ import de.schuermann.interactivedata.api.filter.Filter;
 import de.schuermann.interactivedata.spring.config.InteractiveDataProperties;
 import de.schuermann.interactivedata.spring.data.processors.FilterProcessor;
 import de.schuermann.interactivedata.spring.rest.AbstractApiBuilder;
+import de.schuermann.interactivedata.spring.rest.ApiBuilder;
 import de.schuermann.interactivedata.spring.util.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class ProcessorService {
     }
 
     public Class<? extends AbstractApiBuilder> findApiBuilder(Class<? extends AbstractChartDefinition> chartDefinition) {
-        return (Class<? extends AbstractApiBuilder>) ReflectionUtil.getGenericExtention(AbstractApiBuilder.class, chartDefinition, path);
+        return (Class<? extends AbstractApiBuilder>) ReflectionUtil.getGenericImplementation(ApiBuilder.class, chartDefinition, path);
     }
 
 }

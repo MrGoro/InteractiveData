@@ -10,7 +10,17 @@ public class LineChartApiBuilder extends AbstractApiBuilder<LineChartDefinition>
 
     protected final Resource.Builder resourceBuilder = Resource.builder();
 
-    public LineChartApiBuilder(LineChartDefinition lineChartDefinition) {
+    @Override
+    public ApiBuilder getBuilder(LineChartDefinition chartDefinition) {
+        return new LineChartApiBuilder(chartDefinition);
+    }
+
+    private LineChartApiBuilder(LineChartDefinition lineChartDefinition) {
         super(lineChartDefinition);
+    }
+
+    @Override
+    public AbstractRequestHandler getRequestHandler() {
+        return new LineChartRequestHandler(chartDefinition);
     }
 }
