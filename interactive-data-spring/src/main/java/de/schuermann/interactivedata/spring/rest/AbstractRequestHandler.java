@@ -23,7 +23,12 @@ public abstract class AbstractRequestHandler<T extends AbstractChartDefinition, 
 
     @Override
     public D apply(ContainerRequestContext containerRequestContext) {
+        extract(containerRequestContext);
         return getData();
+    }
+
+    protected void extract(ContainerRequestContext containerRequestContext) {
+
     }
 
     protected abstract D getData();

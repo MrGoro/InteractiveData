@@ -17,9 +17,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Utility for various reflection tasks
+ *
  * @author Philipp Schürmann
  */
 public class ReflectionUtil {
+
+    // TODO JavaDoc and Refactor
 
     public static List<Class<?>> findClasses(String packagePath, List<TypeFilter> includeFilters) {
         List<Class<?>> annotated = new ArrayList<>();
@@ -90,12 +94,12 @@ public class ReflectionUtil {
             while(checkingClass != Object.class) {
                 Type[] interfaceTypes = processorClass.getGenericInterfaces();
                 for (Type interfaceType : interfaceTypes) {
-                    if (checkParameterizedType(interfaceType, clazz2)) {
+                    if (checkParametrizedType(interfaceType, clazz2)) {
                         return processorClass;
                     }
                 }
                 Type genericSuperclass = processorClass.getGenericSuperclass();
-                if (checkParameterizedType(genericSuperclass, clazz2)) {
+                if (checkParametrizedType(genericSuperclass, clazz2)) {
                     return processorClass;
                 }
                 checkingClass = checkingClass.getSuperclass();
@@ -104,7 +108,7 @@ public class ReflectionUtil {
         return null;
     }
 
-    private static boolean checkParameterizedType(Type interfaceType, Class clazz) {
+    private static boolean checkParametrizedType(Type interfaceType, Class clazz) {
         ParameterizedType parameterizedType = (ParameterizedType) interfaceType;
         for (Type genericType : parameterizedType.getActualTypeArguments()) {
             if (genericType == clazz) {
@@ -114,7 +118,6 @@ public class ReflectionUtil {
         return false;
     }
 
-    @Deprecated
     public static Class<?> getGenericExtention(Class clazz1, Class clazz2, String path) {
         List<Class<?>> foundClasses = ReflectionUtil.findAssignableClasses(path, clazz1);
         for (Class<?> processorClass : foundClasses) {
