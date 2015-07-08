@@ -1,4 +1,4 @@
-package de.schuermann.interactivedata.api.chart.types.line;
+package de.schuermann.interactivedata.api.chart.annotations;
 
 import de.schuermann.interactivedata.api.filter.Filter;
 import de.schuermann.interactivedata.api.functions.Function;

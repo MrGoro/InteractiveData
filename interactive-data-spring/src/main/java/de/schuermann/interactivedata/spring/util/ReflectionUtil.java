@@ -1,5 +1,6 @@
 package de.schuermann.interactivedata.spring.util;
 
+import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -9,6 +10,8 @@ import org.springframework.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -66,5 +69,33 @@ public class ReflectionUtil {
         }
 
         return methods;
+    }
+
+    /**
+     * Returns a List of Classes that implement the {@Link AnnotationsProcessor} Interface
+     *
+     * @param chartAnnotation Annotation to find the Processor for
+     * @param path Path to the package to search in
+     * @return Classes implementing @Link AnnotationsProcessor} Interface
+     */
+    public static Class<? extends AnnotationProcessor> getAnnotationProcessor(Annotation chartAnnotation, String path) {
+        List<Class<? extends AnnotationProcessor>> annotationProcessors = new ArrayList<>();
+        List<Class<?>> foundClasses = ReflectionUtil.findAssignableClasses(path, AnnotationProcessor.class);
+        for(Class<?> clazz : foundClasses) {
+            Class<? extends AnnotationProcessor> processor = (Class<? extends AnnotationProcessor>) clazz;
+            annotationProcessors.add(processor);
+        }
+        for (Class<? extends AnnotationProcessor> processorClass : annotationProcessors) {
+            Type[] interfaceTypes = processorClass.getGenericInterfaces();
+            for (Type interfaceType : interfaceTypes) {
+                ParameterizedType parameterizedType = (ParameterizedType) interfaceType;
+                for(Type genericType : parameterizedType.getActualTypeArguments()) {
+                    if (genericType == chartAnnotation.annotationType()) {
+                        return processorClass;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

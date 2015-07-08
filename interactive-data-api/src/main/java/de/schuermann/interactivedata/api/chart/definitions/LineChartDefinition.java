@@ -1,6 +1,6 @@
-package de.schuermann.interactivedata.spring.chart;
+package de.schuermann.interactivedata.api.chart.definitions;
 
-import de.schuermann.interactivedata.api.chart.types.line.Axis;
+import de.schuermann.interactivedata.api.chart.annotations.Axis;
 import de.schuermann.interactivedata.api.data.DataSource;
 
 /**
@@ -8,7 +8,7 @@ import de.schuermann.interactivedata.api.data.DataSource;
  */
 public class LineChartDefinition extends AbstractChartDefinition<AxisDefinition> {
 
-    public LineChartDefinition(String name, DataSource dataSource) {
+    public LineChartDefinition(String name, Class<? extends DataSource> dataSource) {
         super(name, dataSource);
     }
 
@@ -21,7 +21,7 @@ public class LineChartDefinition extends AbstractChartDefinition<AxisDefinition>
         return null;
     }
 
-    public void setAxis(AxisDefinition axis) {
+    public void addAxis(AxisDefinition axis) {
         addDimension(axis);
     }
 

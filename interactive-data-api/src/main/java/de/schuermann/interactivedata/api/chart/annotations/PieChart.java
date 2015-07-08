@@ -1,4 +1,4 @@
-package de.schuermann.interactivedata.api.chart.types.pie;
+package de.schuermann.interactivedata.api.chart.annotations;
 
 /**
  * @author Philipp Schürmann

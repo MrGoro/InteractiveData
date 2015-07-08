@@ -1,6 +1,6 @@
-package de.schuermann.interactivedata.spring.chart;
+package de.schuermann.interactivedata.api.chart.definitions;
 
-import de.schuermann.interactivedata.api.chart.types.line.Axis;
+import de.schuermann.interactivedata.api.chart.annotations.Axis;
 
 /**
  * @author Philipp Schürmann

@@ -1,10 +1,10 @@
 package de.schuermann.interactivedata.spring.sample.chartapi;
 
 import de.schuermann.interactivedata.api.ChartApi;
-import de.schuermann.interactivedata.api.chart.types.Chart;
-import de.schuermann.interactivedata.api.chart.types.line.Axis;
-import de.schuermann.interactivedata.api.chart.types.line.LineChart;
-import de.schuermann.interactivedata.api.chart.types.line.LineChartData;
+import de.schuermann.interactivedata.api.chart.annotations.Chart;
+import de.schuermann.interactivedata.api.chart.annotations.Axis;
+import de.schuermann.interactivedata.api.chart.annotations.LineChart;
+import de.schuermann.interactivedata.api.chart.data.LineChartData;
 import de.schuermann.interactivedata.api.filter.TimeFilter;
 import de.schuermann.interactivedata.api.functions.Average;
 import de.schuermann.interactivedata.api.granularity.TimeGranularity;

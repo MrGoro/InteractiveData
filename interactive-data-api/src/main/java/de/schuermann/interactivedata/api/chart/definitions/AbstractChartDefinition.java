@@ -1,4 +1,4 @@
-package de.schuermann.interactivedata.spring.chart;
+package de.schuermann.interactivedata.api.chart.definitions;
 
 import de.schuermann.interactivedata.api.data.DataSource;
 
@@ -11,10 +11,10 @@ import java.util.List;
 public abstract class AbstractChartDefinition<T extends AbstractDimension> {
 
     private String name;
-    private DataSource dataSource;
+    private Class<? extends DataSource> dataSource;
     private List<T> dimensions;
 
-    protected AbstractChartDefinition(String name, DataSource dataSource) {
+    protected AbstractChartDefinition(String name, Class<? extends DataSource> dataSource) {
         this.name = name;
         this.dataSource = dataSource;
         this.dimensions = new ArrayList<>();
@@ -24,7 +24,7 @@ public abstract class AbstractChartDefinition<T extends AbstractDimension> {
         return name;
     }
 
-    public DataSource getDataSource() {
+    public Class<? extends DataSource> getDataSource() {
         return dataSource;
     }
 

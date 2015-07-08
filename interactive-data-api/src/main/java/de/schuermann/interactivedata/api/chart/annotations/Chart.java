@@ -1,6 +1,4 @@
-package de.schuermann.interactivedata.api.chart.types.line;
-
-import de.schuermann.interactivedata.api.data.DataSource;
+package de.schuermann.interactivedata.api.chart.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,10 +10,8 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface LineChart {
+public @interface Chart {
 
-    Class<? extends DataSource> dataSource();
-
-    Axis[] axis();
+    String value();
 
 }

@@ -5,7 +5,7 @@ import de.schuermann.interactivedata.api.data.DataSource;
 /**
  * Default Implementation of a DataSource using Spring Data Repositories.
  *
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
 public class RepositoryDataSource implements DataSource {
 }

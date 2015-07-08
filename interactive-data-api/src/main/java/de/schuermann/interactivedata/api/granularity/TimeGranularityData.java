@@ -1,7 +1,5 @@
 package de.schuermann.interactivedata.api.granularity;
 
-import java.util.List;
-
 /**
  * @author Philipp Schürmann
  */

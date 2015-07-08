@@ -1,6 +1,6 @@
 package de.schuermann.interactivedata.spring.rest;
 
-import de.schuermann.interactivedata.api.chart.types.line.Axis;
+import de.schuermann.interactivedata.api.chart.annotations.Axis;
 import org.glassfish.jersey.process.Inflector;
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.server.model.ResourceMethod;
