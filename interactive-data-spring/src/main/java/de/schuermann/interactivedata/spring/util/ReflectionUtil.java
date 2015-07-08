@@ -84,20 +84,37 @@ public class ReflectionUtil {
 
     public static Class<?> getGenericImplementation(Class clazz1, Class clazz2, String path) {
         List<Class<?>> foundClasses = ReflectionUtil.findAssignableClasses(path, clazz1);
-        for (Class<?> processorClass : foundClasses) {
-            Type[] interfaceTypes = processorClass.getGenericInterfaces();
-            for (Type interfaceType : interfaceTypes) {
-                ParameterizedType parameterizedType = (ParameterizedType) interfaceType;
-                for(Type genericType : parameterizedType.getActualTypeArguments()) {
-                    if (genericType == clazz2) {
+        for (final Class<?> processorClass : foundClasses) {
+            // Also check if Interfaces implemented in super class
+            Class<?> checkingClass = processorClass;
+            while(checkingClass != Object.class) {
+                Type[] interfaceTypes = processorClass.getGenericInterfaces();
+                for (Type interfaceType : interfaceTypes) {
+                    if (checkParameterizedType(interfaceType, clazz2)) {
                         return processorClass;
                     }
                 }
+                Type genericSuperclass = processorClass.getGenericSuperclass();
+                if (checkParameterizedType(genericSuperclass, clazz2)) {
+                    return processorClass;
+                }
+                checkingClass = checkingClass.getSuperclass();
             }
         }
         return null;
     }
 
+    private static boolean checkParameterizedType(Type interfaceType, Class clazz) {
+        ParameterizedType parameterizedType = (ParameterizedType) interfaceType;
+        for (Type genericType : parameterizedType.getActualTypeArguments()) {
+            if (genericType == clazz) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Deprecated
     public static Class<?> getGenericExtention(Class clazz1, Class clazz2, String path) {
         List<Class<?>> foundClasses = ReflectionUtil.findAssignableClasses(path, clazz1);
         for (Class<?> processorClass : foundClasses) {
