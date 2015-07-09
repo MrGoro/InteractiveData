@@ -15,7 +15,4 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(InteractiveDataProperties.class)
 @ComponentScan(basePackageClasses = InteractiveData.class)
 public class InteractiveDataConfiguration {
-
-    @Autowired
-    InteractiveDataProperties properties;
 }
