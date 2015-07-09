@@ -8,7 +8,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix="interactive-data")
 public class InteractiveDataProperties {
 
-    private String path;
+    // TODO Bad performance => find better path
+    private String path = "";
 
     public String getPath() {
         return path;

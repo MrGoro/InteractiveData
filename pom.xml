@@ -15,6 +15,7 @@
         <module>interactive-data-api</module>
         <module>interactive-data-spring</module>
         <module>interactive-data-spring-sample</module>
+        <module>interactive-data-spring-boot-starter</module>
     </modules>
 
     <properties>
