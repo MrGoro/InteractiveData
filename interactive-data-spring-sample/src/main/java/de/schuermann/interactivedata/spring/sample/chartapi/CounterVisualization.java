@@ -8,7 +8,7 @@ import de.schuermann.interactivedata.api.chart.data.LineChartData;
 import de.schuermann.interactivedata.api.filter.TimeFilter;
 import de.schuermann.interactivedata.api.functions.Average;
 import de.schuermann.interactivedata.api.granularity.TimeGranularity;
-import de.schuermann.interactivedata.spring.data.RepositoryDataSource;
+import de.schuermann.interactivedata.spring.sample.datasource.UserDataSource;
 
 import java.util.Date;
 
@@ -22,7 +22,7 @@ public class CounterVisualization {
 
     @Chart("line")
     @LineChart(
-        dataSource = RepositoryDataSource.class,
+        dataSource = UserDataSource.class,
         axis = {
             @Axis(
                 dataField = "date",

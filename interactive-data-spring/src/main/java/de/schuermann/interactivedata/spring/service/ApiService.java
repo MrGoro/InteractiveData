@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.glassfish.jersey.server.model.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Constructor;
@@ -20,10 +21,12 @@ public class ApiService {
 
     private Log log = LogFactory.getLog(ApiService.class);
 
+    private ApplicationContext applicationContext;
     private ProcessorService processorService;
 
     @Autowired
-    public ApiService(ProcessorService processorService) {
+    public ApiService(ApplicationContext applicationContext, ProcessorService processorService) {
+        this.applicationContext = applicationContext;
         this.processorService = processorService;
     }
 
@@ -31,8 +34,8 @@ public class ApiService {
         Class<? extends AbstractApiBuilder> apiBuilderClass = processorService.findApiBuilder(chartDefinition.getClass());
         if(apiBuilderClass != null) {
             try {
-                Constructor constructor = apiBuilderClass.getConstructor(chartDefinition.getClass());
-                ApiBuilder apiBuilder = (ApiBuilder) constructor.newInstance(chartDefinition);
+                Constructor constructor = apiBuilderClass.getConstructor(ApplicationContext.class, chartDefinition.getClass());
+                ApiBuilder apiBuilder = (ApiBuilder) constructor.newInstance(applicationContext, chartDefinition);
                 return apiBuilder.build();
             } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 log.error("ApiBuilder was unable to build API for ChartDefinition [" + chartDefinition.getClass() + "]: " + e.getMessage());

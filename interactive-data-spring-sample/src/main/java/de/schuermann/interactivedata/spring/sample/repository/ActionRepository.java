@@ -1,6 +1,7 @@
 package de.schuermann.interactivedata.spring.sample.repository;
 
 import de.schuermann.interactivedata.spring.sample.data.Action;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -8,5 +9,5 @@ import org.springframework.data.repository.CrudRepository;
  *
  * @author Philipp Schürmann
  */
-public interface ActionRepository extends CrudRepository<Action, Long> {
+public interface ActionRepository extends CrudRepository<Action, Long>, JpaSpecificationExecutor {
 }
