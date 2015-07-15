@@ -1,13 +1,16 @@
 package de.schuermann.interactivedata.spring;
 
+import de.schuermann.interactivedata.spring.config.InteractiveDataTestConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-public class SampleApplicationTests {
+@ContextConfiguration(classes = InteractiveDataTestConfiguration.class)
+public class InteractiveDataSpringTests {
 
     @Test
     public void contextLoads() {
