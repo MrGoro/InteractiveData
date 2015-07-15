@@ -1,11 +1,10 @@
 package de.schuermann.interactivedata.spring.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 /**
+ * Interactive Data Configurations Options
+ *
  * @author Philipp Schürmann
  */
-@ConfigurationProperties(prefix="interactive-data")
 public class InteractiveDataProperties {
 
     // TODO Bad performance => find better path
@@ -18,4 +17,5 @@ public class InteractiveDataProperties {
     public void setPath(String path) {
         this.path = path;
     }
+
 }

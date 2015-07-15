@@ -35,4 +35,12 @@ public class TimeFilterData implements FilterData {
     public void setEnd(Date end) {
         this.end = end;
     }
+
+    @Override
+    public String toString() {
+        return "TimeFilterData{" +
+                "start=" + start +
+                ", end=" + end +
+                '}';
+    }
 }
