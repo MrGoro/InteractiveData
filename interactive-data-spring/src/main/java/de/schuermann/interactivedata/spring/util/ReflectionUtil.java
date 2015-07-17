@@ -118,7 +118,7 @@ public class ReflectionUtil {
         return false;
     }
 
-    public static Class<?> getGenericExtention(Class clazz1, Class clazz2, String path) {
+    public static Class<?> findGenericExtention(Class clazz1, Class clazz2, String path) {
         List<Class<?>> foundClasses = ReflectionUtil.findAssignableClasses(path, clazz1);
         for (Class<?> processorClass : foundClasses) {
             Type interfaceType = processorClass.getGenericSuperclass();
@@ -131,4 +131,15 @@ public class ReflectionUtil {
         }
         return null;
     }
+
+    /**
+     * Find the Generic Type of the form Clazz<GenericType>
+     * @param clazz
+     * @return
+     */
+    public static Type getGenericType(Class clazz, int index) {
+        ParameterizedType type = (ParameterizedType) clazz.getGenericSuperclass();
+        return type.getActualTypeArguments()[index];
+    }
+
 }

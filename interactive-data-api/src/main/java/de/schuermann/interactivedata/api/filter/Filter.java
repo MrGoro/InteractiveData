@@ -5,6 +5,5 @@ package de.schuermann.interactivedata.api.filter;
  */
 public interface Filter<D extends FilterData> {
 
-    void doFilter(D filterData);
-
+    abstract void doFilter(D filterData);
 }

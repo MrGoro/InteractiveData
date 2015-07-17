@@ -11,18 +11,13 @@ import org.springframework.stereotype.Service;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
 import java.lang.reflect.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Philipp Schürmann
  */
 @Service
 public class DataMapperService {
-
-    private static Log log = LogFactory.getLog(DataMapperService.class);
 
     private ObjectMapper objectMapper;
 
@@ -31,53 +26,39 @@ public class DataMapperService {
         this.objectMapper = objectMapper;
     }
 
-    public <T> T mapDataOnObject(Class<T> objectClass, MultivaluedMap<String, String> data) {
-        T result = null;
-        try {
-            Constructor<T> constructor = objectClass.getConstructor();
-            result = constructor.newInstance();
-
-            PropertyAccessor propertyAccessor = PropertyAccessorFactory.forBeanPropertyAccess(result);
-
-            for(Map.Entry<String, List<String>> entry : data.entrySet()) {
-                String fieldName = entry.getKey();
-                if(propertyAccessor.isWritableProperty(fieldName)) {
-                    Object propertyValue = getPropertyValue(propertyAccessor.getPropertyType(fieldName), data.get(fieldName));
-                    propertyAccessor.setPropertyValue(fieldName, propertyValue);
-                }
-            }
-        } catch (NoSuchMethodException e) {
-            log.warn("Cannot Map Data to Class [" + objectClass.getName() + "], empty Constructor missing");
-        } catch (InstantiationException e) {
-            log.warn("Cannot Map Data to Class [" + objectClass.getName() + "], Object cannot be instantiated, " + e.getMessage());
-        } catch (IOException | InvocationTargetException | IllegalAccessException e) {
-            log.warn("Cannot Map Data to Class [" + objectClass.getName() + "], " + e.getMessage());
-        }
-        return result;
+    /**
+     * Convert a {@Link MultivaluedMap MultivalueMap} (e.g. used for Request Parameters) to a Java POJO.
+     *
+     * @param objectClass Class of the destination Object
+     * @param data Data to fill the Object with
+     * @param <T> Class of the destination Object
+     * @return POJO
+     */
+    public <T> T mapDataOnObject(Class<T> objectClass, MultivaluedMap<String, String> data) throws IllegalArgumentException {
+        return objectMapper.convertValue(getAsMap(data), objectClass);
     }
 
-    private <T> T getPropertyValue(Class<T> propertyType, List<String> data) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, IOException {
-        if(data == null || data.size() == 0) {
-            return null;
-        } else if(data.size() == 1) {
-            return objectMapper.readValue(data.get(0), propertyType);
-        } else {
-            // TODO
-            ParameterizedType parameterizedType = (ParameterizedType) propertyType.getGenericSuperclass();
-            for(Type aType : parameterizedType.getActualTypeArguments()) {
-                log.debug("Parameterized Types: " + aType.getTypeName());
-            }
-            if(propertyType.isAssignableFrom(Collection.class)) {
-                Collection collection = (Collection) propertyType.getConstructor().newInstance();
-                for(String value : data) {
-                    collection.add(getPropertyValue(Object.class, Collections.singletonList(value)));
+    /**
+     * Convert a {@Link MultivaluedMap MultivalueMap} to a {@Link Map Map<String, Object>}.
+     *
+     * Replaces {@Link List Lists} with only one Object by the object itself.
+     *
+     * @param multivaluedMap {@Link MultivaluedMap MultivalueMap} to convert
+     * @return {@Link Map Map<String, Object>}
+     */
+    private Map<String, Object> getAsMap(MultivaluedMap<String, String> multivaluedMap) {
+        Map<String, Object> map = new HashMap<>();
+        for(Map.Entry<String, List<String>> entry : multivaluedMap.entrySet()) {
+            List<String> value = entry.getValue();
+            if(value != null) {
+                if (value.size() > 1) {
+                    map.put(entry.getKey(), value);
+                } else {
+                    map.put(entry.getKey(), value.get(0));
                 }
-                return propertyType.cast(collection);
-            } else {
-                log.warn("Collection has to be provided but property has type " + propertyType.getName());
-                throw new IOException("Collection has to be provided but property has type " + propertyType.getName());
             }
         }
+        return map;
     }
 
 }

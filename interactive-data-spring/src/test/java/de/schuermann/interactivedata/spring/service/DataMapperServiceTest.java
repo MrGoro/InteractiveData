@@ -27,7 +27,8 @@ public class DataMapperServiceTest {
     @Autowired
     private DataMapperService dataMapperService;
 
-    private MultivaluedMap<String, String> multivaluedMap;
+    private MultivaluedMap<String, String> validMultivaluedMap = new MultivaluedHashMap<>();
+    private MultivaluedMap<String, String> invalidMultivaluedMap = new MultivaluedHashMap<>();
 
     public static final String NAME = "FirstName LastName";
     public static final String WEIGHT = "15.74";
@@ -37,17 +38,22 @@ public class DataMapperServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        multivaluedMap = new MultivaluedHashMap<>();
-        multivaluedMap.putSingle("name", NAME);
-        multivaluedMap.putSingle("weight", WEIGHT);
-        multivaluedMap.putSingle("weight", NUMBER);
-        multivaluedMap.putSingle("weight", BIRTHDAY);
-        multivaluedMap.put("weight", DATES);
+        // Setup Valid Map
+        validMultivaluedMap.putSingle("name", NAME);
+        validMultivaluedMap.putSingle("weight", WEIGHT);
+        validMultivaluedMap.putSingle("number", NUMBER);
+        validMultivaluedMap.putSingle("birthday", BIRTHDAY);
+        validMultivaluedMap.put("dates", DATES);
+
+        // Setup Invalid Map
+        invalidMultivaluedMap.putSingle("number", NAME);
+        invalidMultivaluedMap.putSingle("weight", NUMBER);
+        invalidMultivaluedMap.putSingle("birthday", NAME);
     }
 
     @Test
     public void testValidParameters() throws Exception {
-        AnimalData animalData = dataMapperService.mapDataOnObject(AnimalData.class, multivaluedMap);
+        AnimalData animalData = dataMapperService.mapDataOnObject(AnimalData.class, validMultivaluedMap);
         Assert.assertNotNull(animalData);
         Assert.assertEquals(NAME, animalData.getName());
         Assert.assertEquals(Float.parseFloat(WEIGHT), animalData.getWeight(), 0.0);
@@ -58,7 +64,16 @@ public class DataMapperServiceTest {
         }
     }
 
-    public class AnimalData {
+    @Test
+    public void testInvalidParameters() throws Exception {
+        try {
+            AnimalData animalData = dataMapperService.mapDataOnObject(AnimalData.class, invalidMultivaluedMap);
+        } catch (IllegalArgumentException e) {
+
+        }
+    }
+
+    public static class AnimalData {
 
         private String name;
         private float weight;

@@ -1,6 +1,6 @@
 package de.schuermann.interactivedata.api.filter;
 
-import java.util.Date;
+import java.time.Instant;
 
 /**
  * Data Trasfer Object for {@Link Filter Filter} information of {@Link TimeFilter TimeFilter}.
@@ -9,30 +9,30 @@ import java.util.Date;
  */
 public class TimeFilterData implements FilterData {
 
-    private Date start;
-    private Date end;
+    private Instant start;
+    private Instant end;
 
     public TimeFilterData() {
     }
 
-    public TimeFilterData(Date start, Date end) {
+    public TimeFilterData(Instant start, Instant end) {
         this.start = start;
         this.end = end;
     }
 
-    public Date getStart() {
+    public Instant getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(Instant start) {
         this.start = start;
     }
 
-    public Date getEnd() {
+    public Instant getEnd() {
         return end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(Instant end) {
         this.end = end;
     }
 
