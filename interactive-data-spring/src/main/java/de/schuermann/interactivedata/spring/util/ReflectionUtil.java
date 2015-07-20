@@ -15,6 +15,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Utility for various reflection tasks
@@ -49,11 +50,15 @@ public class ReflectionUtil {
         return findClasses(packagePath, filters);
     }
 
-    public static List<Class<?>> findAssignableClasses(String packagePath, final Class<?> assignableType) {
+    @SuppressWarnings("unchecked")
+    public static <D> List<Class<D>> findAssignableClasses(String packagePath, final Class<D> assignableType) {
         List<TypeFilter> filters = new ArrayList<>();
         filters.add(new AssignableTypeFilter(assignableType));
+        List<Class<?>> classes = findClasses(packagePath, filters);
 
-        return findClasses(packagePath, filters);
+        List<Class<D>> assignableClasses = new ArrayList<>();
+        classes.forEach(aClass -> assignableClasses.add((Class<D>) aClass));
+        return assignableClasses;
     }
 
     public static List<Method> findAnnotatedMethods(final Class<?> type, final Class<? extends Annotation> annotation) {
@@ -61,13 +66,14 @@ public class ReflectionUtil {
 
         Class<?> clazz = type;
         while (clazz != Object.class) { // need to iterated thought hierarchy in order to retrieve methods from above the current instance
-            // iterate though the list of methods declared in the class represented by klass variable, and add those annotated with the specified annotation
-            final List<Method> allMethods = new ArrayList<Method>(Arrays.asList(clazz.getDeclaredMethods()));
-            for (final Method method : allMethods) {
-                if (annotation == null || method.isAnnotationPresent(annotation)) {
-                    methods.add(method);
-                }
-            }
+            // iterate though the list of methods declared in the class represented by class variable, and add those annotated with the specified annotation
+            final List<Method> allMethods = new ArrayList<>(Arrays.asList(clazz.getDeclaredMethods()));
+            methods.addAll(allMethods
+                    .stream()
+                    .filter(
+                            method -> annotation == null || method.isAnnotationPresent(annotation)
+                    )
+                    .collect(Collectors.toList()));
             // move to the upper class in the hierarchy in search for more methods
             clazz = clazz.getSuperclass();
         }
@@ -83,12 +89,12 @@ public class ReflectionUtil {
      * @return Classes implementing @Link AnnotationsProcessor} Interface
      */
     public static Class<? extends AnnotationProcessor> getAnnotationProcessor(Annotation chartAnnotation, String path) {
-        return (Class<? extends AnnotationProcessor>) getGenericImplementation(AnnotationProcessor.class, chartAnnotation.annotationType(), path);
+        return getGenericImplementation(AnnotationProcessor.class, chartAnnotation.annotationType(), path);
     }
 
-    public static Class<?> getGenericImplementation(Class clazz1, Class clazz2, String path) {
-        List<Class<?>> foundClasses = ReflectionUtil.findAssignableClasses(path, clazz1);
-        for (final Class<?> processorClass : foundClasses) {
+    public static <D> Class<? extends D> getGenericImplementation(Class<D> clazz1, Class clazz2, String path) {
+        List<Class<D>> foundClasses = ReflectionUtil.findAssignableClasses(path, clazz1);
+        for (final Class<D> processorClass : foundClasses) {
             // Also check if Interfaces implemented in super class
             Class<?> checkingClass = processorClass;
             while(checkingClass != Object.class) {
@@ -118,9 +124,9 @@ public class ReflectionUtil {
         return false;
     }
 
-    public static Class<?> findGenericExtention(Class clazz1, Class clazz2, String path) {
-        List<Class<?>> foundClasses = ReflectionUtil.findAssignableClasses(path, clazz1);
-        for (Class<?> processorClass : foundClasses) {
+    public static <D> Class<D> findGenericExtention(Class<D> clazz1, Class clazz2, String path) {
+        List<Class<D>> foundClasses = ReflectionUtil.findAssignableClasses(path, clazz1);
+        for (Class<D> processorClass : foundClasses) {
             Type interfaceType = processorClass.getGenericSuperclass();
             ParameterizedType parameterizedType = (ParameterizedType) interfaceType;
             for(Type genericType : parameterizedType.getActualTypeArguments()) {

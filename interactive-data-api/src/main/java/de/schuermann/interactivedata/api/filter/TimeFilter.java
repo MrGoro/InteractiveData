@@ -3,9 +3,13 @@ package de.schuermann.interactivedata.api.filter;
 /**
  * @author Philipp Schürmann
  */
-public class TimeFilter implements Filter<TimeFilterData> {
+public class TimeFilter extends AbstractFilter<TimeFilterData> {
 
-    public void doFilter(TimeFilterData filterData) {
+    public TimeFilter(String fieldName) {
+        super(fieldName);
+    }
 
+    public TimeFilter(String fieldName, TimeFilterData filterData) {
+        super(fieldName, filterData);
     }
 }

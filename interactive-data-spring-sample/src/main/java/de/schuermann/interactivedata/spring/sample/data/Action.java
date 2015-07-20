@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**

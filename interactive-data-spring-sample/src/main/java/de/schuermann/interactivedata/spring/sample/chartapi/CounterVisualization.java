@@ -1,16 +1,16 @@
 package de.schuermann.interactivedata.spring.sample.chartapi;
 
 import de.schuermann.interactivedata.api.ChartApi;
-import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.annotations.Axis;
+import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.annotations.LineChart;
 import de.schuermann.interactivedata.api.chart.data.LineChartData;
 import de.schuermann.interactivedata.api.filter.TimeFilter;
-import de.schuermann.interactivedata.api.functions.Average;
+import de.schuermann.interactivedata.api.functions.Count;
 import de.schuermann.interactivedata.api.granularity.TimeGranularity;
-import de.schuermann.interactivedata.spring.sample.datasource.UserDataSource;
+import de.schuermann.interactivedata.spring.sample.datasource.ActionDataSource;
 
-import java.util.Date;
+import java.time.Instant;
 
 /**
  * Demo to build an REST API for the visualization of a counter using the Interactive Data library.
@@ -22,11 +22,11 @@ public class CounterVisualization {
 
     @Chart("line")
     @LineChart(
-        dataSource = UserDataSource.class,
+        dataSource = ActionDataSource.class,
         axis = {
             @Axis(
-                dataField = "date",
-                dataType = Date.class,
+                dataField = "time",
+                dataType = Instant.class,
                 type = Axis.Type.X,
                 filter = TimeFilter.class,
                 granularity = TimeGranularity.class
@@ -35,7 +35,7 @@ public class CounterVisualization {
                 dataField = "value",
                 dataType = Integer.class,
                 type = Axis.Type.Y,
-                functions = Average.class
+                functions = Count.class
             )
         }
     )

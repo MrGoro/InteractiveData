@@ -5,10 +5,12 @@ import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
 import de.schuermann.interactivedata.spring.config.InteractiveDataProperties;
+import de.schuermann.interactivedata.spring.data.processors.FilterProcessor;
 import de.schuermann.interactivedata.spring.util.ReflectionUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
@@ -27,10 +29,12 @@ public class ReflectionService {
     private Log log = LogFactory.getLog(ReflectionService.class);
 
     private String path;
+    private ApplicationContext applicationContext;
 
     @Autowired
-    public ReflectionService(InteractiveDataProperties properties) {
+    public ReflectionService(InteractiveDataProperties properties, ApplicationContext applicationContext) {
         this.path = properties.getPath();
+        this.applicationContext = applicationContext;
     }
 
     public List<AbstractChartDefinition> getChartDefinitions() {
@@ -85,6 +89,11 @@ public class ReflectionService {
             log.warn("Invalid Chart definition on Method " + method.getName());
         }
         return null;
+    }
+
+    public <D> FilterProcessor getFilterProcessor(Class<D> filter) {
+        Class<? extends FilterProcessor> prozessorClazz = ReflectionUtil.getGenericImplementation(FilterProcessor.class, filter, path);
+        return applicationContext.getBean(prozessorClazz);
     }
 
 }

@@ -1,5 +1,6 @@
 package de.schuermann.interactivedata.spring.rest;
 
+import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.data.LineChartData;
 import de.schuermann.interactivedata.api.chart.definitions.LineChartDefinition;
 import de.schuermann.interactivedata.api.filter.Filter;
@@ -19,8 +20,7 @@ public class LineChartRequestHandler extends AbstractRequestHandler<LineChartDef
     }
 
     @Override
-    protected LineChartData getData(Map<Filter, FilterData> filterMap) {
-        List data = getDataSource().getData(filterMap, null, null);
+    protected LineChartData convertData(ChartData chartData) {
         return new LineChartData(getChartDefinition().getName());
     }
 

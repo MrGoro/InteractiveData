@@ -1,5 +1,7 @@
 package de.schuermann.interactivedata.api.data;
 
+import de.schuermann.interactivedata.api.chart.data.ChartData;
+import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.filter.Filter;
 import de.schuermann.interactivedata.api.filter.FilterData;
 import de.schuermann.interactivedata.api.functions.Function;
@@ -13,8 +15,8 @@ import java.util.Map;
  *
  * @author Philipp Schürmann
  */
-public interface DataSource<T> {
+public interface DataSource {
 
-    List<T> getData(Map<Filter, FilterData> filterMap, Map<Granularity, String> granularityMap, Map<Function, String> functionMap);
+    ChartData getData(AbstractChartDefinition chartDefinition, List<Filter> filters);
 
 }

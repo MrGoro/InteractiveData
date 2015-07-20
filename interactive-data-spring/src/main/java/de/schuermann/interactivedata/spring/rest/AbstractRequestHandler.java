@@ -16,7 +16,6 @@ import org.springframework.core.GenericTypeResolver;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MultivaluedMap;
-import java.beans.Introspector;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,9 +39,12 @@ public abstract class AbstractRequestHandler<T extends AbstractChartDefinition, 
         this.filters = new ArrayList<>();
         for(Object dimensionObject : chartDefinition.getDimensions()) {
             AbstractDimension dimension = (AbstractDimension) dimensionObject;
+            String dataField = dimension.getDataField();
             for (Class<? extends Filter> filterClass : dimension.getFilters()) {
                 try {
-                    filters.add(filterClass.newInstance());
+                    Filter filter = filterClass.newInstance();
+                    filter.setFieldName(dataField);
+                    filters.add(filter);
                 } catch (IllegalAccessException | InstantiationException e) {
                     log.warn("Error initializing filter [" + filterClass.getName() + "], " + e.getMessage());
                 }
@@ -56,27 +58,33 @@ public abstract class AbstractRequestHandler<T extends AbstractChartDefinition, 
 
     @Override
     public D apply(ContainerRequestContext containerRequestContext) {
-        return getData(extract(containerRequestContext));
+        return convertData(getData(chartDefinition, extractFilter(containerRequestContext)));
     }
 
-    protected Map<Filter, FilterData> extract(ContainerRequestContext containerRequestContext) {
+    protected List<Filter> extractFilter(ContainerRequestContext containerRequestContext) {
         MultivaluedMap<String, String> pathParameters = containerRequestContext.getUriInfo().getPathParameters();
         log.debug("Path-Parameters: " + StringUtils.multivaluedMapToString(pathParameters));
         MultivaluedMap<String, String> queryParameters = containerRequestContext.getUriInfo().getQueryParameters();
         log.debug("Query-Parameters: " + StringUtils.multivaluedMapToString(queryParameters));
 
-        Map<Filter, FilterData> filterMap = new HashMap<>();
+        List<Filter> requestFilters = new ArrayList<>();
         for(Filter filter : filters) {
             Class<?> filterDataType = GenericTypeResolver.resolveTypeArgument(filter.getClass(), Filter.class);
             try {
-                Object filterData = getDataMapperService().mapDataOnObject(filterDataType, queryParameters);
-                filterMap.put(filter, (FilterData) filterData);
+                FilterData filterData = (FilterData) getDataMapperService().mapDataOnObject(filterDataType, queryParameters);
+
+                Filter requestFilter = filter. clone();
+                filter.setFilterData(filterData);
+                requestFilters.add(requestFilter);
             } catch (IllegalArgumentException e) {
                 log.info("Unable to map query parameters to data object ["  + filterDataType.getName() + "] using null object, " + e.getMessage());
-                filterMap.put(filter, null);
+                requestFilters.add(filter);
+            } catch (CloneNotSupportedException e) {
+                log.warn("Filter [" + filter.getClass().getName() + "] not cloneable but required for using filter data, " + e.getMessage());
+                requestFilters.add(filter);
             }
         }
-        return filterMap;
+        return requestFilters;
     }
 
     protected DataSource getDataSource() {
@@ -87,6 +95,10 @@ public abstract class AbstractRequestHandler<T extends AbstractChartDefinition, 
         return applicationContext.getBean(DataMapperService.class);
     }
 
-    protected abstract D getData(Map<Filter, FilterData> filterMap);
+    protected ChartData getData(AbstractChartDefinition chartDefinition, List<Filter> filter) {
+        return getDataSource().getData(chartDefinition, filter);
+    }
+
+    protected abstract D convertData(ChartData chartData);
 
 }
