@@ -18,6 +18,7 @@ import javax.servlet.ServletContext;
 import javax.ws.rs.ApplicationPath;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Configuration for initiating REST APIs with Jersey.
@@ -28,17 +29,11 @@ import java.util.List;
 @ApplicationPath("interactivedata")
 public class ApiConfig extends ResourceConfig {
 
-    private Log log = LogFactory.getLog(ResourceConfig.class);
-
     @Autowired
-    public ApiConfig(ServletContext servletContext, ReflectionService reflectionService, ApiService apiService) {
+    public ApiConfig(ReflectionService reflectionService, ApiService apiService) {
         List<Resource> resources = new ArrayList<>();
-
         List<AbstractChartDefinition> chartDefinitions = reflectionService.getChartDefinitions();
-        for(AbstractChartDefinition chartDefinition : chartDefinitions) {
-            resources.add(apiService.buildApiResource(chartDefinition));
-        }
-        WebApplicationContext springFactory = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+        resources.addAll(chartDefinitions.stream().map(apiService::buildApiResource).collect(Collectors.toList()));
         resources.forEach(this::registerResources);
     }
 

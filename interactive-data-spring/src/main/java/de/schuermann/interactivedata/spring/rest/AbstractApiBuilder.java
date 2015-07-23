@@ -10,22 +10,20 @@ import org.springframework.context.ApplicationContext;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MediaType;
+import java.util.Arrays;
 
 /**
  * @author Philipp Schürmann
  */
 public abstract class AbstractApiBuilder<T extends AbstractChartDefinition> implements ApiBuilder<T> {
 
-    protected final ApplicationContext applicationContext;
     protected final Resource.Builder resourceBuilder = Resource.builder();
-    protected final T chartDefinition;
+    protected ApplicationContext applicationContext;
+    protected T chartDefinition;
 
     protected AbstractApiBuilder(ApplicationContext applicationContext, T chartDefinition) {
         this.applicationContext = applicationContext;
         this.chartDefinition = chartDefinition;
-        resourceBuilder.path(chartDefinition.getName());
-        addMetaInformation();
-        addDataMethod();
     }
 
     protected void addMetaInformation() {
@@ -47,6 +45,9 @@ public abstract class AbstractApiBuilder<T extends AbstractChartDefinition> impl
     public abstract Inflector<ContainerRequestContext, ChartData> getRequestHandler();
 
     public Resource build() {
+        resourceBuilder.path(chartDefinition.getName());
+        addMetaInformation();
+        addDataMethod();
         return resourceBuilder.build();
     }
 
