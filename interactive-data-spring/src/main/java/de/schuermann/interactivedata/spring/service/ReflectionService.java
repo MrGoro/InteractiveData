@@ -2,13 +2,16 @@ package de.schuermann.interactivedata.spring.service;
 
 import de.schuermann.interactivedata.api.ChartApi;
 import de.schuermann.interactivedata.api.chart.annotations.Chart;
+import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
+import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
 import de.schuermann.interactivedata.spring.config.InteractiveDataProperties;
 import de.schuermann.interactivedata.spring.data.processors.FilterProcessor;
 import de.schuermann.interactivedata.spring.util.ReflectionUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -42,14 +46,33 @@ public class ReflectionService {
 
         List<Class<?>> apiClasses = ReflectionUtil.findAnnotatedClasses(this.path, ChartApi.class);
         for(Class<?> apiClass : apiClasses) {
+            Object bean = null;
+            try {
+                bean = applicationContext.getBean(apiClass);
+            } catch(NoSuchBeanDefinitionException e) {
+                log.debug("Class [" + apiClass.getName() + "] with @Chart annotations is no bean. Methods have to be static.");
+            }
             List<Method> methods = ReflectionUtil.findAnnotatedMethods(apiClass, Chart.class);
-            methods.forEach(method -> chartDefinitions.add(processMethodAnnotations(method)));
+            final Object finalBean = bean;
+            methods.forEach(method -> chartDefinitions.add(processMethodAnnotations(finalBean, method)));
         }
 
         return chartDefinitions;
     }
 
-    private AbstractChartDefinition processMethodAnnotations(Method method) {
+    /**
+     * Extract the {@Link AbstractChartDefinition ChartDefinition} from a Method.
+     *
+     * Uses an {@Link AnnotationProcessor AnnotationProcessor} suitable for the given annotation to extract the
+     * information.
+     *
+     *
+     * @param bean
+     * @param method Method that has the appropriate annotations {@Link Chart} and the specific api annotation.
+     * @return Definition of the chart
+     */
+    @SuppressWarnings("unchecked")
+    private AbstractChartDefinition processMethodAnnotations(Object bean, Method method) {
         log.debug("Generating API for Chart: " + method.getName());
         Annotation[] annotations = method.getDeclaredAnnotations();
 
@@ -64,6 +87,30 @@ public class ReflectionService {
             }
         }
 
+        long appropriateTypesCount = Arrays.asList(method.getParameterTypes())
+                .stream()
+                .filter(ChartData.class::isAssignableFrom)
+                .count();
+
+        ChartPostProcessor chartPostProcessor = data -> data;
+        if(method.getParameterCount() == appropriateTypesCount) {
+            if(ChartData.class.isAssignableFrom(method.getReturnType())) {
+                final Class<? extends ChartData> dataType = (Class<? extends ChartData>) method.getReturnType();
+                chartPostProcessor = data -> {
+                    try {
+                        return dataType.cast(method.invoke(bean, data));
+                    } catch (InvocationTargetException | IllegalAccessException e) {
+                        log.error("Cannot access Method annotated with @Chart for post processing, " + e.getMessage());
+                        return data;
+                    }
+                };
+            } else {
+                log.warn("Method with @Chart annotation does not have ChartData or any sub class as its return type. Return Type is required if the method should post process auto generated ChartData. Skipping post process.");
+            }
+        } else {
+            log.info("Method with @Chart annotation does not have ChartData or any sub class as its parameter type. Skipping post processing.");
+        }
+
         if(name != null && chartAnnotation != null) {
             log.info("Processing Detail-Configuration for Chart: " + name);
 
@@ -72,7 +119,9 @@ public class ReflectionService {
                 try {
                     Constructor constructor = processorClass.getConstructor();
                     AnnotationProcessor annotationProcessor = (AnnotationProcessor) constructor.newInstance();
-                    return annotationProcessor.process(name, chartAnnotation);
+                    AbstractChartDefinition chartDefinition = annotationProcessor.process(name, chartAnnotation);
+                    chartDefinition.setChartPostProcessor(chartPostProcessor);
+                    return chartDefinition;
                 } catch (NoSuchMethodException e) {
                     log.error("Processor [" + processorClass.getName() + " for Chart [" + name + "] does not have an empty constructor");
                 } catch (InvocationTargetException e) {

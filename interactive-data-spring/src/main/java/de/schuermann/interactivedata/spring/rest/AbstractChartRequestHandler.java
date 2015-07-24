@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author Philipp Schürmann
  */
-public abstract class AbstractChartRequestHandler<T extends AbstractChartDefinition, D extends ChartData> implements Inflector<ContainerRequestContext, ChartData> {
+public abstract class AbstractChartRequestHandler<T extends AbstractChartDefinition<?, D>, D extends ChartData> implements Inflector<ContainerRequestContext, ChartData> {
 
     private Log log = LogFactory.getLog(AbstractChartRequestHandler.class);
 
@@ -72,7 +72,9 @@ public abstract class AbstractChartRequestHandler<T extends AbstractChartDefinit
 
         ChartData chartData = getData(chartDefinition, filters);
 
-        return convertData(chartData);
+        D specificChartData = convertData(chartData);
+
+        return chartDefinition.getChartPostProcessor().process(specificChartData);
     }
 
     /**

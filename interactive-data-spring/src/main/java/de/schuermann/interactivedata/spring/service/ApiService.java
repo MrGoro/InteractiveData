@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -30,7 +31,7 @@ public class ApiService {
         this.processorService = processorService;
     }
 
-    public Resource buildApiResource(AbstractChartDefinition chartDefinition) {
+    public Resource buildApiResource(@NotNull AbstractChartDefinition chartDefinition) {
         Class<? extends AbstractApiBuilder> apiBuilderClass = processorService.findApiBuilder(chartDefinition.getClass());
         if(apiBuilderClass != null) {
             try {
@@ -41,7 +42,7 @@ public class ApiService {
                 log.error("ApiBuilder was unable to build API for ChartDefinition [" + chartDefinition.getClass() + "]: " + e.getMessage());
             }
         } else {
-            log.error("Could not find ApiBuilder for ChartDefinition [" + chartDefinition.getClass() + "]");
+            log.error("Could not find ApiBuilder for ChartDefinition [" + chartDefinition.getClass() + "], skipping chart api");
         }
         return null;
     }

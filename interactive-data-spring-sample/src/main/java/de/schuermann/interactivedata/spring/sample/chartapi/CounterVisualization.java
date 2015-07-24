@@ -9,6 +9,7 @@ import de.schuermann.interactivedata.api.filter.TimeFilter;
 import de.schuermann.interactivedata.api.functions.Count;
 import de.schuermann.interactivedata.api.granularity.TimeGranularity;
 import de.schuermann.interactivedata.spring.sample.datasource.ActionDataSource;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
@@ -17,6 +18,7 @@ import java.time.Instant;
  *
  * @author Philipp Schürmann
  */
+@Service
 @ChartApi("counter")
 public class CounterVisualization {
 

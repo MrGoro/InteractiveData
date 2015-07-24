@@ -1,12 +1,13 @@
 package de.schuermann.interactivedata.api.chart.definitions;
 
 import de.schuermann.interactivedata.api.chart.annotations.Axis;
+import de.schuermann.interactivedata.api.chart.data.LineChartData;
 import de.schuermann.interactivedata.api.data.DataSource;
 
 /**
  * @author Philipp Schürmann
  */
-public class LineChartDefinition extends AbstractChartDefinition<AxisDefinition> {
+public class LineChartDefinition extends AbstractChartDefinition<AxisDefinition, LineChartData> {
 
     public LineChartDefinition(String name, Class<? extends DataSource> dataSource) {
         super(name, dataSource);
