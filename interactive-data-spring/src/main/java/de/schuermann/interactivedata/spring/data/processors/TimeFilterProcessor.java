@@ -16,7 +16,6 @@ public class TimeFilterProcessor implements FilterProcessor<TimeFilter> {
 
     @Override
     public Predicate filter(Root root, CriteriaQuery<?> query, CriteriaBuilder cb, TimeFilter filter) {
-        //return filter(filter.getFilterData());
-        return null;
+        return cb.between(root.get(filter.getFieldName()), filter.getFilterData().getStart(), filter.getFilterData().getEnd());
     }
 }

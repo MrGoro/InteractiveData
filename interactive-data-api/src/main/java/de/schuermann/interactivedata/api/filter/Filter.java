@@ -3,16 +3,52 @@ package de.schuermann.interactivedata.api.filter;
 /**
  * @author Philipp Schürmann
  */
-public interface Filter<D extends FilterData> extends Cloneable {
+public abstract class Filter<D extends FilterData> {
 
-    void setFieldName(String fieldName);
+    protected String fieldName;
+    protected D filterData;
 
-    String getFieldName();
+    public abstract static class Builder<D extends FilterData, X extends Filter<D>> {
+        protected String fieldName;
+        protected D filterData;
+        public abstract Builder getInstance();
+        public void setFieldName(String fieldName) {
+            this.fieldName = fieldName;
+        }
+        public void setFilterData(D filterData) {
+            this.filterData = filterData;
+        }
+        public abstract X build();
+    }
 
-    void setFilterData(D filterData);
+    public Filter(String fieldName) {
+        this.fieldName = fieldName;
+    }
 
-    D getFilterData();
+    public Filter(String fieldName, D filterData) {
+        this.fieldName = fieldName;
+        this.filterData = filterData;
+    }
 
-    Filter clone() throws CloneNotSupportedException;
+    public String getFieldName() {
+        return fieldName;
+    }
 
+    public D getFilterData() {
+        return filterData;
+    }
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
+    public void setFilterData(D filterData) {
+        this.filterData = filterData;
+    }
+
+    // TODO Cloneable
+    @Override
+    public Filter clone() throws CloneNotSupportedException {
+        return (Filter) super.clone();
+    }
 }

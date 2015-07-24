@@ -6,6 +6,7 @@ import de.schuermann.interactivedata.api.chart.definitions.AbstractDimension;
 import de.schuermann.interactivedata.api.data.DataSource;
 import de.schuermann.interactivedata.api.filter.Filter;
 import de.schuermann.interactivedata.api.filter.FilterData;
+import de.schuermann.interactivedata.api.service.ServiceLocator;
 import de.schuermann.interactivedata.spring.service.DataMapperService;
 import de.schuermann.interactivedata.spring.util.MultivaluedMapUtil;
 import org.apache.commons.logging.Log;
