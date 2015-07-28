@@ -1,6 +1,14 @@
 package de.schuermann.interactivedata.api.filter;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
 /**
+ * Base for every Filter. Used for storing information of the filter that cannot be accessed / changed
+ * from a request.
+ *
  * @author Philipp Schürmann
  */
 public abstract class Filter<D extends FilterData> {
@@ -8,17 +16,76 @@ public abstract class Filter<D extends FilterData> {
     protected String fieldName;
     protected D filterData;
 
-    public abstract static class Builder<D extends FilterData, X extends Filter<D>> {
+    /**
+     * Builder for quick creation of Filter objects when data changes.
+     *
+     * @param <F> Filter
+     * @param <D> FilterData
+     */
+    public static class Builder<F extends Filter<D>, D extends FilterData> {
         protected String fieldName;
         protected D filterData;
-        public abstract Builder getInstance();
+        protected Class<F> filterClass;
+        protected Class<D> filterDataClass;
+        protected Constructor<F> constructor;
+
+        /**
+         * Create a new Instance of a FilterBuilder
+         *
+         * @param filterClass Class of the Filter
+         * @param <X> Filter
+         * @param <Y> FilterData
+         * @return New FilterBuilder Instance
+         */
+        @SuppressWarnings("unchecked")
+        public static <X extends Filter<Y>, Y extends FilterData> Builder<X, Y> getInstance(Class<X> filterClass) {
+            ParameterizedType parameterizedType = (ParameterizedType)filterClass.getGenericSuperclass();
+            Type genericType = parameterizedType.getActualTypeArguments()[0]; // TODO Check Array Size / Null Pointer
+            Class<Y> filterDataClass = (Class<Y>) genericType;
+            return new Builder<>(filterClass, filterDataClass);
+        }
+        private Builder(Class<F> filterClass, Class<D> filterDataClass) {
+            this.filterClass = filterClass;
+            this.filterDataClass = filterDataClass;
+            try {
+                this.constructor = filterClass.getConstructor(String.class, getFilterDataClass());
+                this.constructor.newInstance(null, null); // Check if Constructor is available during initialization.
+            } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
+                throw new IllegalArgumentException("Filter does not provide a Constructor with appropriate visibility of form " +
+                        "(String, " + getFilterData().getClass().getName() + ")");
+            }
+        }
         public void setFieldName(String fieldName) {
             this.fieldName = fieldName;
         }
         public void setFilterData(D filterData) {
             this.filterData = filterData;
         }
-        public abstract X build();
+        protected String getFieldName() {
+            return fieldName;
+        }
+        protected D getFilterData() {
+            return filterData;
+        }
+        protected Class<F> getFilterClass() {
+            return filterClass;
+        }
+        protected Class<D> getFilterDataClass() {
+            return filterDataClass;
+        }
+        public F build() {
+            // Check parameters before building
+            if(getFieldName() == null || getFieldName().isEmpty()) {
+                throw new IllegalArgumentException("Cannot build Filter, FieldName cannot be null or empty");
+            }
+            try {
+                return constructor.newInstance(getFieldName(), getFilterData());
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                // should not be thrown as tested in constructor
+                throw new IllegalArgumentException("Filter does not provide a Constructor with appropriate visibility of form " +
+                        "(String, " + getFilterData().getClass().getName() + ")");
+            }
+        }
     }
 
     public Filter(String fieldName) {
@@ -44,11 +111,5 @@ public abstract class Filter<D extends FilterData> {
 
     public void setFilterData(D filterData) {
         this.filterData = filterData;
-    }
-
-    // TODO Cloneable
-    @Override
-    public Filter clone() throws CloneNotSupportedException {
-        return (Filter) super.clone();
     }
 }

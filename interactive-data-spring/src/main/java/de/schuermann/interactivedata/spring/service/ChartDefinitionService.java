@@ -20,28 +20,59 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Philipp Schürmann
  */
 @Service
-public class ReflectionService {
+public class ChartDefinitionService {
 
-    private Log log = LogFactory.getLog(ReflectionService.class);
+    private Log log = LogFactory.getLog(ChartDefinitionService.class);
 
     private String path;
     private ApplicationContext applicationContext;
+    private ProcessorService processorService;
+
+    private Map<String, AbstractChartDefinition> chartDefinitions;
 
     @Autowired
-    public ReflectionService(InteractiveDataProperties properties, ApplicationContext applicationContext) {
+    public ChartDefinitionService(InteractiveDataProperties properties, ApplicationContext applicationContext, ProcessorService processorService) {
         this.path = properties.getPath();
         this.applicationContext = applicationContext;
+        this.processorService = processorService;
+
+        List<AbstractChartDefinition> definitionList = loadChartDefinitionsUsingAnnotations();
+        chartDefinitions = new HashMap<>();
+        definitionList.forEach(chartDefinition -> chartDefinitions.put(chartDefinition.getName(), chartDefinition));
     }
 
-    public List<AbstractChartDefinition> getChartDefinitions() {
+    /**
+     * Get a Map with all {@Link AbstractChartDefinition ChartDefinitions}.
+     *
+     * The name of the chart is the key of the Map.
+     *
+     * @return Map with all {@Link AbstractChartDefinition ChartDefinitions}
+     */
+    public Map<String, AbstractChartDefinition> getChartDefinitions() {
+        return chartDefinitions;
+    }
+
+    /**
+     * Get a {@Link AbstractChartDefinition ChartDefinition} for the chart with the given name.
+     * @param name Name of the chart
+     * @return {@Link AbstractChartDefinition ChartDefinition}
+     */
+    public AbstractChartDefinition getChartDefinition(String name) {
+        return chartDefinitions.get(name);
+    }
+
+    /**
+     * Search for {@Link AbstractChartDefinition ChartDefinitions} using the Annotations.
+     *
+     * @return List of {@Link AbstractChartDefinition ChartDefinitions}
+     */
+    private List<AbstractChartDefinition> loadChartDefinitionsUsingAnnotations() {
         List<AbstractChartDefinition> chartDefinitions = new ArrayList<>();
 
         List<Class<?>> apiClasses = ReflectionUtil.findAnnotatedClasses(this.path, ChartApi.class);
@@ -114,35 +145,18 @@ public class ReflectionService {
         if(name != null && chartAnnotation != null) {
             log.info("Processing Detail-Configuration for Chart: " + name);
 
-            Class<? extends AnnotationProcessor> processorClass = ReflectionUtil.getAnnotationProcessor(chartAnnotation, path);
-            if(processorClass != null) {
-                try {
-                    Constructor constructor = processorClass.getConstructor();
-                    AnnotationProcessor annotationProcessor = (AnnotationProcessor) constructor.newInstance();
-                    AbstractChartDefinition chartDefinition = annotationProcessor.process(name, chartAnnotation);
-                    chartDefinition.setChartPostProcessor(chartPostProcessor);
-                    return chartDefinition;
-                } catch (NoSuchMethodException e) {
-                    log.error("Processor [" + processorClass.getName() + " for Chart [" + name + "] does not have an empty constructor");
-                } catch (InvocationTargetException e) {
-                    log.error("Constructor of Processor [" + processorClass.getName() + " for Chart [" + name + "] cannot be invoked: " + e.getMessage());
-                } catch (InstantiationException e) {
-                    log.error("Constructor of Processor [" + processorClass.getName() + " for Chart [" + name + "] cannot be instantiated: " + e.getMessage());
-                } catch (IllegalAccessException e) {
-                    log.error("Constructor of Processor [" + processorClass.getName() + " for Chart [" + name + "] has different arguments: " + e.getMessage());
-                }
-            } else {
-                log.error("Could not find Processor for Annotation " + chartAnnotation.annotationType().getName() + " - Chart not generated!");
+            try {
+                AnnotationProcessor annotationProcessor = processorService.getAnnotationProcessor(chartAnnotation);
+                AbstractChartDefinition chartDefinition = annotationProcessor.process(name, chartAnnotation, chartPostProcessor);
+                chartDefinition.setChartPostProcessor(chartPostProcessor);
+                return chartDefinition;
+            } catch (IllegalArgumentException e) {
+                log.warn(e.getMessage());
             }
         } else {
             log.warn("Invalid Chart definition on Method " + method.getName());
         }
         return null;
-    }
-
-    public <D> FilterProcessor getFilterProcessor(Class<D> filter) {
-        Class<? extends FilterProcessor> prozessorClazz = ReflectionUtil.getGenericImplementation(FilterProcessor.class, filter, path);
-        return applicationContext.getBean(prozessorClazz);
     }
 
 }

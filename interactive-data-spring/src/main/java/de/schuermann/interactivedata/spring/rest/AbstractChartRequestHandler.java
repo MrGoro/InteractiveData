@@ -5,8 +5,8 @@ import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefiniti
 import de.schuermann.interactivedata.api.chart.definitions.AbstractDimension;
 import de.schuermann.interactivedata.api.data.DataSource;
 import de.schuermann.interactivedata.api.filter.Filter;
+import de.schuermann.interactivedata.api.filter.Filter.Builder;
 import de.schuermann.interactivedata.api.filter.FilterData;
-import de.schuermann.interactivedata.api.service.ServiceLocator;
 import de.schuermann.interactivedata.spring.service.DataMapperService;
 import de.schuermann.interactivedata.spring.util.MultivaluedMapUtil;
 import org.apache.commons.logging.Log;
@@ -42,13 +42,9 @@ public abstract class AbstractChartRequestHandler<T extends AbstractChartDefinit
             AbstractDimension dimension = (AbstractDimension) dimensionObject;
             String dataField = dimension.getDataField();
             for (Class<? extends Filter> filterClass : dimension.getFilters()) {
-                try {
-                    Filter filter = filterClass.newInstance();
-                    filter.setFieldName(dataField);
-                    filters.add(filter);
-                } catch (IllegalAccessException | InstantiationException e) {
-                    log.warn("Error initializing filter [" + filterClass.getName() + "], " + e.getMessage());
-                }
+                Builder<?, ?> builder = Builder.getInstance(filterClass);
+                builder.setFieldName(dataField);
+                filters.add(builder.build());
             }
         }
     }
@@ -90,15 +86,12 @@ public abstract class AbstractChartRequestHandler<T extends AbstractChartDefinit
             Class<?> filterDataType = GenericTypeResolver.resolveTypeArgument(filter.getClass(), Filter.class);
             try {
                 FilterData filterData = (FilterData) getDataMapperService().mapDataOnObject(filterDataType, parameters);
-                Filter requestFilter = filter.clone();
+                Filter requestFilter = filter;
                 filter.setFilterData(filterData);
                 log.debug("Extracted Filter[" + filter + "] with FilterData[" + filterData + "]");
                 requestFilters.add(requestFilter);
             } catch (IllegalArgumentException e) {
                 log.info("Unable to map query parameters to data object ["  + filterDataType.getName() + "] using null object, " + e.getMessage());
-                requestFilters.add(filter);
-            } catch (CloneNotSupportedException e) {
-                log.warn("Filter [" + filter.getClass().getName() + "] not cloneable but required for using filter data, " + e.getMessage());
                 requestFilters.add(filter);
             }
         }

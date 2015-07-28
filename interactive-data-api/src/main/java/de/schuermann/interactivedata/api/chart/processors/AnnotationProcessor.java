@@ -1,6 +1,7 @@
 package de.schuermann.interactivedata.api.chart.processors;
 
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
+import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
 
 import java.lang.annotation.Annotation;
 
@@ -19,6 +20,6 @@ public interface AnnotationProcessor<T extends Annotation> {
      * @param annotation Annotation of the Chart
      * @return Chart Definition
      */
-    AbstractChartDefinition process(String name, T annotation);
+    AbstractChartDefinition process(String name, T annotation, ChartPostProcessor postProcessor);
 
 }
