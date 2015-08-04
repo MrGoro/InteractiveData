@@ -60,7 +60,7 @@ public class ReflectionUtil {
     }
 
     /**
-     * Search the package paht for Classes that are assignable to the given class type.
+     * Search the package path for Classes that are assignable to the given class type.
      *
      * @param path Package Path
      * @param assignableType Class Type
@@ -186,15 +186,20 @@ public class ReflectionUtil {
     }
 
     /**
+     * Helper method to provide an easy access to zero argument constructor instantiation.
      *
-     * @param objectClass
-     * @param <T>
-     * @return
-     * @throws IllegalArgumentException when class does not have a default constructor or instantiation fails
+     * @param objectClass Class of the object
+     * @param <T> Type of the object / class
+     * @return Instance of the object class
+     * @throws IllegalArgumentException when class does not have a default constructor, instantiation fails or class object is null
      */
     public static <T> T getInstance(Class<T> objectClass) throws IllegalArgumentException {
         try {
-            return objectClass.newInstance();
+            if(objectClass != null) {
+                return objectClass.newInstance();
+            } else {
+                throw new IllegalArgumentException("Cannot instantiate object of null class.");
+            }
         } catch (IllegalAccessException | InstantiationException e) {
             throw new IllegalArgumentException("Initializing Class [" + objectClass.getName() + "] failed.", e);
         }

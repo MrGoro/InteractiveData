@@ -21,9 +21,18 @@ import org.springframework.context.annotation.Configuration;
 public class InteractiveDataConfiguration {
 
     @Bean
-    public InteractiveDataProperties config() {
-        return new InteractiveDataProperties();
+    public InteractiveDataProperties properties() {
+        InteractiveDataProperties properties = new InteractiveDataProperties();
+        configureProperties(properties);
+        return properties;
     }
+
+    /**
+     * Configure properties
+     *
+     * @param properties
+     */
+    public void configureProperties(InteractiveDataProperties properties) {}
 
     /**
      * The Jackson {@link ObjectMapper} used for serialization.

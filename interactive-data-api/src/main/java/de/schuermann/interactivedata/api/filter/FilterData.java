@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * FilterData is populated for every request using request parameters.
  *
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
 public interface FilterData extends Serializable {
 }

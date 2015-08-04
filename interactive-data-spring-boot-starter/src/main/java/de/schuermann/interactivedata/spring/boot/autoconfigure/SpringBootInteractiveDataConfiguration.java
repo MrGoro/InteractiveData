@@ -16,7 +16,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
  * Favor an extension of this class instead of extending directly from
  * {@link InteractiveDataConfiguration}.
  *
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
 @Configuration
 public class SpringBootInteractiveDataConfiguration extends InteractiveDataConfiguration {
@@ -27,8 +27,8 @@ public class SpringBootInteractiveDataConfiguration extends InteractiveDataConfi
     @Bean
     @ConfigurationProperties(prefix = "interactive-data")
     @Override
-    public InteractiveDataProperties config() {
-        return super.config();
+    public InteractiveDataProperties properties() {
+        return super.properties();
     }
 
     @Override

@@ -5,7 +5,7 @@ import java.time.Instant;
 /**
  * Data Trasfer Object for {@Link Filter Filter} information of {@Link TimeFilter TimeFilter}.
  *
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
 public class TimeFilterData implements FilterData {
 

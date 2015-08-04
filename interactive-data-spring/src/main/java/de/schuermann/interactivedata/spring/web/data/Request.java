@@ -5,7 +5,7 @@ import de.schuermann.interactivedata.api.filter.Filter;
 import java.util.List;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
 public class Request {
 

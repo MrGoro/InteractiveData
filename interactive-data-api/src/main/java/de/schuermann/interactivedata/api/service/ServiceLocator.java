@@ -1,22 +1,15 @@
 package de.schuermann.interactivedata.api.service;
 
 import de.schuermann.interactivedata.api.filter.Filter;
-import de.schuermann.interactivedata.api.filter.FilterData;
+
+import java.util.Collection;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
 public interface ServiceLocator {
 
-    interface FilterFactory {
-        <F extends Filter<D>, D extends FilterData> F newInstance(Class<F> filterClass);
-    }
+    Collection<Class<? extends Filter>> getFilterClasses();
 
-    interface FilterBuilder<F extends Filter<D>, D extends FilterData> {
-        FilterBuilder setFieldName(String fieldName);
-        FilterBuilder setFilterData(D filterData);
-        F build();
-    }
-
-    FilterFactory getFilterFactory();
+    Collection<Class<?>> getChartServices();
 }

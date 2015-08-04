@@ -3,7 +3,7 @@ package de.schuermann.interactivedata.api.chart.definitions;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
 @FunctionalInterface
 public interface ChartPostProcessor<T extends ChartData> {

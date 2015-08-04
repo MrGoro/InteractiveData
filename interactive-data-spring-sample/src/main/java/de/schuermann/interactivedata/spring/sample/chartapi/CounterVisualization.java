@@ -1,6 +1,6 @@
 package de.schuermann.interactivedata.spring.sample.chartapi;
 
-import de.schuermann.interactivedata.api.ChartApi;
+import de.schuermann.interactivedata.api.service.ChartService;
 import de.schuermann.interactivedata.api.chart.annotations.Axis;
 import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.annotations.LineChart;
@@ -19,7 +19,7 @@ import java.time.Instant;
  * @author Philipp Schürmann
  */
 @Service
-@ChartApi("counter")
+@ChartService("counter")
 public class CounterVisualization {
 
     @Chart("line")

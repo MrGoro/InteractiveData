@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.api.chart.data;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
 public class LineChartData extends ChartData {
 

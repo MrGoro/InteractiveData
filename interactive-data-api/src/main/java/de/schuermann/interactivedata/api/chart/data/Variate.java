@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
 public class Variate {
 

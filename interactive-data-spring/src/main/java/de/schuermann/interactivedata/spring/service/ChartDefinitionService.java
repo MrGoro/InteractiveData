@@ -1,13 +1,12 @@
 package de.schuermann.interactivedata.spring.service;
 
-import de.schuermann.interactivedata.api.ChartApi;
+import de.schuermann.interactivedata.api.service.ChartService;
 import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
 import de.schuermann.interactivedata.spring.config.InteractiveDataProperties;
-import de.schuermann.interactivedata.spring.data.processors.FilterProcessor;
 import de.schuermann.interactivedata.spring.util.ReflectionUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,7 +16,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -75,13 +73,13 @@ public class ChartDefinitionService {
     private List<AbstractChartDefinition> loadChartDefinitionsUsingAnnotations() {
         List<AbstractChartDefinition> chartDefinitions = new ArrayList<>();
 
-        List<Class<?>> apiClasses = ReflectionUtil.findAnnotatedClasses(this.path, ChartApi.class);
+        List<Class<?>> apiClasses = ReflectionUtil.findAnnotatedClasses(this.path, ChartService.class);
         for(Class<?> apiClass : apiClasses) {
             Object bean = null;
             try {
                 bean = applicationContext.getBean(apiClass);
             } catch(NoSuchBeanDefinitionException e) {
-                log.debug("Class [" + apiClass.getName() + "] with @Chart annotations is no bean. Methods have to be static.");
+                log.debug("Class [" + apiClass.getName() + "] with @Chart controllers is no bean. Methods have to be static.");
             }
             List<Method> methods = ReflectionUtil.findAnnotatedMethods(apiClass, Chart.class);
             final Object finalBean = bean;
@@ -99,7 +97,7 @@ public class ChartDefinitionService {
      *
      *
      * @param bean
-     * @param method Method that has the appropriate annotations {@Link Chart} and the specific api annotation.
+     * @param method Method that has the appropriate controllers {@Link Chart} and the specific api annotation.
      * @return Definition of the chart
      */
     @SuppressWarnings("unchecked")

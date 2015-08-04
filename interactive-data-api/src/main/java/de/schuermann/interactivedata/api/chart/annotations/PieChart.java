@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.api.chart.annotations;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
 public @interface PieChart {
 }

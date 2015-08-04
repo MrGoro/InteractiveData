@@ -29,6 +29,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>de.schuermann.interactivedata</groupId>
+            <artifactId>interactive-data-processors</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -77,5 +83,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>

@@ -14,7 +14,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
 @Service
 public class DataMapperService {

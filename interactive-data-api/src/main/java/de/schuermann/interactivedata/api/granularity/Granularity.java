@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.api.granularity;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
 public interface Granularity<T extends GranularityData> {
 }

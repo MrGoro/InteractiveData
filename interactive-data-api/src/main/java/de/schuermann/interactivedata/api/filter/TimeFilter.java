@@ -1,8 +1,11 @@
 package de.schuermann.interactivedata.api.filter;
 
+import de.schuermann.interactivedata.api.service.FilterService;
+
 /**
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
+@FilterService
 public class TimeFilter extends Filter<TimeFilterData> {
 
     public TimeFilter(String fieldName) {

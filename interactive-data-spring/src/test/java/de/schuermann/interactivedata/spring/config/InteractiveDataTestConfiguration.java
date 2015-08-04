@@ -7,4 +7,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class InteractiveDataTestConfiguration extends InteractiveDataConfiguration {
+
+    @Override
+    public void configureProperties(InteractiveDataProperties properties) {
+        properties.setPath("de.schuermann.interactivedata.spring");
+    }
 }

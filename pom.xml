@@ -13,14 +13,16 @@
 
     <modules>
         <module>interactive-data-api</module>
+        <module>interactive-data-processors</module>
         <module>interactive-data-spring</module>
-        <module>interactive-data-spring-sample</module>
         <module>interactive-data-spring-boot-starter</module>
+        <module>interactive-data-spring-sample</module>
     </modules>
 
     <properties>
         <project.type>multi</project.type>
         <dist.id>interactive-data</dist.id>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <developers>

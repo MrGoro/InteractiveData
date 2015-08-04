@@ -1,5 +1,7 @@
 package de.schuermann.interactivedata.api.filter;
 
+import de.schuermann.interactivedata.api.service.FilterService;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
@@ -9,8 +11,9 @@ import java.lang.reflect.Type;
  * Base for every Filter. Used for storing information of the filter that cannot be accessed / changed
  * from a request.
  *
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
+@FilterService
 public abstract class Filter<D extends FilterData> {
 
     protected String fieldName;

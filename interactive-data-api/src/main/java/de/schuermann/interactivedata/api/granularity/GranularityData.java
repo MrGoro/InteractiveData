@@ -3,7 +3,7 @@ package de.schuermann.interactivedata.api.granularity;
 import java.io.Serializable;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp SchÃ¼rmann
  */
 public interface GranularityData extends Serializable {
 }
