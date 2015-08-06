@@ -1,16 +1,15 @@
 package de.schuermann.interactivedata.spring.service;
 
-import de.schuermann.interactivedata.api.service.annotations.ChartService;
 import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
+import de.schuermann.interactivedata.api.util.ReflectionUtil;
 import de.schuermann.interactivedata.spring.config.InteractiveDataProperties;
-import de.schuermann.interactivedata.spring.util.AdvancedReflectionUtil;
+import de.schuermann.interactivedata.spring.service.locators.ServiceProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -28,21 +27,14 @@ public class ChartDefinitionService {
 
     private Log log = LogFactory.getLog(ChartDefinitionService.class);
 
-    private String path;
-    private ApplicationContext applicationContext;
-    private ProcessorService processorService;
+    private ServiceProvider serviceProvider;
 
-    private Map<String, AbstractChartDefinition> chartDefinitions;
+    private Map<String, AbstractChartDefinition> chartDefinitions = new HashMap<>();
 
     @Autowired
-    public ChartDefinitionService(InteractiveDataProperties properties, ApplicationContext applicationContext, ProcessorService processorService) {
-        this.path = properties.getPath();
-        this.applicationContext = applicationContext;
-        this.processorService = processorService;
-
-        List<AbstractChartDefinition> definitionList = loadChartDefinitionsUsingAnnotations();
-        chartDefinitions = new HashMap<>();
-        definitionList.forEach(chartDefinition -> chartDefinitions.put(chartDefinition.getName(), chartDefinition));
+    public ChartDefinitionService(ServiceProvider serviceProvider) {
+        this.serviceProvider = serviceProvider;
+        loadChartDefinitionsUsingAnnotations();
     }
 
     /**
@@ -67,26 +59,13 @@ public class ChartDefinitionService {
 
     /**
      * Search for {@Link AbstractChartDefinition ChartDefinitions} using the Annotations.
-     *
-     * @return List of {@Link AbstractChartDefinition ChartDefinitions}
      */
-    private List<AbstractChartDefinition> loadChartDefinitionsUsingAnnotations() {
-        List<AbstractChartDefinition> chartDefinitions = new ArrayList<>();
-
-        List<Class<?>> apiClasses = AdvancedReflectionUtil.findAnnotatedClasses(this.path, ChartService.class);
-        for(Class<?> apiClass : apiClasses) {
-            Object bean = null;
-            try {
-                bean = applicationContext.getBean(apiClass);
-            } catch(NoSuchBeanDefinitionException e) {
-                log.debug("Class [" + apiClass.getName() + "] with @Chart controllers is no bean. Methods have to be static.");
-            }
-            List<Method> methods = AdvancedReflectionUtil.findAnnotatedMethods(apiClass, Chart.class);
-            final Object finalBean = bean;
-            methods.forEach(method -> chartDefinitions.add(processMethodAnnotations(finalBean, method)));
+    private void loadChartDefinitionsUsingAnnotations() {
+        Collection<Object> chartServices = serviceProvider.getChartServices();
+        for(Object chartService : chartServices) {
+            List<Method> methods = ReflectionUtil.findAnnotatedMethods(chartService.getClass(), Chart.class);
+            methods.forEach(method -> processMethodAnnotations(chartService, method));
         }
-
-        return chartDefinitions;
     }
 
     /**
@@ -94,14 +73,8 @@ public class ChartDefinitionService {
      *
      * Uses an {@Link AnnotationProcessor AnnotationProcessor} suitable for the given annotation to extract the
      * information.
-     *
-     *
-     * @param bean
-     * @param method Method that has the appropriate controllers {@Link Chart} and the specific api annotation.
-     * @return Definition of the chart
      */
-    @SuppressWarnings("unchecked")
-    private AbstractChartDefinition processMethodAnnotations(Object bean, Method method) {
+    private void processMethodAnnotations(Object bean, Method method) {
         log.debug("Generating API for Chart: " + method.getName());
         Annotation[] annotations = method.getDeclaredAnnotations();
 
@@ -142,19 +115,18 @@ public class ChartDefinitionService {
 
         if(name != null && chartAnnotation != null) {
             log.info("Processing Detail-Configuration for Chart: " + name);
-
             try {
-                AnnotationProcessor annotationProcessor = processorService.getAnnotationProcessor(chartAnnotation);
-                AbstractChartDefinition chartDefinition = annotationProcessor.process(name, chartAnnotation, chartPostProcessor);
-                chartDefinition.setChartPostProcessor(chartPostProcessor);
-                return chartDefinition;
-            } catch (IllegalArgumentException e) {
+                AbstractChartDefinition chartDefinition = serviceProvider
+                        .getAnnotationProcessor(chartAnnotation)
+                        .get()
+                        .process(name, chartAnnotation, chartPostProcessor);
+                chartDefinitions.put(chartDefinition.getName(), chartDefinition);
+            } catch (NoSuchElementException | IllegalArgumentException e) {
                 log.warn(e.getMessage());
             }
         } else {
             log.warn("Invalid Chart definition on Method " + method.getName());
         }
-        return null;
     }
 
 }

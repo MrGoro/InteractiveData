@@ -8,24 +8,22 @@ import de.schuermann.interactivedata.api.filter.Filter;
 import de.schuermann.interactivedata.api.filter.Filter.Builder;
 import de.schuermann.interactivedata.api.filter.FilterData;
 import de.schuermann.interactivedata.spring.service.DataMapperService;
-import de.schuermann.interactivedata.spring.util.MultivaluedMapUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.glassfish.jersey.process.Inflector;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.GenericTypeResolver;
 
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.MultivaluedMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Base Class that handles request to a REST API based on a chart definition.
  *
  * @author Philipp Schürmann
  */
-public abstract class AbstractChartRequestHandler<T extends AbstractChartDefinition<?, D>, D extends ChartData> implements Inflector<ContainerRequestContext, ChartData> {
+public abstract class AbstractChartRequestHandler<T extends AbstractChartDefinition<?, D>, D extends ChartData> {
 
     private Log log = LogFactory.getLog(AbstractChartRequestHandler.class);
 
@@ -53,16 +51,10 @@ public abstract class AbstractChartRequestHandler<T extends AbstractChartDefinit
         return chartDefinition;
     }
 
-    @Override
-    public final D apply(ContainerRequestContext containerRequestContext) {
-        // Extract parameters (query and path) from Request and combine
-        MultivaluedMap<String, String> pathParameters = containerRequestContext.getUriInfo().getPathParameters();
-        MultivaluedMap<String, String> queryParameters = containerRequestContext.getUriInfo().getQueryParameters();
-        MultivaluedMap<String, String> parameters = MultivaluedMapUtil.combine(pathParameters, queryParameters);
+    public final D apply() {
+        // TODO
 
-        // Log for debug purpose
-        log.debug("Path-Parameters: " + MultivaluedMapUtil.multivaluedMapToString(pathParameters));
-        log.debug("Query-Parameters: " + MultivaluedMapUtil.multivaluedMapToString(queryParameters));
+        Map<String, String[]> parameters = new HashMap<>();
 
         // Extract filters from parameters
         List<Filter> filters = extractFilter(parameters);
@@ -80,7 +72,7 @@ public abstract class AbstractChartRequestHandler<T extends AbstractChartDefinit
      * @param parameters {@Link MultivaluedMap} of the Parameters.
      * @return List of {@Link Filter Filters} containing {@Link FilterData}
      */
-    protected List<Filter> extractFilter(MultivaluedMap<String, String> parameters) {
+    protected List<Filter> extractFilter(Map<String, String[]> parameters) {
         List<Filter> requestFilters = new ArrayList<>();
         for(Filter filter : filters) {
             Class<?> filterDataType = GenericTypeResolver.resolveTypeArgument(filter.getClass(), Filter.class);

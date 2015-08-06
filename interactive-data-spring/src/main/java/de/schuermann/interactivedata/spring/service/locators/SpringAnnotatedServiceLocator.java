@@ -1,8 +1,7 @@
-package de.schuermann.interactivedata.spring.service;
+package de.schuermann.interactivedata.spring.service.locators;
 
 import de.schuermann.interactivedata.api.service.AnnotatedServiceLocator;
 import de.schuermann.interactivedata.spring.config.InteractiveDataProperties;
-import de.schuermann.interactivedata.spring.util.AdvancedReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +9,8 @@ import java.lang.annotation.Annotation;
 import java.util.Collection;
 
 /**
+ * Service Locator that uses Springs ClassPathScanningCandidateComponentProvider to find Classes.
+ *
  * @author Philipp Schürmann
  */
 @Service
@@ -24,6 +25,6 @@ public class SpringAnnotatedServiceLocator extends AnnotatedServiceLocator {
 
     @Override
     public Collection<Class<?>> getServices(Class<? extends Annotation> annotation) {
-        return AdvancedReflectionUtil.findAnnotatedClasses(path, annotation);
+        return ClassLocatorUtil.findAnnotatedClasses(path, annotation);
     }
 }

@@ -6,9 +6,11 @@ import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefiniti
 import de.schuermann.interactivedata.api.chart.definitions.AxisDefinition;
 import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
 import de.schuermann.interactivedata.api.chart.definitions.LineChartDefinition;
+import de.schuermann.interactivedata.api.service.annotations.AnnotationProcessorService;
 
 import java.util.Arrays;
 
+@AnnotationProcessorService
 public class LineChartProcessor implements AnnotationProcessor<LineChart> {
 
     @Override

@@ -78,7 +78,7 @@ public class ReflectionUtil {
      * @param clazz Class to check for
      * @return true if at least one generic interface is the class specified
      */
-    private static boolean checkParametrizedType(Type interfaceType, Class clazz) {
+    public static boolean checkParametrizedType(Type interfaceType, Class clazz) {
         if(interfaceType instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) interfaceType;
             for (Type genericType : parameterizedType.getActualTypeArguments()) {

@@ -59,9 +59,9 @@ public interface ServiceLocator {
      *
      * This will respect the priority of the {@Link AnnotationProcessorService AnnotationProcessorService}.
      *
-     * @param dataClass Class of the Annotation that should be processed
+     * @param annotationClass Class of the Annotation that should be processed
      * @param <A> Annotation Type
      * @return Class of the {@Link de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor}
      */
-    <A extends Annotation> Optional<Class<? extends AnnotationProcessor<A>>> getAnnotationProcessorService(Class<A> dataClass);
+    <A extends Annotation> Optional<Class<? extends AnnotationProcessor<A>>> getAnnotationProcessorService(Class<A> annotationClass);
 }

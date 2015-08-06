@@ -1,17 +1,13 @@
 package de.schuermann.interactivedata.spring.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.PropertyAccessor;
-import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.MultivaluedMap;
-import java.io.IOException;
-import java.lang.reflect.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Philipp Schürmann
@@ -34,7 +30,7 @@ public class DataMapperService {
      * @param <T> Class of the destination Object
      * @return POJO
      */
-    public <T> T mapDataOnObject(Class<T> objectClass, MultivaluedMap<String, String> data) throws IllegalArgumentException {
+    public <T> T mapDataOnObject(Class<T> objectClass, Map<String, String[]> data) throws IllegalArgumentException {
         return objectMapper.convertValue(getAsMap(data), objectClass);
     }
 
@@ -46,16 +42,14 @@ public class DataMapperService {
      * @param multivaluedMap {@Link MultivaluedMap MultivalueMap} to convert
      * @return {@Link Map Map<String, Object>}
      */
-    private Map<String, Object> getAsMap(MultivaluedMap<String, String> multivaluedMap) {
+    private Map<String, Object> getAsMap(Map<String, String[]> multivaluedMap) {
         Map<String, Object> map = new HashMap<>();
-        for(Map.Entry<String, List<String>> entry : multivaluedMap.entrySet()) {
-            List<String> value = entry.getValue();
-            if(value != null) {
-                if (value.size() > 1) {
-                    map.put(entry.getKey(), value);
-                } else {
-                    map.put(entry.getKey(), value.get(0));
-                }
+        for(Map.Entry<String, String[]> entry : multivaluedMap.entrySet()) {
+            List<String> value = Arrays.asList(entry.getValue());
+            if (value.size() > 1) {
+                map.put(entry.getKey(), value);
+            } else {
+                map.put(entry.getKey(), value.get(0));
             }
         }
         return map;

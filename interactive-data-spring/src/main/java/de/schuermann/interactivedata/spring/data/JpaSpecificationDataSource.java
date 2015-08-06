@@ -5,7 +5,7 @@ import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefiniti
 import de.schuermann.interactivedata.api.data.DataSource;
 import de.schuermann.interactivedata.api.filter.Filter;
 import de.schuermann.interactivedata.spring.data.processors.FilterProcessor;
-import de.schuermann.interactivedata.spring.service.ProcessorService;
+import de.schuermann.interactivedata.spring.service.locators.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -22,7 +22,7 @@ import java.util.List;
 public abstract class JpaSpecificationDataSource<T> implements DataSource {
 
     @Autowired
-    private ProcessorService processorService;
+    private ServiceProvider processorService;
 
     @Override
     public ChartData getData(AbstractChartDefinition chartDefinition, List<Filter> filters) {
