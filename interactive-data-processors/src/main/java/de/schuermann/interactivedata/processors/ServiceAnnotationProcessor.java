@@ -6,25 +6,28 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementScanner6;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * @author Philipp Schuermann
+ * Annotation Processor used to write Services to files to find them during runtime.
+ *
+ * Annotations for Services must be annotated with @ProcessedAnnotation themselves.
+ *
+ * @author Philipp Schürmann
  */
-@SupportedAnnotationTypes(value= {"de.schuermann.interactivedata.api.service.*"})
+@SupportedAnnotationTypes(value= {"de.schuermann.interactivedata.api.service.annotations.*"})
 public class ServiceAnnotationProcessor extends AbstractProcessor {
 
     private Map<String, Set<String>> annotatedServices = new HashMap<>();
 
-    private Types types;
     private Filer filer;
-    private Elements elementUtils;
     private Messager messager;
 
     public ServiceAnnotationProcessor() {
@@ -34,9 +37,7 @@ public class ServiceAnnotationProcessor extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        types = processingEnv.getTypeUtils();
         filer = processingEnv.getFiler();
-        elementUtils = processingEnv.getElementUtils();
         messager = processingEnv.getMessager();
     }
 
@@ -75,7 +76,7 @@ public class ServiceAnnotationProcessor extends AbstractProcessor {
     private void storeAnnotation(TypeElement annotationElement, TypeElement rootElement) {
         ProcessedAnnotation processedAnnotation = annotationElement.getAnnotation(ProcessedAnnotation.class);
         if(processedAnnotation != null) {
-            addElement(annotatedServices, annotationElement.getSimpleName().toString(), rootElement.getQualifiedName().toString());
+            addElement(annotatedServices, annotationElement.getQualifiedName().toString(), rootElement.getQualifiedName().toString());
         }
     }
 
@@ -93,7 +94,7 @@ public class ServiceAnnotationProcessor extends AbstractProcessor {
     private void writeToFiles() {
         try {
             for (Map.Entry<String, Set<String>> entry : annotatedServices.entrySet()) {
-                messager.printMessage(Diagnostic.Kind.NOTE, "Writing " + entry.getValue().size() + " Services for [" + entry.getKey() + "]");
+                messager.printMessage(Diagnostic.Kind.NOTE, "Found " + entry.getValue().size() + " Services for [" + entry.getKey() + "]");
                 writeSimpleNameIndexFile(entry.getValue(), ServiceClassLocator.ANNOTATED_RESOURCE + entry.getKey());
             }
         } catch (IOException e) {
@@ -114,11 +115,6 @@ public class ServiceAnnotationProcessor extends AbstractProcessor {
             reader = resource.openReader(true);
             readOldIndexFile(entries, reader);
         } catch (FileNotFoundException e) {
-            /**
-             * Ugly hack for Intellij IDEA incremental compilation.
-             * The problem is that it throws FileNotFoundException on the files, if they were not created during the
-             * current session of compilation.
-             */
             final String realPath = e.getMessage();
             if (new File(realPath).exists()) {
                 try (Reader fileReader = new FileReader(realPath)) {

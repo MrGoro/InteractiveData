@@ -7,14 +7,12 @@ import de.schuermann.interactivedata.spring.config.InteractiveDataProperties;
 import de.schuermann.interactivedata.spring.data.processors.FilterProcessor;
 import de.schuermann.interactivedata.spring.rest.AbstractApiBuilder;
 import de.schuermann.interactivedata.spring.rest.ApiBuilder;
-import de.schuermann.interactivedata.spring.util.ReflectionUtil;
+import de.schuermann.interactivedata.spring.util.AdvancedReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Service for searching the correct implementations of interfaces.
@@ -35,7 +33,7 @@ public class ProcessorService {
 
     @Deprecated
     public Class<? extends AbstractApiBuilder> findApiBuilder(Class<? extends AbstractChartDefinition> chartDefinition) {
-        return (Class<? extends AbstractApiBuilder>) ReflectionUtil.getGenericImplementation(ApiBuilder.class, chartDefinition, path);
+        return (Class<? extends AbstractApiBuilder>) AdvancedReflectionUtil.getGenericImplementation(ApiBuilder.class, chartDefinition, path);
     }
 
     /**
@@ -57,7 +55,7 @@ public class ProcessorService {
      * @return Class implementing FilterProcessor<FilterType>
      */
     private <D> Class<? extends FilterProcessor> findFilterProcessor(Class<D> filterType) {
-        return ReflectionUtil.getGenericImplementation(FilterProcessor.class, filterType, this.path);
+        return AdvancedReflectionUtil.getGenericImplementation(FilterProcessor.class, filterType, this.path);
     }
 
     /**
@@ -70,7 +68,7 @@ public class ProcessorService {
     public AnnotationProcessor getAnnotationProcessor(Annotation annotation) {
         Class<? extends AnnotationProcessor> processorClass = findAnnotationProcessor(annotation);
         try {
-            return ReflectionUtil.getInstance(processorClass);
+            return AdvancedReflectionUtil.getInstance(processorClass);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Cannot get AnnotationProcessor for Annotation [" + annotation.getClass().getName() + "]", e);
         }
@@ -84,7 +82,7 @@ public class ProcessorService {
      * @return Class implementing AnnotationProcessor<AnnotationType>
      */
     private Class<? extends AnnotationProcessor> findAnnotationProcessor(Annotation annotation) {
-        return ReflectionUtil.getGenericImplementation(AnnotationProcessor.class, annotation.annotationType(), this.path);
+        return AdvancedReflectionUtil.getGenericImplementation(AnnotationProcessor.class, annotation.annotationType(), this.path);
     }
 
 }

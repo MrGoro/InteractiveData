@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
  *
  * @author Philipp Schürmann
  */
-public class ReflectionUtil {
+public class AdvancedReflectionUtil {
 
     @Deprecated
     public static <D> Class<D> findGenericExtention(Class<D> clazz1, Class clazz2, String path) {
-        List<Class<D>> foundClasses = ReflectionUtil.findAssignableClasses(path, clazz1);
+        List<Class<D>> foundClasses = AdvancedReflectionUtil.findAssignableClasses(path, clazz1);
         for (Class<D> processorClass : foundClasses) {
             Type interfaceType = processorClass.getGenericSuperclass();
             if(checkParametrizedType(interfaceType, clazz2)) {
@@ -131,7 +131,7 @@ public class ReflectionUtil {
      * @return Class that implements the generic Interface <code>Class1<Class2></code>
      */
     public static <D> Class<? extends D> getGenericImplementation(Class<D> clazz1, Class clazz2, String path) {
-        List<Class<D>> foundClasses = ReflectionUtil.findAssignableClasses(path, clazz1);
+        List<Class<D>> foundClasses = AdvancedReflectionUtil.findAssignableClasses(path, clazz1);
         for (final Class<D> processorClass : foundClasses) {
             // Also check if Interfaces implemented in super class
             Class<?> checkingClass = processorClass;

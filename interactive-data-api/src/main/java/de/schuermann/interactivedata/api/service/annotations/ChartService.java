@@ -1,4 +1,4 @@
-package de.schuermann.interactivedata.api.service;
+package de.schuermann.interactivedata.api.service.annotations;
 
 import de.schuermann.interactivedata.processors.ProcessedAnnotation;
 

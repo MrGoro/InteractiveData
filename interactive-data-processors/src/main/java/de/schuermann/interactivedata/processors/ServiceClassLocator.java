@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,28 +18,27 @@ public class ServiceClassLocator {
 
     public static final String ANNOTATED_RESOURCE = "META-INF/annotations/";
 
-    public static Iterable<Class<?>> getAnnotated(Class<? extends Annotation> annotation) {
+    public static Collection<Class<?>> getAnnotated(Class<? extends Annotation> annotation) {
         return getAnnotated(annotation, Thread.currentThread().getContextClassLoader());
     }
 
-    public static Iterable<Class<?>> getAnnotated(Class<? extends Annotation> annotation, ClassLoader classLoader) {
+    public static Collection<Class<?>> getAnnotated(Class<? extends Annotation> annotation, ClassLoader classLoader) {
         Iterable<String> entries = getAnnotatedNames(annotation, classLoader);
         Set<Class<?>> classes = new HashSet<>();
         findClasses(classLoader, classes, entries);
         return classes;
     }
 
-    public static Iterable<String> getAnnotatedNames(Class<? extends Annotation> annotation) {
+    public static Collection<String> getAnnotatedNames(Class<? extends Annotation> annotation) {
         return getAnnotatedNames(annotation, Thread.currentThread().getContextClassLoader());
     }
 
-    public static Iterable<String> getAnnotatedNames(Class<? extends Annotation> annotation, ClassLoader classLoader) {
+    public static Collection<String> getAnnotatedNames(Class<? extends Annotation> annotation, ClassLoader classLoader) {
         return readIndexFile(classLoader, ANNOTATED_RESOURCE + annotation.getCanonicalName());
     }
 
-    private static Iterable<String> readIndexFile(ClassLoader classLoader, String resourceFile) {
+    private static Collection<String> readIndexFile(ClassLoader classLoader, String resourceFile) {
         Set<String> entries = new HashSet<>();
-
         try {
             Enumeration<URL> resources = classLoader.getResources(resourceFile);
 

@@ -1,13 +1,13 @@
 package de.schuermann.interactivedata.spring.service;
 
-import de.schuermann.interactivedata.api.service.ChartService;
+import de.schuermann.interactivedata.api.service.annotations.ChartService;
 import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
 import de.schuermann.interactivedata.spring.config.InteractiveDataProperties;
-import de.schuermann.interactivedata.spring.util.ReflectionUtil;
+import de.schuermann.interactivedata.spring.util.AdvancedReflectionUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -73,7 +73,7 @@ public class ChartDefinitionService {
     private List<AbstractChartDefinition> loadChartDefinitionsUsingAnnotations() {
         List<AbstractChartDefinition> chartDefinitions = new ArrayList<>();
 
-        List<Class<?>> apiClasses = ReflectionUtil.findAnnotatedClasses(this.path, ChartService.class);
+        List<Class<?>> apiClasses = AdvancedReflectionUtil.findAnnotatedClasses(this.path, ChartService.class);
         for(Class<?> apiClass : apiClasses) {
             Object bean = null;
             try {
@@ -81,7 +81,7 @@ public class ChartDefinitionService {
             } catch(NoSuchBeanDefinitionException e) {
                 log.debug("Class [" + apiClass.getName() + "] with @Chart controllers is no bean. Methods have to be static.");
             }
-            List<Method> methods = ReflectionUtil.findAnnotatedMethods(apiClass, Chart.class);
+            List<Method> methods = AdvancedReflectionUtil.findAnnotatedMethods(apiClass, Chart.class);
             final Object finalBean = bean;
             methods.forEach(method -> chartDefinitions.add(processMethodAnnotations(finalBean, method)));
         }

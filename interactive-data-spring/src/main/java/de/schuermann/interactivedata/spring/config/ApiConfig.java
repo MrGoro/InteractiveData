@@ -1,6 +1,9 @@
 package de.schuermann.interactivedata.spring.config;
 
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
+import de.schuermann.interactivedata.api.filter.Filter;
+import de.schuermann.interactivedata.api.filter.TimeFilterData;
+import de.schuermann.interactivedata.api.service.ServiceLocator;
 import de.schuermann.interactivedata.spring.service.ApiService;
 import de.schuermann.interactivedata.spring.service.ChartDefinitionService;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -12,6 +15,7 @@ import javax.ws.rs.ApplicationPath;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -24,7 +28,9 @@ import java.util.stream.Collectors;
 public class ApiConfig extends ResourceConfig {
 
     @Autowired
-    public ApiConfig(ChartDefinitionService chartDefinitionService, ApiService apiService) {
+    public ApiConfig(ChartDefinitionService chartDefinitionService, ApiService apiService, ServiceLocator serviceLocator) {
+        Optional<Class<? extends Filter<TimeFilterData>>> filterService = serviceLocator.getFilterService(TimeFilterData.class);
+
         List<Resource> resources = new ArrayList<>();
         Collection<AbstractChartDefinition> chartDefinitions = chartDefinitionService.getChartDefinitions().values();
         resources.addAll(chartDefinitions.stream().map(apiService::buildApiResource).collect(Collectors.toList()));

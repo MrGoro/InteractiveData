@@ -1,6 +1,6 @@
 package de.schuermann.interactivedata.api.filter;
 
-import de.schuermann.interactivedata.api.service.FilterService;
+import de.schuermann.interactivedata.api.service.annotations.FilterService;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

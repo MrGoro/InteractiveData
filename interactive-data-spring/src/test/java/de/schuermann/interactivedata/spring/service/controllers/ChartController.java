@@ -1,6 +1,6 @@
 package de.schuermann.interactivedata.spring.service.controllers;
 
-import de.schuermann.interactivedata.api.service.ChartService;
+import de.schuermann.interactivedata.api.service.annotations.ChartService;
 import de.schuermann.interactivedata.api.chart.annotations.Axis;
 import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.annotations.LineChart;
@@ -18,7 +18,7 @@ import java.time.Instant;
 import java.util.List;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Schï¿½rmann
  */
 @Service
 @ChartService("counter")
