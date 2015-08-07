@@ -1,6 +1,6 @@
 package de.schuermann.interactivedata.spring.data.processors;
 
-import de.schuermann.interactivedata.api.filter.TimeFilter;
+import de.schuermann.interactivedata.api.data.operations.filter.TimeFilter;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.criteria.CriteriaBuilder;

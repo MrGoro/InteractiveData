@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import de.schuermann.interactivedata.api.chart.definitions.ChartDefinitionService;
+import de.schuermann.interactivedata.api.service.ServiceProvider;
 import de.schuermann.interactivedata.spring.InteractiveData;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -62,5 +64,10 @@ public class InteractiveDataConfiguration {
      * @param objectMapper The {@literal ObjectMapper} to be used by the system.
      */
     protected void configureJacksonObjectMapper(ObjectMapper objectMapper) {}
+
+    @Bean
+    public ChartDefinitionService chartDefinitionService(ServiceProvider serviceProvider) {
+        return new ChartDefinitionService(serviceProvider);
+    }
 
 }

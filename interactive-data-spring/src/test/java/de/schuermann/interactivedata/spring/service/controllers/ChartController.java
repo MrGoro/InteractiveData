@@ -8,10 +8,10 @@ import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.data.LineChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.data.DataSource;
-import de.schuermann.interactivedata.api.filter.Filter;
-import de.schuermann.interactivedata.api.filter.TimeFilter;
-import de.schuermann.interactivedata.api.functions.Count;
-import de.schuermann.interactivedata.api.granularity.TimeGranularity;
+import de.schuermann.interactivedata.api.data.operations.filter.Filter;
+import de.schuermann.interactivedata.api.data.operations.filter.TimeFilter;
+import de.schuermann.interactivedata.api.data.operations.functions.Count;
+import de.schuermann.interactivedata.api.data.operations.granularity.TimeGranularity;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

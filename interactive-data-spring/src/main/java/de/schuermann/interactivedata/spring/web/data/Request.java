@@ -1,6 +1,6 @@
 package de.schuermann.interactivedata.spring.web.data;
 
-import de.schuermann.interactivedata.api.filter.Filter;
+import de.schuermann.interactivedata.api.data.operations.filter.Filter;
 
 import java.util.List;
 

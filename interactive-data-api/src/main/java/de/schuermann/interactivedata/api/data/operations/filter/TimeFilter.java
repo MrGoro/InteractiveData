@@ -1,4 +1,4 @@
-package de.schuermann.interactivedata.api.filter;
+package de.schuermann.interactivedata.api.data.operations.filter;
 
 import de.schuermann.interactivedata.api.service.annotations.FilterService;
 

@@ -1,18 +1,11 @@
-package de.schuermann.interactivedata.spring.service;
+package de.schuermann.interactivedata.api.chart.definitions;
 
 import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
-import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
-import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
-import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
+import de.schuermann.interactivedata.api.service.ServiceProvider;
 import de.schuermann.interactivedata.api.util.ReflectionUtil;
-import de.schuermann.interactivedata.spring.config.InteractiveDataProperties;
-import de.schuermann.interactivedata.spring.service.locators.ServiceProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -22,7 +15,6 @@ import java.util.*;
 /**
  * @author Philipp Schürmann
  */
-@Service
 public class ChartDefinitionService {
 
     private Log log = LogFactory.getLog(ChartDefinitionService.class);
@@ -31,7 +23,6 @@ public class ChartDefinitionService {
 
     private Map<String, AbstractChartDefinition> chartDefinitions = new HashMap<>();
 
-    @Autowired
     public ChartDefinitionService(ServiceProvider serviceProvider) {
         this.serviceProvider = serviceProvider;
         loadChartDefinitionsUsingAnnotations();

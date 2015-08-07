@@ -1,4 +1,4 @@
-package de.schuermann.interactivedata.api.granularity;
+package de.schuermann.interactivedata.api.data.operations.granularity;
 
 /**
  * @author Philipp Schürmann

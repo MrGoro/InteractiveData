@@ -1,8 +1,8 @@
 package de.schuermann.interactivedata.api.chart.definitions;
 
-import de.schuermann.interactivedata.api.filter.Filter;
-import de.schuermann.interactivedata.api.functions.Function;
-import de.schuermann.interactivedata.api.granularity.Granularity;
+import de.schuermann.interactivedata.api.data.operations.filter.Filter;
+import de.schuermann.interactivedata.api.data.operations.functions.Function;
+import de.schuermann.interactivedata.api.data.operations.granularity.Granularity;
 
 import java.util.List;
 

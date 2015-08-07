@@ -1,8 +1,8 @@
 package de.schuermann.interactivedata.api.chart.annotations;
 
-import de.schuermann.interactivedata.api.filter.Filter;
-import de.schuermann.interactivedata.api.functions.Function;
-import de.schuermann.interactivedata.api.granularity.Granularity;
+import de.schuermann.interactivedata.api.data.operations.filter.Filter;
+import de.schuermann.interactivedata.api.data.operations.functions.Function;
+import de.schuermann.interactivedata.api.data.operations.granularity.Granularity;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,6 +1,7 @@
 package de.schuermann.interactivedata.spring.service;
 
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
+import de.schuermann.interactivedata.api.chart.definitions.ChartDefinitionService;
 import de.schuermann.interactivedata.spring.config.InteractiveDataTestConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Schï¿½rmann
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = InteractiveDataTestConfiguration.class)

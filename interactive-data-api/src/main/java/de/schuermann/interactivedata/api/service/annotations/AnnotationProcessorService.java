@@ -28,5 +28,5 @@ public @interface AnnotationProcessorService {
      *
      * @return Priority of the service as a long value
      */
-    long value() default 100;
+    long value() default 1000;
 }

@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.spring.web.controller;
 
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
-import de.schuermann.interactivedata.spring.service.ChartDefinitionService;
+import de.schuermann.interactivedata.api.chart.definitions.ChartDefinitionService;
 import de.schuermann.interactivedata.spring.web.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

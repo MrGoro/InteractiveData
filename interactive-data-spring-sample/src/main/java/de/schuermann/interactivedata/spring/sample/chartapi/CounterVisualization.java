@@ -5,9 +5,9 @@ import de.schuermann.interactivedata.api.chart.annotations.Axis;
 import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.annotations.LineChart;
 import de.schuermann.interactivedata.api.chart.data.LineChartData;
-import de.schuermann.interactivedata.api.filter.TimeFilter;
-import de.schuermann.interactivedata.api.functions.Count;
-import de.schuermann.interactivedata.api.granularity.TimeGranularity;
+import de.schuermann.interactivedata.api.data.operations.filter.TimeFilter;
+import de.schuermann.interactivedata.api.data.operations.functions.Count;
+import de.schuermann.interactivedata.api.data.operations.granularity.TimeGranularity;
 import de.schuermann.interactivedata.spring.sample.datasource.ActionDataSource;
 import org.springframework.stereotype.Service;
 

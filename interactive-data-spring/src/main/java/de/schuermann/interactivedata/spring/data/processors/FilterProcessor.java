@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.spring.data.processors;
 
-import de.schuermann.interactivedata.api.filter.Filter;
-import de.schuermann.interactivedata.api.filter.FilterData;
+import de.schuermann.interactivedata.api.data.operations.filter.Filter;
+import de.schuermann.interactivedata.api.data.operations.filter.FilterData;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.criteria.CriteriaBuilder;

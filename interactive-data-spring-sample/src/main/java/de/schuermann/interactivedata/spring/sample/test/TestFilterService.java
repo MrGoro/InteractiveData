@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.spring.sample.test;
 
-import de.schuermann.interactivedata.api.filter.Filter;
-import de.schuermann.interactivedata.api.filter.TimeFilterData;
+import de.schuermann.interactivedata.api.data.operations.filter.Filter;
+import de.schuermann.interactivedata.api.data.operations.filter.TimeFilterData;
 import de.schuermann.interactivedata.api.service.annotations.FilterService;
 
 // TODO Remove Test Class

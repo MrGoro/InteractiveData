@@ -3,9 +3,8 @@ package de.schuermann.interactivedata.spring.data;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.data.DataSource;
-import de.schuermann.interactivedata.api.filter.Filter;
-import de.schuermann.interactivedata.spring.data.processors.FilterProcessor;
-import de.schuermann.interactivedata.spring.service.locators.ServiceProvider;
+import de.schuermann.interactivedata.api.data.operations.filter.Filter;
+import de.schuermann.interactivedata.api.service.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -37,8 +36,8 @@ public abstract class JpaSpecificationDataSource<T> implements DataSource {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             for(Filter filter : filters) {
-                FilterProcessor filterProcessor = processorService.getFilterProcessor(filter.getClass());
-                predicates.add(filterProcessor.filter(root, query, cb, filter));
+/*                FilterProcessor filterProcessor = processorService.getFilterProcessor(filter.getClass());
+                predicates.add(filterProcessor.filter(root, query, cb, filter));*/
             }
 
             return cb.and(predicates.toArray(new Predicate[predicates.size()]));

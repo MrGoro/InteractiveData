@@ -1,8 +1,8 @@
 package de.schuermann.interactivedata.api.service;
 
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
-import de.schuermann.interactivedata.api.filter.Filter;
-import de.schuermann.interactivedata.api.filter.FilterData;
+import de.schuermann.interactivedata.api.data.operations.filter.Filter;
+import de.schuermann.interactivedata.api.data.operations.filter.FilterData;
 import de.schuermann.interactivedata.api.service.annotations.AnnotationProcessorService;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
 import de.schuermann.interactivedata.api.service.annotations.FilterService;
