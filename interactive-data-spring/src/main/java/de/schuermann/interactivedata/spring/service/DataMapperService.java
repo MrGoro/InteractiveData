@@ -23,7 +23,7 @@ public class DataMapperService {
     }
 
     /**
-     * Convert a {@Link MultivaluedMap MultivalueMap} (e.g. used for Request Parameters) to a Java POJO.
+     * Convert a {@Link Map Map<String, String[]>} (e.g. used for Request Parameters) to a Java POJO.
      *
      * @param objectClass Class of the destination Object
      * @param data Data to fill the Object with
@@ -35,16 +35,16 @@ public class DataMapperService {
     }
 
     /**
-     * Convert a {@Link MultivaluedMap MultivalueMap} to a {@Link Map Map<String, Object>}.
+     * Convert a {@Link Map Map<String, String[]>} to a {@Link Map Map<String, Object>}.
      *
      * Replaces {@Link List Lists} with only one Object by the object itself.
      *
-     * @param multivaluedMap {@Link MultivaluedMap MultivalueMap} to convert
+     * @param stringMap {@Link Map Map<String, String[]>} to convert
      * @return {@Link Map Map<String, Object>}
      */
-    private Map<String, Object> getAsMap(Map<String, String[]> multivaluedMap) {
+    private Map<String, Object> getAsMap(Map<String, String[]> stringMap) {
         Map<String, Object> map = new HashMap<>();
-        for(Map.Entry<String, String[]> entry : multivaluedMap.entrySet()) {
+        for(Map.Entry<String, String[]> entry : stringMap.entrySet()) {
             List<String> value = Arrays.asList(entry.getValue());
             if (value.size() > 1) {
                 map.put(entry.getKey(), value);

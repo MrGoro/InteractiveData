@@ -39,10 +39,13 @@ You can also make your own implementation for the generic API and make it usable
 See the wiki for more information on developing for other frameworks.
 
 ### Spring Boot
-Interactive Data has a starter pom.xml for an easy start if you are using Spring Boot.
+Interactive Data has a starter pom.xml for an easy start if you are using Spring Boot. This will also auto configure
+everything for direct start.
 ```
 <dependency>
-    coming soon...
+    <groupId>de.schuermann.interactivedata</groupId>
+    <artifactId>interactive-data-spring-boot-starter</artifactId>
+    <version>1.0-SNAPSHOT</version>
 </dependency>
 ```
 

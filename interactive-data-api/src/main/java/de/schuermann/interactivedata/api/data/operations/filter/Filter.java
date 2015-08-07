@@ -58,11 +58,13 @@ public abstract class Filter<D extends FilterData> {
                         "(String, " + getFilterData().getClass().getName() + ")");
             }
         }
-        public void setFieldName(String fieldName) {
+        public Builder<F, D> fieldName(String fieldName) {
             this.fieldName = fieldName;
+            return this;
         }
-        public void setFilterData(D filterData) {
+        public Builder<F, D> filterData(D filterData) {
             this.filterData = filterData;
+            return this;
         }
         protected String getFieldName() {
             return fieldName;

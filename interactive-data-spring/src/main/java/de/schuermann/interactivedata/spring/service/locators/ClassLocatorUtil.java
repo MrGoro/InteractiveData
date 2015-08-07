@@ -2,6 +2,7 @@ package de.schuermann.interactivedata.spring.service.locators;
 
 import de.schuermann.interactivedata.api.util.ReflectionUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.AssignableTypeFilter;
@@ -51,6 +52,7 @@ public class ClassLocatorUtil {
      * @return List of Classes that are assignable to the given class type
      */
     @SuppressWarnings("unchecked")
+    @Cacheable("assignableClasses")
     static <D> List<Class<D>> findAssignableClasses(String path, Class<D> assignableType) {
         List<TypeFilter> filters = new ArrayList<>();
         filters.add(new AssignableTypeFilter(assignableType));
@@ -68,6 +70,7 @@ public class ClassLocatorUtil {
      * @param annotationType Type of the Annotation to search for
      * @return List of Classes annotated with the given annotation
      */
+    @Cacheable("annotatedClasses")
     static List<Class<?>> findAnnotatedClasses(String packagePath, final Class<? extends Annotation> annotationType) {
         List<TypeFilter> filters = new ArrayList<>();
         filters.add(new AnnotationTypeFilter(annotationType));
