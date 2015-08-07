@@ -1,5 +1,6 @@
 package de.schuermann.interactivedata.spring.service.locators;
 
+import de.schuermann.interactivedata.api.data.DataSource;
 import de.schuermann.interactivedata.api.service.ServiceLocator;
 import de.schuermann.interactivedata.api.service.ServiceProvider;
 import org.springframework.beans.BeansException;
@@ -31,5 +32,10 @@ public class SpringServiceProvider extends ServiceProvider {
         } catch (BeansException e) {
             return super.getInstanceOfClass(tClass);
         }
+    }
+
+    @Override
+    public DataSource getDataSource(Class<? extends DataSource> dataSourceClass) {
+        return getInstanceOfClass(dataSourceClass);
     }
 }

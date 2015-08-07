@@ -1,6 +1,7 @@
 package de.schuermann.interactivedata.api.service;
 
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
+import de.schuermann.interactivedata.api.data.DataSource;
 import de.schuermann.interactivedata.api.util.ReflectionUtil;
 
 import java.lang.annotation.Annotation;
@@ -67,6 +68,8 @@ public abstract class ServiceProvider {
         }
         return Optional.ofNullable(processor);
     }
+
+    public abstract DataSource getDataSource(Class<? extends DataSource> dataSourceClass);
 
     protected ServiceLocator getServiceLocator() {
         return serviceLocator;
