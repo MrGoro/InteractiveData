@@ -1,6 +1,7 @@
 package de.schuermann.interactivedata.spring.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.schuermann.interactivedata.api.service.DataMapperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,24 +14,17 @@ import java.util.Map;
  * @author Philipp Schürmann
  */
 @Service
-public class DataMapperService {
+public class JacksonDataMapperService implements DataMapperService {
 
     private ObjectMapper objectMapper;
 
     @Autowired
-    public DataMapperService(ObjectMapper objectMapper) {
+    public JacksonDataMapperService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    /**
-     * Convert a {@Link Map Map<String, String[]>} (e.g. used for Request Parameters) to a Java POJO.
-     *
-     * @param objectClass Class of the destination Object
-     * @param data Data to fill the Object with
-     * @param <T> Class of the destination Object
-     * @return POJO
-     */
-    public <T> T mapDataOnObject(Class<T> objectClass, Map<String, String[]> data) throws IllegalArgumentException {
+    @Override
+    public <T> T mapDataOnObject(Map<String, String[]> data, Class<T> objectClass) throws IllegalArgumentException {
         return objectMapper.convertValue(getAsMap(data), objectClass);
     }
 
@@ -39,7 +33,7 @@ public class DataMapperService {
      *
      * Replaces {@Link List Lists} with only one Object by the object itself.
      *
-     * @param stringMap {@Link Map Map<String, String[]>} to convert
+     * @param stringMap {@Link Map Map<String, String[]>} to convertData
      * @return {@Link Map Map<String, Object>}
      */
     private Map<String, Object> getAsMap(Map<String, String[]> stringMap) {

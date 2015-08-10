@@ -1,9 +1,12 @@
 package de.schuermann.interactivedata.api.service;
 
+import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
 import de.schuermann.interactivedata.api.data.operations.filter.Filter;
 import de.schuermann.interactivedata.api.data.operations.filter.FilterData;
+import de.schuermann.interactivedata.api.handler.ChartRequestHandler;
 import de.schuermann.interactivedata.api.service.annotations.AnnotationProcessorService;
+import de.schuermann.interactivedata.api.service.annotations.ChartRequestHandlerService;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
 import de.schuermann.interactivedata.api.service.annotations.FilterService;
 import de.schuermann.interactivedata.api.util.AnnotationToLongFunction;
@@ -37,12 +40,17 @@ public abstract class AnnotatedServiceLocator implements ServiceLocator {
         return getServices(AnnotationProcessorService.class);
     }
 
+    @Override
+    public Collection<Class<?>> getChartRequestHandlerServices() {
+        return getServices(ChartRequestHandlerService.class);
+    }
+
     private AnnotationToLongFunction<FilterService> filterServicePriorityFunction =
             new AnnotationToLongFunction<>(FilterService.class, "value");
 
     @Override
     @SuppressWarnings("unchecked")
-    public <D extends FilterData> Optional<Class<? extends Filter<D>>> getFilterService(Class<D> dataClass) {
+    public <D extends FilterData> Class<? extends Filter<D>> getFilterService(Class<D> dataClass) {
         // Get all suitable Services
         Collection<Class<?>> serviceClasses = getFilterServices();
 
@@ -58,7 +66,7 @@ public abstract class AnnotatedServiceLocator implements ServiceLocator {
             filterClassTyped = (Class<? extends Filter<D>>) filterClass.get();
         }
 
-        return Optional.ofNullable(filterClassTyped);
+        return filterClassTyped;
     }
 
     private AnnotationToLongFunction<AnnotationProcessorService> annotationProcessorServicePriorityFunction =
@@ -66,7 +74,7 @@ public abstract class AnnotatedServiceLocator implements ServiceLocator {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <A extends Annotation> Optional<Class<? extends AnnotationProcessor<A>>> getAnnotationProcessorService(Class<A> annotationClass) {
+    public <A extends Annotation> Class<? extends AnnotationProcessor<A>> getAnnotationProcessorService(Class<A> annotationClass) {
         // Get all suitable Services
         Collection<Class<?>> serviceClasses = getAnnotationProcessorServices();
 
@@ -82,6 +90,29 @@ public abstract class AnnotatedServiceLocator implements ServiceLocator {
             processorClassTyped = (Class<? extends AnnotationProcessor<A>>) processorClass.get();
         }
 
-        return Optional.ofNullable(processorClassTyped);
+        return processorClassTyped;
+    }
+
+    private AnnotationToLongFunction<ChartRequestHandlerService> chartReqeustHandlerServicePriorityFunction =
+            new AnnotationToLongFunction<>(ChartRequestHandlerService.class, "value");
+
+    @Override
+    public <T extends AbstractChartDefinition<?, ?>> Class<? extends ChartRequestHandler<T, ?>> getChartRequestHandlerService(Class<? extends AbstractChartDefinition> chartDefinition) {
+        // Get all suitable Services
+        Collection<Class<?>> serviceClasses = getChartRequestHandlerServices();
+
+        // Filter by generic implementation and get the one with the lowest priority value
+        Optional<Class<?>> requestHandlerClasses = serviceClasses.stream()
+                .filter(aClass -> ReflectionUtil.isGenericImplementation(aClass, ChartRequestHandler.class, chartDefinition))
+                .sorted(Comparator.comparingLong(chartReqeustHandlerServicePriorityFunction))
+                .findFirst();
+
+        // Make it typed (already checked in filter)
+        Class<? extends ChartRequestHandler<T, ?>> requestHandlerClassesTyped = null;
+        if(requestHandlerClasses.isPresent()) {
+            requestHandlerClassesTyped = (Class<? extends ChartRequestHandler<T, ?>>) requestHandlerClasses.get();
+        }
+
+        return requestHandlerClassesTyped;
     }
 }

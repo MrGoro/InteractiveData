@@ -29,7 +29,7 @@ public class SpringServiceProvider extends ServiceProvider {
         // Try to instantiate with Spring, else use default
         try {
             return applicationContext.getBean(tClass);
-        } catch (BeansException e) {
+        } catch (BeansException | IllegalArgumentException e) {
             return super.getInstanceOfClass(tClass);
         }
     }

@@ -7,6 +7,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
@@ -47,23 +49,34 @@ public class ReflectionUtil {
     /**
      * Check if Class is of generic type <code>Class1<Class2></code>
      *
-     * @param clazz1 Class1
-     * @param clazz2 Class2
-     * @return boolean
+     * @param test
+     * @param clazz1
+     * @param interfacesArray
+     * @return
      */
-    public static boolean isGenericImplementation(Class<?> test, Class<?> clazz1, Class<?> clazz2) {
+    public static boolean isGenericImplementation(Class<?> test, Class<?> clazz1, Class<?>... interfacesArray) {
+        List<Class<?>> interfaces = Arrays.asList(interfacesArray);
         if(clazz1.isAssignableFrom(test)) {
             Class<?> checkingClass = test;
             while(checkingClass != Object.class) {
                 Type[] interfaceTypes = test.getGenericInterfaces();
-                for (Type interfaceType : interfaceTypes) {
-                    if (checkParametrizedType(interfaceType, clazz2)) {
+
+                AtomicLong parameterizedCount = new AtomicLong(0);
+                Arrays.asList(interfaceTypes)
+                        .forEach(interfaceType ->
+                                parameterizedCount.addAndGet(interfaces.stream()
+                                    .filter(anInterface -> checkParametrizedType(interfaceType, anInterface))
+                                    .count()));
+
+                if(parameterizedCount.get() == interfaces.size()) {
+                    return true;
+                }
+
+                if(interfaces.size() == 1) {
+                    Type genericSuperclass = test.getGenericSuperclass();
+                    if (checkParametrizedType(genericSuperclass, interfaces.get(0))) {
                         return true;
                     }
-                }
-                Type genericSuperclass = test.getGenericSuperclass();
-                if (checkParametrizedType(genericSuperclass, clazz2)) {
-                    return true;
                 }
                 checkingClass = checkingClass.getSuperclass();
             }

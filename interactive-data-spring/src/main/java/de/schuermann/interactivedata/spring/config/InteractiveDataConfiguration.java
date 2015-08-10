@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import de.schuermann.interactivedata.api.chart.definitions.ChartDefinitionService;
+import de.schuermann.interactivedata.api.service.ChartDefinitionService;
 import de.schuermann.interactivedata.api.service.ServiceProvider;
-import de.schuermann.interactivedata.spring.InteractiveData;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  * @author Philipp Schürmann
  */
 @Configuration
-@ComponentScan(basePackageClasses = InteractiveData.class)
+@ComponentScan({"de.schuermann.interactivedata"})
 public class InteractiveDataConfiguration {
 
     @Bean

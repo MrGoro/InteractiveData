@@ -8,14 +8,14 @@ import java.util.List;
 /**
  * @author Philipp Schürmann
  */
-public abstract class ChartData implements Serializable {
+public class ChartData implements Serializable {
 
     private String name;
     private LocalDateTime time = LocalDateTime.now();
 
     private List<Variate> variates = new ArrayList<>();
 
-    protected ChartData(String name) {
+    public ChartData(String name) {
         this.name = name;
     }
 
@@ -33,5 +33,13 @@ public abstract class ChartData implements Serializable {
 
     protected void setName(String name) {
         this.name = name;
+    }
+
+    public void addVariate(Variate variate) {
+        variates.add(variate);
+    }
+
+    public List<Variate> getVariates() {
+        return variates;
     }
 }

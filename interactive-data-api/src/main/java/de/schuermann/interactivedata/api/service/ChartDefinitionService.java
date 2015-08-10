@@ -1,8 +1,9 @@
-package de.schuermann.interactivedata.api.chart.definitions;
+package de.schuermann.interactivedata.api.service;
 
 import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
-import de.schuermann.interactivedata.api.service.ServiceProvider;
+import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
+import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
 import de.schuermann.interactivedata.api.util.ReflectionUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +22,7 @@ public class ChartDefinitionService {
 
     private ServiceProvider serviceProvider;
 
-    private Map<String, AbstractChartDefinition> chartDefinitions = new HashMap<>();
+    private Map<String, AbstractChartDefinition<?, ? extends ChartData>> chartDefinitions = new HashMap<>();
 
     public ChartDefinitionService(ServiceProvider serviceProvider) {
         this.serviceProvider = serviceProvider;
@@ -35,7 +36,7 @@ public class ChartDefinitionService {
      *
      * @return Map with all {@Link AbstractChartDefinition ChartDefinitions}
      */
-    public Map<String, AbstractChartDefinition> getChartDefinitions() {
+    public Map<String, AbstractChartDefinition<?, ? extends ChartData>> getChartDefinitions() {
         return chartDefinitions;
     }
 
@@ -44,7 +45,7 @@ public class ChartDefinitionService {
      * @param name Name of the chart
      * @return {@Link AbstractChartDefinition ChartDefinition}
      */
-    public AbstractChartDefinition getChartDefinition(String name) {
+    public AbstractChartDefinition<?, ? extends ChartData> getChartDefinition(String name) {
         return chartDefinitions.get(name);
     }
 
@@ -107,10 +108,11 @@ public class ChartDefinitionService {
         if(name != null && chartAnnotation != null) {
             log.info("Processing Detail-Configuration for Chart: " + name);
             try {
-                AbstractChartDefinition chartDefinition = serviceProvider
+                AbstractChartDefinition<?, ? extends ChartData> chartDefinition = serviceProvider
                         .getAnnotationProcessor(chartAnnotation)
                         .get()
-                        .process(name, chartAnnotation, chartPostProcessor);
+                        .process(name, chartAnnotation);
+                chartDefinition.setChartPostProcessor(chartPostProcessor);
                 chartDefinitions.put(chartDefinition.getName(), chartDefinition);
             } catch (NoSuchElementException | IllegalArgumentException e) {
                 log.warn(e.getMessage());

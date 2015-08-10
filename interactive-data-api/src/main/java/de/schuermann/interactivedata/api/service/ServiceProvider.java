@@ -1,7 +1,10 @@
 package de.schuermann.interactivedata.api.service;
 
+import de.schuermann.interactivedata.api.chart.data.ChartData;
+import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
 import de.schuermann.interactivedata.api.data.DataSource;
+import de.schuermann.interactivedata.api.handler.ChartRequestHandler;
 import de.schuermann.interactivedata.api.util.ReflectionUtil;
 
 import java.lang.annotation.Annotation;
@@ -24,12 +27,16 @@ public abstract class ServiceProvider {
 
     /**
      * Provides an instance of a given class.
+     * Returns null if Class is null.
      *
      * @param tClass Class to build the instance from.
      * @param <T> Type of the Instance
      * @return Instance of Type T
      */
     protected <T> T getInstanceOfClass(Class<T> tClass) {
+        if(tClass == null) {
+            return null;
+        }
         return ReflectionUtil.getInstance(tClass);
     }
 
@@ -57,19 +64,28 @@ public abstract class ServiceProvider {
     @SuppressWarnings("unchecked")
     public <A extends Annotation> Optional<AnnotationProcessor<A>> getAnnotationProcessor(A annotation) {
         Class<A> annotationClass = (Class<A>) annotation.annotationType();
-        Optional<Class<? extends AnnotationProcessor<A>>> processorClass = serviceLocator.getAnnotationProcessorService(annotationClass);
-        AnnotationProcessor<A> processor = null;
-        try {
-            if(processorClass.isPresent()) {
-                processor = getInstanceOfClass(processorClass.get());
-            }
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Cannot get AnnotationProcessor for Annotation [" + annotationClass.getName() + "]", e);
-        }
+        Class<? extends AnnotationProcessor<A>> processorClass = serviceLocator.getAnnotationProcessorService(annotationClass);
+        AnnotationProcessor<A> processor = getInstanceOfClass(processorClass);
         return Optional.ofNullable(processor);
     }
 
-    public abstract DataSource getDataSource(Class<? extends DataSource> dataSourceClass);
+    /**
+     * Get an {@Link de.schuermann.interactivedata.api.handler.ChartRequestHandler} that is capable of processing the given
+     * {@Link de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition ChartDefinition}.
+     *
+     * @param chartDefinition ChartDefinition to process with the ChartRequestHandler
+     * @param <T> Type of the ChartDefinition
+     * @return ChartRequest handle capable of handling requests for charts with the given ChartDefinition
+     */
+    public <T extends AbstractChartDefinition<?, ? extends ChartData>> Optional<ChartRequestHandler<T, ?>> getChartRequestHandler(T chartDefinition) {
+        Class<? extends ChartRequestHandler<T, ?>> requestHandlerClass = serviceLocator.getChartRequestHandlerService(chartDefinition.getClass());
+        ChartRequestHandler<T, ?> requestHandler = getInstanceOfClass(requestHandlerClass);
+        return Optional.ofNullable(requestHandler);
+    }
+
+    public DataSource getDataSource(Class<? extends DataSource> dataSourceClass) {
+        return getInstanceOfClass(dataSourceClass);
+    }
 
     protected ServiceLocator getServiceLocator() {
         return serviceLocator;

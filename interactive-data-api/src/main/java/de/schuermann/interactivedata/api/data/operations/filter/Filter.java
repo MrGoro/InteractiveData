@@ -6,6 +6,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.function.Predicate;
 
 /**
  * Base for every Filter. Used for storing information of the filter that cannot be accessed / changed
@@ -17,6 +18,7 @@ import java.lang.reflect.Type;
 public abstract class Filter<D extends FilterData> {
 
     protected String fieldName;
+    protected Class fieldClass;
     protected D filterData;
 
     /**
@@ -27,6 +29,7 @@ public abstract class Filter<D extends FilterData> {
      */
     public static class Builder<F extends Filter<D>, D extends FilterData> {
         protected String fieldName;
+        protected Class fieldClass;
         protected D filterData;
         protected Class<F> filterClass;
         protected Class<D> filterDataClass;
@@ -62,6 +65,10 @@ public abstract class Filter<D extends FilterData> {
             this.fieldName = fieldName;
             return this;
         }
+        public Builder<F, D> fieldClass(Class fieldClass) {
+            this.fieldClass = fieldClass;
+            return this;
+        }
         public Builder<F, D> filterData(D filterData) {
             this.filterData = filterData;
             return this;
@@ -72,10 +79,10 @@ public abstract class Filter<D extends FilterData> {
         protected D getFilterData() {
             return filterData;
         }
-        protected Class<F> getFilterClass() {
+        public Class<F> getFilterClass() {
             return filterClass;
         }
-        protected Class<D> getFilterDataClass() {
+        public Class<D> getFilterDataClass() {
             return filterDataClass;
         }
         public F build() {
@@ -106,15 +113,43 @@ public abstract class Filter<D extends FilterData> {
         return fieldName;
     }
 
+    public Class getFieldClass() {
+        return fieldClass;
+    }
+
     public D getFilterData() {
         return filterData;
     }
 
-    public void setFieldName(String fieldName) {
+    protected void setFieldName(String fieldName) {
         this.fieldName = fieldName;
     }
 
-    public void setFilterData(D filterData) {
+    protected void setFieldClass(Class fieldClass) {
+        this.fieldClass = fieldClass;
+    }
+
+    protected void setFilterData(D filterData) {
         this.filterData = filterData;
+    }
+
+    public <T> Predicate<T> toPredicate() {
+        return new FilterPredicate<>(this);
+    }
+
+    protected abstract <T> boolean test(T t);
+
+    private static class FilterPredicate<T> implements Predicate<T> {
+
+        private Filter filter;
+
+        public FilterPredicate(Filter filter) {
+            this.filter = filter;
+        }
+
+        @Override
+        public boolean test(T t) {
+            return filter.test(t);
+        }
     }
 }

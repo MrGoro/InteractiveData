@@ -1,16 +1,25 @@
 package de.schuermann.interactivedata.api.handler;
 
-import de.schuermann.interactivedata.api.data.operations.filter.Filter;
-
-import java.util.List;
+import java.util.Map;
 
 /**
+ * Data Object for wrapping information about a specific request for chart data.
+ *
  * @author Philipp Schürmann
  */
 public class Request {
 
     public String name;
-    private List<Filter> filter;
+    public Map<String, String[]> data;
+
+    public Request(String name) {
+        this.name = name;
+    }
+
+    public Request(String name, Map<String, String[]> data) {
+        this.name = name;
+        this.data = data;
+    }
 
     public String getName() {
         return name;
@@ -20,11 +29,11 @@ public class Request {
         this.name = name;
     }
 
-    public List<Filter> getFilter() {
-        return filter;
+    public Map<String, String[]> getData() {
+        return data;
     }
 
-    public void setFilter(List<Filter> filter) {
-        this.filter = filter;
+    public void setData(Map<String, String[]> data) {
+        this.data = data;
     }
 }

@@ -1,6 +1,5 @@
 package de.schuermann.interactivedata.spring.web.controller;
 
-import de.schuermann.interactivedata.api.chart.definitions.ChartDefinitionService;
 import de.schuermann.interactivedata.api.handler.Request;
 import de.schuermann.interactivedata.spring.service.ChartRequestHandlerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +26,10 @@ public class InteractiveDataController {
     private static final String BASE_MAPPING = "/api/{"+CHART_NAME+"}";
 
     private ChartRequestHandlerService chartRequestHandlerService;
-    private ChartDefinitionService chartDefinitionService;
 
     @Autowired
-    public InteractiveDataController(ChartRequestHandlerService chartRequestHandlerService, ChartDefinitionService chartDefinitionService) {
+    public InteractiveDataController(ChartRequestHandlerService chartRequestHandlerService) {
         this.chartRequestHandlerService = chartRequestHandlerService;
-        this.chartDefinitionService = chartDefinitionService;
     }
 
     @RequestMapping(
@@ -41,12 +38,10 @@ public class InteractiveDataController {
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> getData(@PathVariable(CHART_NAME) String chartName, HttpServletRequest servletRequest) {
-        servletRequest.getParameterMap();
-        return Optional.ofNullable(chartRequestHandlerService.getChartRequestHandler(chartName))
+        Request request = new Request(chartName, servletRequest.getParameterMap());
+        return Optional.ofNullable(chartRequestHandlerService.handleDataRequest(request))
             .map(
-                chartRequestHandler -> new ResponseEntity<>(
-                    chartRequestHandler.handleDataRequest(buildRequest(chartName, servletRequest)),
-                    HttpStatus.OK))
+                    chartData -> new ResponseEntity<>(chartData, HttpStatus.OK))
             .orElse(
                     new ResponseEntity<>(HttpStatus.NOT_FOUND)
             );
@@ -60,16 +55,12 @@ public class InteractiveDataController {
     public ResponseEntity<?> getInformation(@PathVariable(CHART_NAME) String chartName) {
         return Optional.ofNullable(chartRequestHandlerService.getChartRequestHandler(chartName))
             .map(
-                chartRequestHandler -> new ResponseEntity<>(
-                    chartRequestHandler.handleInfoRequest(),
-                    HttpStatus.OK))
+                    chartRequestHandler -> new ResponseEntity<>(
+                            chartRequestHandler.handleInfoRequest(),
+                            HttpStatus.OK))
             .orElse(
                     new ResponseEntity<>(HttpStatus.NOT_FOUND)
             );
-    }
-
-    private Request buildRequest(String name, HttpServletRequest servletRequest) {
-        return new Request();
     }
 
 }

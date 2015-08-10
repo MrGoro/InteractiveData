@@ -19,4 +19,9 @@ public class TestFilterService extends Filter<TimeFilterData> {
     public TestFilterService(String fieldName, TimeFilterData filterData) {
         super(fieldName, filterData);
     }
+
+    @Override
+    protected <T> boolean test(T t) {
+        return false;
+    }
 }
