@@ -1,10 +1,10 @@
 package de.schuermann.interactivedata.spring.service.controllers;
 
+import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
 import de.schuermann.interactivedata.api.chart.annotations.Axis;
 import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.annotations.LineChart;
-import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.data.LineChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.data.DataSource;
@@ -51,7 +51,7 @@ public class ChartController {
     public static class MockDataSource implements DataSource {
 
         @Override
-        public ChartData getData(AbstractChartDefinition chartDefinition, List<Filter> filters) {
+        public List<DataObject> getData(AbstractChartDefinition chartDefinition, List<Filter> filters) {
             return null;
         }
     }

@@ -3,7 +3,7 @@ package de.schuermann.interactivedata.api.data.operations.filter;
 import java.time.Instant;
 
 /**
- * Data Trasfer Object for {@Link Filter Filter} information of {@Link TimeFilter TimeFilter}.
+ * Data Transfer Object for {@Link Filter Filter} information of {@Link TimeFilter TimeFilter}.
  *
  * @author Philipp Schürmann
  */
@@ -42,5 +42,10 @@ public class TimeFilterData implements FilterData {
                 "start=" + start +
                 ", end=" + end +
                 '}';
+    }
+
+    @Override
+    public boolean doFilter() {
+        return getEnd() != null && getStart() != null;
     }
 }

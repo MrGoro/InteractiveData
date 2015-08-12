@@ -6,6 +6,7 @@ import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
 import de.schuermann.interactivedata.api.data.DataSource;
 import de.schuermann.interactivedata.api.data.operations.filter.Filter;
 import de.schuermann.interactivedata.api.data.operations.filter.FilterData;
+import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import de.schuermann.interactivedata.api.service.ServiceProvider;
 import de.schuermann.interactivedata.api.service.DataMapperService;
 import de.schuermann.interactivedata.api.service.annotations.ChartRequestHandlerService;
@@ -16,6 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Basic Implementation of a RequestHandler that is able to process a request for a specific chart.
+ *
+ * Abstract implementation that solves basic functionality. Should be extended for specialized purpose.
+ * Every type of chart (ChartDefinition) must have a corresponding RequestHandler.
+ *
+ * Every RequestHandler must at least override the convert method to support its special conversion from
+ * generic data to the specific ChartData.
+ *
  * @author Philipp Schürmann
  */
 @ChartRequestHandlerService
@@ -41,7 +50,6 @@ public abstract class ChartRequestHandler<T extends AbstractChartDefinition<?, D
         this.chartDefinition = chartDefinition;
 
         dataSource = serviceProvider.getDataSource(chartDefinition.getDataSource());
-        // TODO Refactor PostProcessor Initialization to Service Provider
         postProcessor = chartDefinition.getChartPostProcessor();
 
         // Initialize Filter.Builder to speed up Filter creating not needing Reflection at runtime / every request
@@ -59,20 +67,24 @@ public abstract class ChartRequestHandler<T extends AbstractChartDefinition<?, D
 
     public D handleDataRequest(Request request) {
         List<Filter> filters = getFilters(request);
-        ChartData chartData = getData(chartDefinition, filters);
+        List<DataObject> chartData = getData(chartDefinition, filters);
         D specificChartData = convertData(chartData);
         return postProcessor.process(specificChartData);
     }
 
-    protected abstract D convertData(ChartData chartData);
+    protected abstract D convertData(List<DataObject> chartData);
 
-    protected ChartData getData(T chartDefinition, List<Filter> filters) {
+    protected List<DataObject> getData(T chartDefinition, List<Filter> filters) {
         return dataSource.getData(chartDefinition, filters);
+    }
+
+    protected T getChartDefinition() {
+        return chartDefinition;
     }
 
     /**
      * Get a List of filters from the request using the Filter.Builders.
-     * Filters will be populated with data from the reqeust.
+     * Filters will be populated with data from the request.
      *
      * @param request Request
      * @return List of Filters populated with Data

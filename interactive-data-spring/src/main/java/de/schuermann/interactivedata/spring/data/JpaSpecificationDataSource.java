@@ -1,10 +1,10 @@
 package de.schuermann.interactivedata.spring.data;
 
 import de.schuermann.interactivedata.api.chart.data.ChartData;
-import de.schuermann.interactivedata.api.chart.data.Variate;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.data.DataSource;
 import de.schuermann.interactivedata.api.data.operations.filter.Filter;
+import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.toList;
 public abstract class JpaSpecificationDataSource<T> implements DataSource {
 
     @Override
-    public ChartData getData(AbstractChartDefinition chartDefinition, List<Filter> filters) {
+    public List<DataObject> getData(AbstractChartDefinition chartDefinition, List<Filter> filters) {
         JpaSpecificationExecutor<T> repository = getRepository();
         List<T> dbResult = repository.findAll(getSpecification(chartDefinition, filters));
         return postProcess(dbResult, chartDefinition, filters);
@@ -41,20 +41,27 @@ public abstract class JpaSpecificationDataSource<T> implements DataSource {
         };
     }
 
-    private ChartData postProcess(List<T> dbResult, AbstractChartDefinition chartDefinition, List<Filter> filters) {
-        ChartData chartData = new ChartData(chartDefinition.getName());
-
-        List<T> filterResult = dbResult;
+    private List<DataObject> postProcess(List<T> dbResult, AbstractChartDefinition chartDefinition, List<Filter> filters) {
+        // Filter
+        List<DataObject> filterResult = getDataObject(dbResult);
         for(Filter  filter : filters) {
-            filterResult = filter(filterResult, filter);
+            if(filter.doFilter()) {
+                filterResult = filter(filterResult, filter);
+            }
         }
 
-        chartData.addVariate(new Variate("", (List<Object>) filterResult));
-        return chartData;
+        // Granularity / Functions
+
+        return filterResult;
     }
 
-    private List<T> filter(List<T> data, Filter filter) {
-        return (List<T>) data.stream().filter(filter.toPredicate()).collect(toList());
+    private List<DataObject> filter(List<DataObject> data, Filter filter) {
+        return (List<DataObject>) data.stream().filter(filter.toPredicate()).collect(toList());
     }
 
+    private List<DataObject> getDataObject(List<T> dbResult) {
+        return dbResult.stream()
+                .map(DataObject::create)
+                .collect(toList());
+    }
 }

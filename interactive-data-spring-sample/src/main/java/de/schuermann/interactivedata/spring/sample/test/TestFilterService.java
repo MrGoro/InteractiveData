@@ -2,6 +2,7 @@ package de.schuermann.interactivedata.spring.sample.test;
 
 import de.schuermann.interactivedata.api.data.operations.filter.Filter;
 import de.schuermann.interactivedata.api.data.operations.filter.TimeFilterData;
+import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import de.schuermann.interactivedata.api.service.annotations.FilterService;
 
 // TODO Remove Test Class
@@ -12,16 +13,12 @@ import de.schuermann.interactivedata.api.service.annotations.FilterService;
 @FilterService(5000)
 public class TestFilterService extends Filter<TimeFilterData> {
 
-    public TestFilterService(String fieldName) {
-        super(fieldName);
-    }
-
-    public TestFilterService(String fieldName, TimeFilterData filterData) {
-        super(fieldName, filterData);
+    public TestFilterService(Class fieldClass, TimeFilterData filterData) {
+        super("", fieldClass, filterData);
     }
 
     @Override
-    protected <T> boolean test(T t) {
+    protected boolean test(DataObject t) {
         return false;
     }
 }

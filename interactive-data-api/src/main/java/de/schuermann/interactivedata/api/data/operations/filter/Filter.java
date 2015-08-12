@@ -1,5 +1,6 @@
 package de.schuermann.interactivedata.api.data.operations.filter;
 
+import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import de.schuermann.interactivedata.api.service.annotations.FilterService;
 
 import java.lang.reflect.Constructor;
@@ -51,14 +52,17 @@ public abstract class Filter<D extends FilterData> {
             return new Builder<>(filterClass, filterDataClass);
         }
         private Builder(Class<F> filterClass, Class<D> filterDataClass) {
+            if(filterClass == null || filterDataClass == null) {
+                throw new IllegalArgumentException("FilterClass or FilterDataClass are not allowed to be null for a Filter.Builder");
+            }
             this.filterClass = filterClass;
             this.filterDataClass = filterDataClass;
             try {
-                this.constructor = filterClass.getConstructor(String.class, getFilterDataClass());
-                this.constructor.newInstance(null, null); // Check if Constructor is available during initialization.
+                this.constructor = filterClass.getConstructor(String.class, Class.class, getFilterDataClass());
+                this.constructor.newInstance(null, null, null); // Check if Constructor is available during initialization.
             } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
-                throw new IllegalArgumentException("Filter does not provide a Constructor with appropriate visibility of form " +
-                        "(String, " + getFilterData().getClass().getName() + ")");
+                throw new IllegalArgumentException("Filter [" + filterClass + "] does not provide a Constructor with " +
+                        "appropriate visibility of form (String, Class, " + filterDataClass.getName() + ")", e);
             }
         }
         public Builder<F, D> fieldName(String fieldName) {
@@ -76,6 +80,9 @@ public abstract class Filter<D extends FilterData> {
         protected String getFieldName() {
             return fieldName;
         }
+        protected Class getFieldClass() {
+            return fieldClass;
+        }
         protected D getFilterData() {
             return filterData;
         }
@@ -90,8 +97,11 @@ public abstract class Filter<D extends FilterData> {
             if(getFieldName() == null || getFieldName().isEmpty()) {
                 throw new IllegalArgumentException("Cannot build Filter, FieldName cannot be null or empty");
             }
+            if(getFieldClass() == null) {
+                throw new IllegalArgumentException("Cannot build Filter, FieldClass cannot be null");
+            }
             try {
-                return constructor.newInstance(getFieldName(), getFilterData());
+                return constructor.newInstance(getFieldName(), getFieldClass(), getFilterData());
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 // should not be thrown as tested in constructor
                 throw new IllegalArgumentException("Filter does not provide a Constructor with appropriate visibility of form " +
@@ -100,12 +110,9 @@ public abstract class Filter<D extends FilterData> {
         }
     }
 
-    public Filter(String fieldName) {
+    public Filter(String fieldName, Class fieldClass, D filterData) {
         this.fieldName = fieldName;
-    }
-
-    public Filter(String fieldName, D filterData) {
-        this.fieldName = fieldName;
+        this.fieldClass = fieldClass;
         this.filterData = filterData;
     }
 
@@ -133,13 +140,34 @@ public abstract class Filter<D extends FilterData> {
         this.filterData = filterData;
     }
 
-    public <T> Predicate<T> toPredicate() {
-        return new FilterPredicate<>(this);
+    /**
+     * Get a Predicate that is capable of filtering using this filters information.
+     *
+     * @return Predicate
+     */
+    public Predicate<DataObject> toPredicate() {
+        return new FilterPredicate(this);
     }
 
-    protected abstract <T> boolean test(T t);
+    /**
+     * Checks if the filter does have data so it does want to filter.
+     * If false no filtering is needed at all and should not be done.
+     *
+     * @return true if filter wants to filter, false if not
+     */
+    public boolean doFilter() {
+        return getFilterData() != null && getFilterData().doFilter();
+    }
 
-    private static class FilterPredicate<T> implements Predicate<T> {
+    /**
+     * Test if the given Data object is suitable for current filter.
+     *
+     * @param t DataObject
+     * @return true if object has to be included, false if not
+     */
+    protected abstract boolean test(DataObject t);
+
+    private static class FilterPredicate implements Predicate<DataObject> {
 
         private Filter filter;
 
@@ -148,7 +176,7 @@ public abstract class Filter<D extends FilterData> {
         }
 
         @Override
-        public boolean test(T t) {
+        public boolean test(DataObject t) {
             return filter.test(t);
         }
     }
