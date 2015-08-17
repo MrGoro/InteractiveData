@@ -145,7 +145,7 @@ public abstract class Filter<D extends FilterData> {
      *
      * @return Predicate
      */
-    public Predicate<DataObject> toPredicate() {
+    public Predicate<? super DataObject> toPredicate() {
         return new FilterPredicate(this);
     }
 
@@ -155,8 +155,8 @@ public abstract class Filter<D extends FilterData> {
      *
      * @return true if filter wants to filter, false if not
      */
-    public boolean doFilter() {
-        return getFilterData() != null && getFilterData().doFilter();
+    public boolean shouldFilter() {
+        return getFilterData() != null && getFilterData().shouldFilter();
     }
 
     /**

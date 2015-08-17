@@ -45,7 +45,7 @@ public class TimeFilterData implements FilterData {
     }
 
     @Override
-    public boolean doFilter() {
+    public boolean shouldFilter() {
         return getEnd() != null && getStart() != null;
     }
 }

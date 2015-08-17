@@ -6,4 +6,5 @@ import java.io.Serializable;
  * @author Philipp Schürmann
  */
 public interface GranularityData extends Serializable {
+    boolean shouldGroup();
 }

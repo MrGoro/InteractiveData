@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * @author Philipp Schürmann
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target(ElementType.ANNOTATION_TYPE)
 public @interface Axis {
 
     enum Type { X, Y }

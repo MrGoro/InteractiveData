@@ -32,13 +32,31 @@ public class DataObject {
         return new DataObject(origin);
     }
 
+    public static DataObject create(Map<String, Object> map) {
+        DataObject dataObject = new DataObject(null);
+        dataObject.setExtraProperties(map);
+        return dataObject;
+    }
+
+    public static DataObject createEmpty() {
+        return new DataObject();
+    }
+
+    private DataObject() {
+    }
+
     private DataObject(Object origin) {
+        this();
         this.origin = origin;
         try {
             this.propertyDescriptors = Introspector.getBeanInfo(origin.getClass()).getPropertyDescriptors();
         } catch (IntrospectionException e) {
             log.warn("Error during DataObject creation for Object of class: [" + origin.getClass() + "], " + e.getMessage(), e);
         }
+    }
+
+    private void setExtraProperties(Map<String, Object> extraProperties) {
+        this.extraProperties = extraProperties;
     }
 
     /**
@@ -104,4 +122,6 @@ public class DataObject {
     private void setExtraProperty(String name, Object value) {
         extraProperties.put(name, value);
     }
+
+
 }

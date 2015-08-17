@@ -19,5 +19,5 @@ public interface FilterData extends Serializable {
      *
      * @return true if filter data wants to filter, false if not
      */
-    boolean doFilter();
+    boolean shouldFilter();
 }

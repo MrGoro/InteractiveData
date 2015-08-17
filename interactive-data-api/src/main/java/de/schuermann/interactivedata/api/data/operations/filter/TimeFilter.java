@@ -18,8 +18,8 @@ public class TimeFilter extends Filter<TimeFilterData> {
     }
 
     @Override
-    protected boolean test(DataObject t) {
-        Object value = t.getProperty(getFieldName());
+    protected boolean test(DataObject dataObject) {
+        Object value = dataObject.getProperty(getFieldName());
         if(Instant.class.isAssignableFrom(value.getClass())) {
             Instant instant = (Instant) value;
             return test(instant);
@@ -38,8 +38,7 @@ public class TimeFilter extends Filter<TimeFilterData> {
     }
 
     private boolean test(TemporalAccessor temporalAccessor) {
-        Instant instant = Instant.from(temporalAccessor);
-        return test(instant);
+        return test(Instant.from(temporalAccessor));
     }
 
     private boolean test(Date date) {
