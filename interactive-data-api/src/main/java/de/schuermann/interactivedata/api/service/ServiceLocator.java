@@ -1,15 +1,11 @@
 package de.schuermann.interactivedata.api.service;
 
-import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
-import de.schuermann.interactivedata.api.data.operations.filter.Filter;
-import de.schuermann.interactivedata.api.data.operations.filter.FilterData;
 import de.schuermann.interactivedata.api.handler.ChartRequestHandler;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * @author Philipp Schürmann
@@ -31,13 +27,6 @@ public interface ServiceLocator {
     Collection<Class<?>> getChartServices();
 
     /**
-     * Get all registered {@Link FilterService FilterServices}.
-     *
-     * @return Collection of Classes that are registered as {@Link FilterService FilterService}
-     */
-    Collection<Class<?>> getFilterServices();
-
-    /**
      * Get all registered {@Link AnnotationProcessorService AnnotationProcessorServices}.
      *
      * @return Collection of Classes that are registered as {@Link AnnotationProcessorService AnnotationProcessorService}
@@ -50,18 +39,6 @@ public interface ServiceLocator {
      * @return Collection of Classes that are registered as {@Link AnnotationProcessorService AnnotationProcessorService}
      */
     Collection<Class<?>> getChartRequestHandlerServices();
-
-    /**
-     * Get the Class of the {@Link de.schuermann.interactivedata.api.filter.Filter} that
-     * can use the specified {@Link de.schuermann.interactivedata.api.filter.FilterData}.
-     *
-     * This will respect the priority of the {@Link FilterService FilterService}.
-     *
-     * @param dataClass Data Class
-     * @param <D> {@Link de.schuermann.interactivedata.api.filter.FilterData} Type
-     * @return Class of the {@Link de.schuermann.interactivedata.api.filter.Filter}
-     */
-    <D extends FilterData> Class<? extends Filter<D>> getFilterService(Class<D> dataClass);
 
     /**
      * Get the Class of the {@Link de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor} that

@@ -2,13 +2,10 @@ package de.schuermann.interactivedata.api.service;
 
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
-import de.schuermann.interactivedata.api.data.operations.filter.Filter;
-import de.schuermann.interactivedata.api.data.operations.filter.FilterData;
 import de.schuermann.interactivedata.api.handler.ChartRequestHandler;
 import de.schuermann.interactivedata.api.service.annotations.AnnotationProcessorService;
 import de.schuermann.interactivedata.api.service.annotations.ChartRequestHandlerService;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
-import de.schuermann.interactivedata.api.service.annotations.FilterService;
 import de.schuermann.interactivedata.api.util.AnnotationToLongFunction;
 import de.schuermann.interactivedata.api.util.ReflectionUtil;
 
@@ -31,11 +28,6 @@ public abstract class AnnotatedServiceLocator implements ServiceLocator {
     }
 
     @Override
-    public Collection<Class<?>> getFilterServices() {
-        return getServices(FilterService.class);
-    }
-
-    @Override
     public Collection<Class<?>> getAnnotationProcessorServices() {
         return getServices(AnnotationProcessorService.class);
     }
@@ -43,30 +35,6 @@ public abstract class AnnotatedServiceLocator implements ServiceLocator {
     @Override
     public Collection<Class<?>> getChartRequestHandlerServices() {
         return getServices(ChartRequestHandlerService.class);
-    }
-
-    private AnnotationToLongFunction<FilterService> filterServicePriorityFunction =
-            new AnnotationToLongFunction<>(FilterService.class, "value");
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <D extends FilterData> Class<? extends Filter<D>> getFilterService(Class<D> dataClass) {
-        // Get all suitable Services
-        Collection<Class<?>> serviceClasses = getFilterServices();
-
-        // Filter by generic implementation and get the one with the lowest priority value
-        Optional<Class<?>> filterClass = serviceClasses.stream()
-                .filter(aClass -> ReflectionUtil.isGenericImplementation(aClass, Filter.class, dataClass))
-                .sorted(Comparator.comparingLong(filterServicePriorityFunction))
-                .findFirst();
-
-        // Make it typed (already checked in filter)
-        Class<? extends Filter<D>> filterClassTyped = null;
-        if(filterClass.isPresent()) {
-            filterClassTyped = (Class<? extends Filter<D>>) filterClass.get();
-        }
-
-        return filterClassTyped;
     }
 
     private AnnotationToLongFunction<AnnotationProcessorService> annotationProcessorServicePriorityFunction =

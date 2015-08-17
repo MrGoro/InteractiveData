@@ -1,5 +1,6 @@
 package de.schuermann.interactivedata.spring.sample.chartapi;
 
+import de.schuermann.interactivedata.api.data.operations.functions.Average;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
 import de.schuermann.interactivedata.api.chart.annotations.Axis;
 import de.schuermann.interactivedata.api.chart.annotations.Chart;
@@ -38,6 +39,12 @@ public class CounterVisualization {
                 dataType = Integer.class,
                 type = Axis.Type.Y,
                 functions = Count.class
+            ),
+            @Axis(
+                dataField = "id",
+                dataType = Long.class,
+                type = Axis.Type.Y,
+                functions = Average.class
             )
         }
     )

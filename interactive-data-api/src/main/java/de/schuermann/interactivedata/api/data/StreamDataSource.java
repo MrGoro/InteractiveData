@@ -1,15 +1,14 @@
 package de.schuermann.interactivedata.api.data;
 
 import de.schuermann.interactivedata.api.data.operations.filter.Filter;
+import de.schuermann.interactivedata.api.data.operations.functions.Function;
+import de.schuermann.interactivedata.api.data.operations.granularity.Granularity;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /**
  * @author Philipp Schürmann
@@ -30,25 +29,50 @@ public abstract class StreamDataSource implements DataSource {
     }
 
     protected List<DataObject> postProcess(Stream<DataObject> dataStream, DataRequest dataRequest) {
+        Stream<DataObject> stream = dataStream;
 
         // Filter
-        dataRequest.getFilter().stream().filter(Filter::shouldFilter).forEach(filter -> {
-            dataStream.filter(filter.toPredicate());
-        });
+        for(Filter<?> filter : dataRequest.getFilter()) {
+            if(filter.shouldFilter()) {
+                stream = stream.filter(filter.toPredicate());
+            }
+        }
+        List<DataObject> filteredData = stream.collect(toList());
 
         // Granularities and functions
-        List<Map<Object, DataObject>> grouped = new ArrayList<>();
-        dataRequest.getOperations().stream().forEach(
-            operation -> operation.getFunction().stream().forEach(
-                function ->
-                    grouped.add(
-                        dataStream.collect(
-                            groupingBy(operation.getGranularity().toGroupFunction(), function.toCollector())
-                        )
-                    )
-            )
-        );
+        List<DataObject> collect = dataRequest.getOperations().stream().flatMap(
+                operation -> {
+                    Map<Function, Map<Object, ?>> operationStream = new HashMap<Function, Map<Object, ?>>();
+                    operation.getFunction().stream().forEach(function ->
+                                    operationStream.put(
+                                            function,
+                                            filteredData.parallelStream().collect(
+                                                    groupingBy(operation.getGranularity().toGroupFunction(), function.toCollector())
+                                            )
+                                    )
+                    );
+                    return processOperationResult(operation, operationStream).stream();
+                }
+        ).collect(toList());
 
-        return dataStream.collect(toList());
+        return collect;
+    }
+
+    private List<DataObject> processOperationResult(DataRequest.Operation operation, Map<Function, Map<Object, ?>> operationResult) {
+        Map<Object, DataObject> result = new HashMap<>();
+        for(Map.Entry<Function, Map<Object, ?>> functionResult : operationResult.entrySet()) {
+            Function function = functionResult.getKey();
+            for(Map.Entry<Object, ?> dataEntry : functionResult.getValue().entrySet()) {
+                Object key = dataEntry.getKey();
+                DataObject dataObject = result.get(key);
+                if(dataObject == null) {
+                    dataObject = DataObject.createEmpty();
+                    result.put(key, dataObject);
+                    dataObject.setProperty(operation.getGranularity().getFieldName(), key);
+                }
+                dataObject.setProperty(function.getFieldName(), dataEntry.getValue());
+            }
+        }
+        return new ArrayList<>(result.values());
     }
 }

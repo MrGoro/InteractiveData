@@ -4,6 +4,8 @@ import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import de.schuermann.interactivedata.api.service.annotations.FilterService;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 
@@ -34,11 +36,15 @@ public class TimeFilter extends Filter<TimeFilterData> {
     }
 
     private boolean test(Instant instant) {
-        return instant.isAfter(getFilterData().getStart()) && instant.isBefore(getFilterData().getEnd());
+        return test(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()));
     }
 
     private boolean test(TemporalAccessor temporalAccessor) {
-        return test(Instant.from(temporalAccessor));
+        return test(LocalDateTime.from(temporalAccessor));
+    }
+
+    private boolean test(LocalDateTime localDateTime) {
+        return localDateTime.isAfter(getRequestData().getStart()) && localDateTime.isBefore(getRequestData().getEnd());
     }
 
     private boolean test(Date date) {

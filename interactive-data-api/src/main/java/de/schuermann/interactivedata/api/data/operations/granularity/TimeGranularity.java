@@ -5,10 +5,7 @@ import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import java.time.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalField;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Philipp Schürmann
@@ -40,7 +37,7 @@ public class TimeGranularity extends Granularity<TimeGranularityData> {
     }
 
     private Object group(TemporalAccessor temporalAccessor) {
-        switch (getGranularityData().getSelected()) {
+        switch (getRequestData().getSelected()) {
             case MILLISECOND: LocalDateTime.of(
                     temporalAccessor.get(ChronoField.YEAR), temporalAccessor.get(ChronoField.MONTH_OF_YEAR),
                     temporalAccessor.get(ChronoField.DAY_OF_MONTH), temporalAccessor.get(ChronoField.HOUR_OF_DAY),

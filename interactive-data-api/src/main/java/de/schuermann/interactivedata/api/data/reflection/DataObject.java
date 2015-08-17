@@ -66,14 +66,16 @@ public class DataObject {
      * @return Value of the property
      */
     public Object getProperty(String name) {
-        try {
-            for (PropertyDescriptor pd : propertyDescriptors) {
-                if (pd.getReadMethod() != null && pd.getName().equals(name) && !"class".equals(pd.getName())) {
-                    return pd.getReadMethod().invoke(origin);
+        if(propertyDescriptors != null) {
+            try {
+                for (PropertyDescriptor pd : propertyDescriptors) {
+                    if (pd.getReadMethod() != null && pd.getName().equals(name) && !"class".equals(pd.getName())) {
+                        return pd.getReadMethod().invoke(origin);
+                    }
                 }
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                log.debug("Error reading property [" + name + " of DataObject of class: [" + origin.getClass() + "], " + e.getMessage(), e);
             }
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            log.debug("Error reading property [" + name + " of DataObject of class: [" + origin.getClass() + "], " + e.getMessage(), e);
         }
         return getExtraProperty(name);
     }
@@ -106,15 +108,17 @@ public class DataObject {
     }
 
     public void setProperty(String name, Object value) {
-        try {
-            for (PropertyDescriptor pd : propertyDescriptors) {
-                if (pd.getWriteMethod() != null && pd.getName().equals(name) && !"class".equals(pd.getName())) {
-                    pd.getWriteMethod().invoke(origin);
-                    return;
+        if (propertyDescriptors != null) {
+            try {
+                for (PropertyDescriptor pd : propertyDescriptors) {
+                    if (pd.getWriteMethod() != null && pd.getName().equals(name) && !"class".equals(pd.getName())) {
+                        pd.getWriteMethod().invoke(origin);
+                        return;
+                    }
                 }
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                log.debug("Error writing property [" + name + " of DataObject of class: [" + origin.getClass() + "], " + e.getMessage(), e);
             }
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            log.debug("Error writing property [" + name + " of DataObject of class: [" + origin.getClass() + "], " + e.getMessage(), e);
         }
         setExtraProperty(name, value);
     }

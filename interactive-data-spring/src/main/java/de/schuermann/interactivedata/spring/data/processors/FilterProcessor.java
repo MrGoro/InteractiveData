@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.spring.data.processors;
 
+import de.schuermann.interactivedata.api.data.operations.RequestData;
 import de.schuermann.interactivedata.api.data.operations.filter.Filter;
-import de.schuermann.interactivedata.api.data.operations.filter.FilterData;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -15,7 +15,7 @@ import javax.persistence.criteria.Root;
  * @author Philipp Schürmann
  */
 @Component
-public interface FilterProcessor<T extends Filter<? extends FilterData>> {
+public interface FilterProcessor<T extends Filter<? extends RequestData>> {
 
     Predicate filter(Root root, CriteriaQuery<?> query, CriteriaBuilder cb, T filter);
 

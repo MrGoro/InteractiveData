@@ -1,38 +1,40 @@
 package de.schuermann.interactivedata.api.data.operations.filter;
 
-import java.time.Instant;
+import de.schuermann.interactivedata.api.data.operations.RequestData;
+
+import java.time.LocalDateTime;
 
 /**
  * Data Transfer Object for {@Link Filter Filter} information of {@Link TimeFilter TimeFilter}.
  *
  * @author Philipp Schürmann
  */
-public class TimeFilterData implements FilterData {
+public class TimeFilterData implements RequestData {
 
-    private Instant start;
-    private Instant end;
+    private LocalDateTime start;
+    private LocalDateTime end;
 
     public TimeFilterData() {
     }
 
-    public TimeFilterData(Instant start, Instant end) {
+    public TimeFilterData(LocalDateTime start, LocalDateTime end) {
         this.start = start;
         this.end = end;
     }
 
-    public Instant getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
 
-    public void setStart(Instant start) {
+    public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
-    public Instant getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(Instant end) {
+    public void setEnd(LocalDateTime end) {
         this.end = end;
     }
 
@@ -45,7 +47,7 @@ public class TimeFilterData implements FilterData {
     }
 
     @Override
-    public boolean shouldFilter() {
+    public boolean hasData() {
         return getEnd() != null && getStart() != null;
     }
 }

@@ -43,7 +43,6 @@ public class ChartRequestHandlerService {
         final AbstractChartDefinition<?, ? extends ChartData> chartDefinition = chartDefinitionService.getChartDefinition(name);
 
         ChartRequestHandler requestHandler = serviceProvider.getChartRequestHandler(chartDefinition)
-                .map(handler -> handler)
                 .orElseThrow(() -> new ResourceNotFoundException("No ChartRequestHandler found for this resource."));
 
         requestHandler.setChartDefinition(chartDefinition);

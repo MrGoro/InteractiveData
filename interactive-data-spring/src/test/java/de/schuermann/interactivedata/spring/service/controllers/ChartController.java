@@ -1,5 +1,6 @@
 package de.schuermann.interactivedata.spring.service.controllers;
 
+import de.schuermann.interactivedata.api.data.DataRequest;
 import de.schuermann.interactivedata.api.data.operations.granularity.Granularity;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
@@ -52,7 +53,7 @@ public class ChartController {
     public static class MockDataSource implements DataSource {
 
         @Override
-        public List<DataObject> getData(AbstractChartDefinition chartDefinition, List<Filter> filters, List<Granularity> granularities) {
+        public List<DataObject> getData(DataRequest dataRequest) {
             return null;
         }
     }

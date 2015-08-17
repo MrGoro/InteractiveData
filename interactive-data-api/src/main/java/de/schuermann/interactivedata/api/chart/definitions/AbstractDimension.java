@@ -14,9 +14,9 @@ public abstract class AbstractDimension {
     private String dataField;
     private Class dataType;
 
-    private List<Class<? extends Filter>> filters;
-    private List<Class<? extends Granularity>> granularities;
-    private List<Class<? extends Function>> functions;
+    private List<Class<? extends Filter<?>>> filters;
+    private List<Class<? extends Granularity<?>>> granularities;
+    private List<Class<? extends Function<?>>> functions;
 
     public String getDataField() {
         return dataField;
@@ -34,27 +34,27 @@ public abstract class AbstractDimension {
         this.dataType = dataType;
     }
 
-    public List<Class<? extends Filter>> getFilters() {
+    public List<Class<? extends Filter<?>>> getFilters() {
         return filters;
     }
 
-    public void setFilters(List<Class<? extends Filter>> filters) {
+    public void setFilters(List<Class<? extends Filter<?>>> filters) {
         this.filters = filters;
     }
 
-    public List<Class<? extends Granularity>> getGranularities() {
+    public List<Class<? extends Granularity<?>>> getGranularities() {
         return granularities;
     }
 
-    public void setGranularities(List<Class<? extends Granularity>> granularities) {
+    public void setGranularities(List<Class<? extends Granularity<?>>> granularities) {
         this.granularities = granularities;
     }
 
-    public List<Class<? extends Function>> getFunctions() {
+    public List<Class<? extends Function<?>>> getFunctions() {
         return functions;
     }
 
-    public void setFunctions(List<Class<? extends Function>> functions) {
+    public void setFunctions(List<Class<? extends Function<?>>> functions) {
         this.functions = functions;
     }
 }
