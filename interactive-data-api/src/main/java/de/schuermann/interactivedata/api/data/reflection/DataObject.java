@@ -32,8 +32,15 @@ public class DataObject {
         return new DataObject(origin);
     }
 
+    /**
+     * Create a new DataObject that just uses Key Value Pairs.
+     *
+     * @implNote This is just a wrapper around a Map
+     * @param map the Map with initial data
+     * @return DataObject
+     */
     public static DataObject create(Map<String, Object> map) {
-        DataObject dataObject = new DataObject(null);
+        DataObject dataObject = createEmpty();
         dataObject.setExtraProperties(map);
         return dataObject;
     }

@@ -64,7 +64,7 @@ public class DataRequest {
             return granularity;
         }
 
-        public List<Function<?>> getFunction() {
+        public List<Function<?>> getFunctions() {
             return function;
         }
     }

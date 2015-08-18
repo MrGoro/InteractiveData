@@ -5,6 +5,8 @@ import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import java.time.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -54,12 +56,12 @@ public class TimeGranularity extends Granularity<TimeGranularityData> {
             case HOUR: return LocalDateTime.of(
                     temporalAccessor.get(ChronoField.YEAR), temporalAccessor.get(ChronoField.MONTH_OF_YEAR),
                     temporalAccessor.get(ChronoField.DAY_OF_MONTH), temporalAccessor.get(ChronoField.HOUR_OF_DAY), 0);
-            case DAY: LocalDate.of(temporalAccessor.get(ChronoField.YEAR), temporalAccessor.get(ChronoField.MONTH_OF_YEAR),
+            case DAY: return LocalDate.of(temporalAccessor.get(ChronoField.YEAR), temporalAccessor.get(ChronoField.MONTH_OF_YEAR),
                     temporalAccessor.get(ChronoField.DAY_OF_MONTH));
-            case WEEK: return new Object[] {Year.from(temporalAccessor), temporalAccessor.get(ChronoField.ALIGNED_WEEK_OF_YEAR)};
+            case WEEK: return Arrays.asList(Year.from(temporalAccessor), temporalAccessor.get(ChronoField.ALIGNED_WEEK_OF_YEAR));
             case MONTH: return YearMonth.from(temporalAccessor);
             case YEAR: return Year.from(temporalAccessor);
-            default: return temporalAccessor;
+            default: return LocalDateTime.from(temporalAccessor);
         }
     }
 
