@@ -10,6 +10,6 @@ public @interface FunctionDef {
     String fieldName();
     String targetFieldName() default "";
     Class<?> fieldClass();
-    Class<? extends Function<?>> function();
+    Class<? extends Function<?,?>> function();
     Option[] options() default {};
 }

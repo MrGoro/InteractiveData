@@ -9,7 +9,7 @@ public @interface OperationDef {
 
     String fieldName();
     Class<?> fieldClass();
-    Class<? extends Granularity<?>> granularity();
+    Class<? extends Granularity<?,?>> granularity();
     Option[] options() default {};
 
     FunctionDef[] functions();

@@ -6,10 +6,10 @@ import de.schuermann.interactivedata.api.data.reflection.DataObject;
 /**
  * @author Philipp Schürmann
  */
-public class DistinctGranularity extends Granularity<EmptyRequestData> {
+public class DistinctGranularity extends Granularity<EmptyRequestData, EmptyRequestData> {
 
-    public DistinctGranularity(String fieldName, Class fieldClass, EmptyRequestData requestData) {
-        super(fieldName, fieldClass, requestData);
+    public DistinctGranularity(String fieldName, Class fieldClass, EmptyRequestData requestData, EmptyRequestData options) {
+        super(fieldName, fieldClass, requestData, options);
     }
 
     @Override

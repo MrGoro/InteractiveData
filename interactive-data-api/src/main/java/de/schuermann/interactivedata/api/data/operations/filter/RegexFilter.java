@@ -1,14 +1,15 @@
 package de.schuermann.interactivedata.api.data.operations.filter;
 
+import de.schuermann.interactivedata.api.data.operations.EmptyRequestData;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;
 
 /**
  * @author Philipp Schürmann
  */
-public class RegexFilter extends Filter<RegexFilterData> {
+public class RegexFilter extends Filter<RegexFilterData, EmptyRequestData> {
 
-    public RegexFilter(String fieldName, Class fieldClass, RegexFilterData requestData) {
-        super(fieldName, fieldClass, requestData);
+    public RegexFilter(String fieldName, Class fieldClass, RegexFilterData requestData, EmptyRequestData options) {
+        super(fieldName, fieldClass, requestData, options);
     }
 
     @Override

@@ -2,6 +2,9 @@ package de.schuermann.interactivedata.spring.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.schuermann.interactivedata.api.service.DataMapperService;
+import de.schuermann.interactivedata.api.util.exceptions.RequestDataException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,8 @@ import java.util.Map;
 @Service
 public class JacksonDataMapperService implements DataMapperService {
 
+    private static Log log = LogFactory.getLog(JacksonDataMapperService.class);
+
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -24,8 +29,17 @@ public class JacksonDataMapperService implements DataMapperService {
     }
 
     @Override
-    public <T> T mapDataOnObject(Map<String, String[]> data, Class<T> objectClass) throws IllegalArgumentException {
-        return objectMapper.convertValue(getAsMap(data), objectClass);
+    public <T> T mapMultiDataOnObject(Map<String, String[]> data, Class<T> objectClass) {
+        return mapDataOnObject(getAsMap(data), objectClass);
+    }
+
+    @Override
+    public <T> T mapDataOnObject(Map<String, ?> data, Class<T> objectClass) {
+        try {
+            return objectMapper.convertValue(data, objectClass);
+        } catch (IllegalArgumentException e) {
+            throw new RequestDataException("Parameter has wrong form and cannot be mapped on data class", e);
+        }
     }
 
     /**

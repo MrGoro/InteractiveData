@@ -45,7 +45,7 @@ public abstract class StreamDataSource<T> implements DataSource {
         Stream<DataObject> stream = dataStream;
 
         // Apply all filters to the stream
-        for(Filter<?> filter : dataRequest.getFilter()) {
+        for(Filter<?,?> filter : dataRequest.getFilter()) {
             if(filter.shouldOperate()) {
                 stream = stream.filter(filter.toPredicate());
             }

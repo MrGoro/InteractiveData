@@ -14,10 +14,10 @@ import java.util.function.Predicate;
  * @author Philipp Schürmann
  */
 @FilterService
-public abstract class Filter<D extends RequestData> extends Operation<D> {
+public abstract class Filter<D extends RequestData, O extends RequestData> extends Operation<D, O> {
 
-    public Filter(String fieldName, Class fieldClass, D requestData) {
-        super(fieldName, fieldClass, requestData);
+    public Filter(String fieldName, Class fieldClass, D requestData, O options) {
+        super(fieldName, fieldClass, requestData, options);
     }
 
     /**
@@ -32,7 +32,7 @@ public abstract class Filter<D extends RequestData> extends Operation<D> {
     /**
      * Test if the given Data object is suitable for current filter.
      *
-     * @param t DataObject
+     * @param dataObject DataObject
      * @return true if object has to be included, false if not
      */
     protected abstract boolean test(DataObject dataObject);

@@ -1,8 +1,6 @@
 package de.schuermann.interactivedata.api.data.operations.functions;
 
 import de.schuermann.interactivedata.api.data.operations.EmptyRequestData;
-import de.schuermann.interactivedata.api.data.operations.Operation;
-import de.schuermann.interactivedata.api.data.operations.RequestData;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import de.schuermann.interactivedata.api.util.exceptions.ChartDefinitionException;
 
@@ -12,10 +10,10 @@ import java.util.stream.Collectors;
 /**
  * @author Philipp Schürmann
  */
-public class Average extends Function<EmptyRequestData> {
+public class Average extends Function<EmptyRequestData, EmptyRequestData> {
 
-    public Average(String fieldName, Class fieldClass, EmptyRequestData requestData) {
-        super(fieldName, fieldClass, requestData);
+    public Average(String fieldName, Class fieldClass, EmptyRequestData requestData, EmptyRequestData options) {
+        super(fieldName, fieldClass, requestData, options);
     }
 
     @Override

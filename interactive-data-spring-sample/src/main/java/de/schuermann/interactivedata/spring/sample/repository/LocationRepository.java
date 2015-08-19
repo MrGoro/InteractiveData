@@ -1,13 +1,11 @@
 package de.schuermann.interactivedata.spring.sample.repository;
 
-import de.schuermann.interactivedata.spring.sample.data.User;
+import de.schuermann.interactivedata.spring.sample.data.Location;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 
 /**
- * Spring Data JPA Repository for accessing users from database.
- *
  * @author Philipp Schürmann
  */
-public interface UserRepository extends CrudRepository<User, Long>, JpaSpecificationExecutor {
+public interface LocationRepository extends CrudRepository<Location, Long>, JpaSpecificationExecutor {
 }

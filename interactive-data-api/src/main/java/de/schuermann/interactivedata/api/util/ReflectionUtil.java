@@ -7,7 +7,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -49,10 +48,10 @@ public class ReflectionUtil {
     /**
      * Check if Class is of generic type <code>Class1<Class2></code>
      *
-     * @param test
-     * @param clazz1
-     * @param interfacesArray
-     * @return
+     * @param test Class to test
+     * @param clazz1 Class1
+     * @param interfacesArray Class2
+     * @return true if it is a generic implementation, false if not
      */
     public static boolean isGenericImplementation(Class<?> test, Class<?> clazz1, Class<?>... interfacesArray) {
         List<Class<?>> interfaces = Arrays.asList(interfacesArray);

@@ -11,7 +11,7 @@ public @interface FilterDef {
 
     Class<?> fieldClass();
 
-    Class<? extends Filter<?>> filter();
+    Class<? extends Filter<?,?>> filter();
 
     Option[] options() default {};
 }

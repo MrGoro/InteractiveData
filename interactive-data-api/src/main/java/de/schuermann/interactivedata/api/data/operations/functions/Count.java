@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 /**
  * @author Philipp Schürmann
  */
-public class Count extends Function<EmptyRequestData> {
+public class Count extends Function<EmptyRequestData, EmptyRequestData> {
 
-    public Count(String fieldName, Class fieldClass, EmptyRequestData requestData) {
-        super(fieldName, fieldClass, requestData);
+    public Count(String fieldName, Class fieldClass, EmptyRequestData requestData, EmptyRequestData options) {
+        super(fieldName, fieldClass, requestData, options);
     }
 
     @Override

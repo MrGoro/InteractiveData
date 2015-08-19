@@ -1,7 +1,8 @@
-package de.schuermann.interactivedata.api.chart.definitions;
+package de.schuermann.interactivedata.api.chart.definitions.line;
 
-import de.schuermann.interactivedata.api.chart.annotations.Axis;
+import de.schuermann.interactivedata.api.chart.annotations.line.Axis;
 import de.schuermann.interactivedata.api.chart.data.LineChartData;
+import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 
 import java.util.List;
 

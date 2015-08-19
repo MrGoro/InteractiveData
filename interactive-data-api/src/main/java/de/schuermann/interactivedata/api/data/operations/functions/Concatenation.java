@@ -11,10 +11,10 @@ import static java.util.stream.Collectors.mapping;
 /**
  * @author Philipp Schürmann
  */
-public class Concatenation extends Function<EmptyRequestData> {
+public class Concatenation extends Function<EmptyRequestData, EmptyRequestData> {
 
-    public Concatenation(String fieldName, Class fieldClass, EmptyRequestData requestData) {
-        super(fieldName, fieldClass, requestData);
+    public Concatenation(String fieldName, Class fieldClass, EmptyRequestData requestData, EmptyRequestData options) {
+        super(fieldName, fieldClass, requestData, options);
     }
 
     @Override

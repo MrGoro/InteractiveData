@@ -1,7 +1,4 @@
-package de.schuermann.interactivedata.api.chart.annotations;
-
-import de.schuermann.interactivedata.api.data.DataSource;
-import de.schuermann.interactivedata.api.data.operations.filter.Filter;
+package de.schuermann.interactivedata.api.chart.annotations.line;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

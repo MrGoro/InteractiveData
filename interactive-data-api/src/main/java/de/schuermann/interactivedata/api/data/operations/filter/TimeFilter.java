@@ -1,5 +1,6 @@
 package de.schuermann.interactivedata.api.data.operations.filter;
 
+import de.schuermann.interactivedata.api.data.operations.EmptyRequestData;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import de.schuermann.interactivedata.api.service.annotations.FilterService;
 
@@ -13,10 +14,10 @@ import java.util.Date;
  * @author Philipp Schürmann
  */
 @FilterService
-public class TimeFilter extends Filter<TimeFilterData> {
+public class TimeFilter extends Filter<TimeFilterData, EmptyRequestData> {
 
-    public TimeFilter(String fieldName, Class fieldClass, TimeFilterData filterData) {
-        super(fieldName, fieldClass, filterData);
+    public TimeFilter(String fieldName, Class fieldClass, TimeFilterData requestData, EmptyRequestData options) {
+        super(fieldName, fieldClass, requestData, options);
     }
 
     @Override

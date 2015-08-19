@@ -7,6 +7,7 @@ import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessHelper;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
 import de.schuermann.interactivedata.api.util.ReflectionUtil;
+import de.schuermann.interactivedata.api.util.exceptions.ChartDefinitionException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -69,8 +70,9 @@ public class ChartDefinitionService {
      * Uses an {@Link AnnotationProcessor AnnotationProcessor} suitable for the given annotation to extract the
      * information.
      */
+    @SuppressWarnings("unchecked")
     private void processMethodAnnotations(Object bean, Method method, ChartService serviceAnnotation) {
-        log.debug("Generating API for Chart: " + method.getName());
+        log.debug("Processing chart annotations on method: " + method.getName());
         Annotation[] annotations = method.getDeclaredAnnotations();
 
         Chart chart = null;
@@ -108,7 +110,7 @@ public class ChartDefinitionService {
         }
 
         if(chart != null && chartAnnotation != null) {
-            log.info("Processing Detail-Configuration for Chart: " + chart.value());
+            String chartTypeName = chartAnnotation.annotationType().getSimpleName();
             try {
                 AbstractChartDefinition<?, ?> chartDefinition = serviceProvider
                         .getAnnotationProcessor(chartAnnotation)
@@ -117,6 +119,7 @@ public class ChartDefinitionService {
                 chartDefinition.setChartPostProcessor(chartPostProcessor);
                 AnnotationProcessHelper.processChartAnnotation(chartDefinition, chart, serviceAnnotation);
                 chartDefinitions.put(chartDefinition.getName(), chartDefinition);
+                log.info("Chart of type [" + chartTypeName + "] with id [" + chartDefinition.getName() + "]");
             } catch (NoSuchElementException | IllegalArgumentException e) {
                 log.warn("Error Processing Annotation [" + chartAnnotation.annotationType().getSimpleName() + "]", e);
             }

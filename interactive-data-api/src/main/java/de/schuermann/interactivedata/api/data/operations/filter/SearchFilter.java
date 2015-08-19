@@ -1,14 +1,15 @@
 package de.schuermann.interactivedata.api.data.operations.filter;
 
+import de.schuermann.interactivedata.api.data.operations.EmptyRequestData;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;
 
 /**
  * @author Philipp Schürmann
  */
-public class SearchFilter extends Filter<SearchFilterData> {
+public class SearchFilter extends Filter<SearchFilterData, EmptyRequestData> {
 
-    public SearchFilter(String fieldName, Class fieldClass, SearchFilterData requestData) {
-        super(fieldName, fieldClass, requestData);
+    public SearchFilter(String fieldName, Class fieldClass, SearchFilterData requestData, EmptyRequestData options) {
+        super(fieldName, fieldClass, requestData, options);
     }
 
     @Override

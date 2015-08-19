@@ -1,5 +1,6 @@
 package de.schuermann.interactivedata.api.data.operations.granularity;
 
+import de.schuermann.interactivedata.api.data.operations.EmptyRequestData;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import de.schuermann.interactivedata.api.util.exceptions.ChartDefinitionException;
 
@@ -13,10 +14,10 @@ import java.util.Date;
 /**
  * @author Philipp Schürmann
  */
-public class TimeGranularity extends Granularity<TimeGranularityData> {
+public class TimeGranularity extends Granularity<TimeGranularityData, EmptyRequestData> {
 
-    public TimeGranularity(String fieldName, Class fieldClass, TimeGranularityData granularityData) {
-        super(fieldName, fieldClass, granularityData);
+    public TimeGranularity(String fieldName, Class fieldClass, TimeGranularityData requestData, EmptyRequestData options) {
+        super(fieldName, fieldClass, requestData, options);
     }
 
     @Override

@@ -2,11 +2,6 @@ package de.schuermann.interactivedata.api.data.operations.granularity;
 
 import de.schuermann.interactivedata.api.data.operations.RequestData;
 
-import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalField;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Philipp Schürmann
  */

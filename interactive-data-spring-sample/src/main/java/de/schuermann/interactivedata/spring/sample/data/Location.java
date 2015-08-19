@@ -1,15 +1,14 @@
 package de.schuermann.interactivedata.spring.sample.data;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
- * Data Entity for users
- *
  * @author Philipp Schürmann
  */
 @Entity
-public class User {
+public class Location {
 
     @Id
     @GeneratedValue
@@ -17,9 +16,10 @@ public class User {
 
     private String firstName;
     private String lastName;
+    private String email;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Action> actions;
+    private String latitude;
+    private String longitude;
 
     public Long getId() {
         return id;
@@ -45,11 +45,27 @@ public class User {
         this.lastName = lastName;
     }
 
-    public List<Action> getActions() {
-        return actions;
+    public String getEmail() {
+        return email;
     }
 
-    public void setActions(List<Action> actions) {
-        this.actions = actions;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }

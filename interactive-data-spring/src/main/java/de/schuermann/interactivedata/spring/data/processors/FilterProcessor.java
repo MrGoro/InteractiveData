@@ -15,7 +15,7 @@ import javax.persistence.criteria.Root;
  * @author Philipp Schürmann
  */
 @Component
-public interface FilterProcessor<T extends Filter<? extends RequestData>> {
+public interface FilterProcessor<T extends Filter<?,?>> {
 
     Predicate filter(Root root, CriteriaQuery<?> query, CriteriaBuilder cb, T filter);
 

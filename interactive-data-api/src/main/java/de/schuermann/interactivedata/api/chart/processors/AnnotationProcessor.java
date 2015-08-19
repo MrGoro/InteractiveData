@@ -2,7 +2,6 @@ package de.schuermann.interactivedata.api.chart.processors;
 
 import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
-import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
 import de.schuermann.interactivedata.api.service.annotations.AnnotationProcessorService;
 
 import java.lang.annotation.Annotation;

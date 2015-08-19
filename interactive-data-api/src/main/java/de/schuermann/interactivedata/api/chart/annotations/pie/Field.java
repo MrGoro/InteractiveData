@@ -1,4 +1,4 @@
-package de.schuermann.interactivedata.api.chart.annotations;
+package de.schuermann.interactivedata.api.chart.annotations.pie;
 
 import de.schuermann.interactivedata.api.data.operations.filter.Filter;
 import de.schuermann.interactivedata.api.data.operations.functions.Function;
@@ -14,19 +14,17 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
-public @interface Axis {
+public @interface Field {
 
-    enum Type { X, Y }
-
-    Type type() default Type.X;
+    enum Type { DATA, LABEL }
 
     String dataField();
 
     Class dataType() default Object.class;
 
-    Class<? extends Filter<?>>[] filter() default {};
+    Class<? extends Filter<?,?>>[] filter() default {};
 
-    Class<? extends Granularity<?>>[] granularity() default {};
+    Class<? extends Granularity<?,?>>[] granularity() default {};
 
-    Class<? extends Function<?>>[] functions() default {};
+    Class<? extends Function<?,?>>[] functions() default {};
 }

@@ -3,7 +3,6 @@ package de.schuermann.interactivedata.api.handler;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
-import de.schuermann.interactivedata.api.chart.definitions.operations.FilterInfo;
 import de.schuermann.interactivedata.api.chart.definitions.operations.OperationInfo;
 import de.schuermann.interactivedata.api.data.DataRequest;
 import de.schuermann.interactivedata.api.data.DataSource;
@@ -45,8 +44,8 @@ public abstract class ChartRequestHandler<T extends AbstractChartDefinition<?, D
 
     private T chartDefinition;
     private DataSource dataSource;
-    private List<Operation.Builder<? extends Filter<?>>> filterBuilder;
-    private Map<Operation.Builder<? extends Granularity<?>>, List<Operation.Builder<? extends Function<?>>>> operationBuilder;
+    private List<Operation.Builder<? extends Filter<?,?>>> filterBuilder = new ArrayList<>();
+    private Map<Operation.Builder<? extends Granularity<?,?>>, List<Operation.Builder<? extends Function<?,?>>>> operationBuilder = new HashMap<>();
     private ChartPostProcessor<D> postProcessor;
 
     @Inject
@@ -64,30 +63,31 @@ public abstract class ChartRequestHandler<T extends AbstractChartDefinition<?, D
 
         // Initialize Builders to speed up Filter/Granularity/Function creating
         // not needing Reflection at runtime / every request
-        filterBuilder = new ArrayList<>();
-        operationBuilder = new HashMap<>();
-
+        //
         // Filter.Builder
         chartDefinition.getFilters().stream()
                 .map(filterInfo ->
                     Operation.Builder.getInstance(filterInfo.getFilter(), dataMapperService)
                             .fieldName(filterInfo.getFieldName())
-                            .fieldClass(filterInfo.getFieldClass()))
+                            .fieldClass(filterInfo.getFieldClass())
+                            .options(filterInfo.getOptions()))
                 .collect(toList())
                 .forEach(filterBuilder::add);
 
         // Operations (Granularity.Builder, Function.Builder)
         for(OperationInfo operationInfo : chartDefinition.getOperations()) {
-            Operation.Builder<? extends Granularity<?>> granularityBuilder =
+            Operation.Builder<? extends Granularity<?,?>> granularityBuilder =
                     Operation.Builder.getInstance(operationInfo.getGranularity(), dataMapperService)
                                                             .fieldName(operationInfo.getFieldName())
-                                                            .fieldClass(operationInfo.getFieldClass());
+                                                            .fieldClass(operationInfo.getFieldClass())
+                                                            .options(operationInfo.getOptions());
 
-            List<Operation.Builder<? extends Function<?>>> functionBuilder = operationInfo.getFunctionInfos().stream()
+            List<Operation.Builder<? extends Function<?,?>>> functionBuilder = operationInfo.getFunctionInfos().stream()
                 .map(functionInfo ->
                                 Operation.Builder.getInstance(functionInfo.getFunction(), dataMapperService)
                                         .fieldName(functionInfo.getFieldName())
                                         .fieldClass(functionInfo.getFieldClass())
+                                        .options(functionInfo.getOptions())
                 ).collect(toList());
 
             operationBuilder.put(granularityBuilder, functionBuilder);
@@ -106,22 +106,6 @@ public abstract class ChartRequestHandler<T extends AbstractChartDefinition<?, D
         return dataSource.getData(getDataRequest(request));
     }
 
-    protected DataRequest getDataRequest(T chartDefinition, List<Filter<?>> filters,
-                                         List<Granularity<?>> granularities, List<Function<?>> functions) {
-
-        DataRequest dataRequest = new DataRequest();
-        dataRequest.setChartDefinition(chartDefinition);
-        dataRequest.setFilter(filters);
-        for(Granularity<?> granularity : granularities) {
-            List<Function<?>> relatedFunctions = functions.stream()
-                    .filter(function -> !function.getFieldName().equals(granularity.getFieldName()))
-                    .collect(toList());
-            dataRequest.addOperation(granularity, relatedFunctions.toArray(new Function[relatedFunctions.size()]));
-        }
-
-        return dataRequest;
-    }
-
     protected DataRequest getDataRequest(Request request) {
         DataRequest dataRequest = new DataRequest();
         dataRequest.setChartDefinition(chartDefinition);
@@ -130,7 +114,7 @@ public abstract class ChartRequestHandler<T extends AbstractChartDefinition<?, D
                     .map(builder -> builder.requestData(request.getData()).build())
                     .collect(toList())
         );
-        for(Map.Entry<Operation.Builder<? extends Granularity<?>>, List<Operation.Builder<? extends Function<?>>>> entry : operationBuilder.entrySet()) {
+        for(Map.Entry<Operation.Builder<? extends Granularity<?,?>>, List<Operation.Builder<? extends Function<?,?>>>> entry : operationBuilder.entrySet()) {
             dataRequest.addOperation(
                     entry.getKey().requestData(request.getData()).build(),
                     entry.getValue().stream()

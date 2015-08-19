@@ -9,10 +9,10 @@ import java.util.function.Function;
 /**
  * @author Philipp Schürmann
  */
-public abstract class Granularity<D extends RequestData> extends Operation<D> {
+public abstract class Granularity<D extends RequestData, O extends RequestData> extends Operation<D, O> {
 
-    public Granularity(String fieldName, Class fieldClass, D requestData) {
-        super(fieldName, fieldClass, requestData);
+    public Granularity(String fieldName, Class fieldClass, D requestData, O options) {
+        super(fieldName, fieldClass, requestData, options);
     }
 
     protected abstract Object group(DataObject dataObject);

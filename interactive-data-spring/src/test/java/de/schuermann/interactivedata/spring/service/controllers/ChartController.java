@@ -1,8 +1,8 @@
 package de.schuermann.interactivedata.spring.service.controllers;
 
-import de.schuermann.interactivedata.api.chart.annotations.Axis;
 import de.schuermann.interactivedata.api.chart.annotations.Chart;
-import de.schuermann.interactivedata.api.chart.annotations.LineChart;
+import de.schuermann.interactivedata.api.chart.annotations.line.Axis;
+import de.schuermann.interactivedata.api.chart.annotations.line.LineChart;
 import de.schuermann.interactivedata.api.chart.data.LineChartData;
 import de.schuermann.interactivedata.api.data.DataRequest;
 import de.schuermann.interactivedata.api.data.DataSource;

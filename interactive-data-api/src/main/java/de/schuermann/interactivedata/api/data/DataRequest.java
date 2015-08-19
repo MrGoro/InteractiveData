@@ -15,14 +15,14 @@ import java.util.List;
 public class DataRequest {
 
     private AbstractChartDefinition chartDefinition;
-    private List<Filter<?>> filter = new ArrayList<>();
+    private List<Filter<?,?>> filter = new ArrayList<>();
     private List<Operation> operations = new ArrayList<>();
 
     public AbstractChartDefinition getChartDefinition() {
         return chartDefinition;
     }
 
-    public List<Filter<?>> getFilter() {
+    public List<Filter<?,?>> getFilter() {
         return filter;
     }
 
@@ -34,7 +34,7 @@ public class DataRequest {
         this.chartDefinition = chartDefinition;
     }
 
-    public void setFilter(List<Filter<?>> filter) {
+    public void setFilter(List<Filter<?,?>> filter) {
         this.filter = filter;
     }
 
@@ -42,7 +42,7 @@ public class DataRequest {
         this.filter.add(filter);
     }
 
-    public void addOperation(Granularity<?> granularity, List<Function<?>> functions) {
+    public void addOperation(Granularity<?,?> granularity, List<Function<?,?>> functions) {
         // Check if all functions belong to another field than granularity
         if(functions.stream().noneMatch(function -> function.getFieldName().equals(granularity.getFieldName()))) {
             operations.add(new Operation(granularity, functions));
@@ -51,24 +51,24 @@ public class DataRequest {
         }
     }
 
-    public void addOperation(Granularity<?> granularity, Function<?>... functions) {
+    public void addOperation(Granularity<?,?> granularity, Function<?,?>... functions) {
         addOperation(granularity, Arrays.asList(functions));
     }
 
     public class Operation {
-        private Granularity<?> granularity;
-        private List<Function<?>> function;
+        private Granularity<?,?> granularity;
+        private List<Function<?,?>> function;
 
-        private Operation(Granularity<?> granularity, List<Function<?>> functions) {
+        private Operation(Granularity<?,?> granularity, List<Function<?,?>> functions) {
             this.granularity = granularity;
             this.function = functions;
         }
 
-        public Granularity<?> getGranularity() {
+        public Granularity<?,?> getGranularity() {
             return granularity;
         }
 
-        public List<Function<?>> getFunctions() {
+        public List<Function<?,?>> getFunctions() {
             return function;
         }
     }

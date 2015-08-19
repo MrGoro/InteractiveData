@@ -1,11 +1,11 @@
 package de.schuermann.interactivedata.api.chart.processors;
 
-import de.schuermann.interactivedata.api.chart.annotations.Axis;
-import de.schuermann.interactivedata.api.chart.annotations.LineChart;
+import de.schuermann.interactivedata.api.chart.annotations.line.Axis;
+import de.schuermann.interactivedata.api.chart.annotations.line.LineChart;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
-import de.schuermann.interactivedata.api.chart.definitions.AxisDefinition;
-import de.schuermann.interactivedata.api.chart.definitions.LineChartDefinition;
+import de.schuermann.interactivedata.api.chart.definitions.line.AxisDefinition;
+import de.schuermann.interactivedata.api.chart.definitions.line.LineChartDefinition;
 import de.schuermann.interactivedata.api.chart.definitions.operations.FilterInfo;
 import de.schuermann.interactivedata.api.chart.definitions.operations.FunctionInfo;
 import de.schuermann.interactivedata.api.chart.definitions.operations.OperationInfo;
@@ -39,27 +39,27 @@ public class LineChartProcessor implements AnnotationProcessor<LineChart> {
                 throw new ChartDefinitionException("LineChart can only have one Function on an axis.");
             }
             definition.addAxis(getAxisDefinition(axis));
-            for (Class<? extends Filter<?>> filterClass : axis.filter()) {
+            for (Class<? extends Filter<?,?>> filterClass : axis.filter()) {
                 FilterInfo filterInfo = new FilterInfo();
                 filterInfo.setFieldName(axis.dataField());
                 filterInfo.setFieldClass(axis.dataType());
                 filterInfo.setFilter(filterClass);
                 definition.addFilter(filterInfo);
             }
-            for (Class<? extends Granularity<?>> granularityClass : axis.granularity()) {
+            for (Class<? extends Granularity<?,?>> granularityClass : axis.granularity()) {
                 OperationInfo operationInfo = new OperationInfo();
                 operationInfo.setFieldName(axis.dataField());
                 operationInfo.setFieldClass(axis.dataType());
                 operationInfo.setGranularity(granularityClass);
 
                 List<FunctionInfo> functionInfos = new ArrayList<>();
-                Map<Axis, Class<? extends Function<?>>[]> functions = Arrays.stream(annotation.axis())
+                Map<Axis, Class<? extends Function<?,?>>[]> functions = Arrays.stream(annotation.axis())
                         .filter(streamAxis -> !streamAxis.dataField().equals(axis.dataField()))
                         .filter(streamAxis -> streamAxis.functions().length > 0)
                         .collect(toMap(java.util.function.Function.identity(), Axis::functions));
-                for(Map.Entry<Axis, Class<? extends Function<?>>[]> entry : functions.entrySet()) {
+                for(Map.Entry<Axis, Class<? extends Function<?,?>>[]> entry : functions.entrySet()) {
                     Axis functionAxis = entry.getKey();
-                    for(Class<? extends Function<?>> function : entry.getValue()) {
+                    for(Class<? extends Function<?,?>> function : entry.getValue()) {
                         FunctionInfo functionInfo = new FunctionInfo();
                         functionInfo.setFieldName(functionAxis.dataField());
                         functionInfo.setTargetFieldName(functionAxis.dataField());

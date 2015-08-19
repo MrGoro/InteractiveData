@@ -3,6 +3,7 @@ package de.schuermann.interactivedata.spring.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import de.schuermann.interactivedata.api.service.ChartDefinitionService;
 import de.schuermann.interactivedata.api.service.ServiceProvider;
@@ -43,6 +44,9 @@ public class InteractiveDataConfiguration {
         ObjectMapper objectMapper = new ObjectMapper();
 
         objectMapper.registerModule(new JSR310Module());
+        // TODO Upgrade to JavaTimeModule with Spring Boot 1.3
+        //objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.registerModule(new Jdk8Module());
 
         objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
