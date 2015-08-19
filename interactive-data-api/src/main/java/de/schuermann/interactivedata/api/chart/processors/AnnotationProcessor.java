@@ -19,10 +19,9 @@ public interface AnnotationProcessor<T extends Annotation> {
     /**
      * Generates the Definition of the Chart from the Annotation an a name.
      *
-     * @param name Name of the Chart
      * @param annotation Annotation of the Chart
      * @return Chart Definition
      */
-    AbstractChartDefinition<?, ? extends ChartData> process(String name, T annotation);
+    AbstractChartDefinition<?, ? extends ChartData> process(T annotation);
 
 }

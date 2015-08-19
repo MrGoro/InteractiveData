@@ -1,6 +1,8 @@
 package de.schuermann.interactivedata.api.chart.definitions;
 
 import de.schuermann.interactivedata.api.chart.data.ChartData;
+import de.schuermann.interactivedata.api.chart.definitions.operations.FilterInfo;
+import de.schuermann.interactivedata.api.chart.definitions.operations.OperationInfo;
 import de.schuermann.interactivedata.api.data.DataSource;
 
 import java.util.ArrayList;
@@ -13,14 +15,11 @@ public abstract class AbstractChartDefinition<T extends AbstractDimension, D ext
 
     private String name;
     private Class<? extends DataSource> dataSource;
-    private List<T> dimensions;
     private ChartPostProcessor<D> chartPostProcessor;
 
-    protected AbstractChartDefinition(String name, Class<? extends DataSource> dataSource) {
-        this.name = name;
-        this.dataSource = dataSource;
-        this.dimensions = new ArrayList<>();
-    }
+    private List<T> dimensions = new ArrayList<>();
+    private List<FilterInfo> filters = new ArrayList<>();
+    private List<OperationInfo> operations = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -42,7 +41,51 @@ public abstract class AbstractChartDefinition<T extends AbstractDimension, D ext
         return chartPostProcessor;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDataSource(Class<? extends DataSource> dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public void setDimensions(List<T> dimensions) {
+        this.dimensions = dimensions;
+    }
+
+    public void setFilters(List<FilterInfo> filters) {
+        this.filters = filters;
+    }
+
+    public void setOperations(List<OperationInfo> operations) {
+        this.operations = operations;
+    }
+
     public void setChartPostProcessor(ChartPostProcessor<D> chartPostProcessor) {
         this.chartPostProcessor = chartPostProcessor;
     }
+
+    public List<FilterInfo> getFilters() {
+        return filters;
+    }
+
+    public List<OperationInfo> getOperations() {
+        return operations;
+    }
+
+    public void addFilter(FilterInfo filterInfo) {
+        filters.add(filterInfo);
+    }
+
+    public void addOperation(OperationInfo operationInfo) {
+        operations.add(operationInfo);
+    }
+
+
+
+
+
+
+
+
 }

@@ -42,22 +42,26 @@ public class DataRequest {
         this.filter.add(filter);
     }
 
-    public void addOperation(Granularity<?> granularity, Function<?>... functions) {
+    public void addOperation(Granularity<?> granularity, List<Function<?>> functions) {
         // Check if all functions belong to another field than granularity
-        if(Arrays.stream(functions).noneMatch(function -> function.getFieldName().equals(granularity.getFieldName()))) {
+        if(functions.stream().noneMatch(function -> function.getFieldName().equals(granularity.getFieldName()))) {
             operations.add(new Operation(granularity, functions));
         } else {
             throw new IllegalArgumentException("Granularity and Function cannot be used on the same field [" + granularity.getFieldName() + "]");
         }
     }
 
+    public void addOperation(Granularity<?> granularity, Function<?>... functions) {
+        addOperation(granularity, Arrays.asList(functions));
+    }
+
     public class Operation {
         private Granularity<?> granularity;
         private List<Function<?>> function;
 
-        private Operation(Granularity<?> granularity, Function<?>... functions) {
+        private Operation(Granularity<?> granularity, List<Function<?>> functions) {
             this.granularity = granularity;
-            this.function = Arrays.asList(functions);
+            this.function = functions;
         }
 
         public Granularity<?> getGranularity() {

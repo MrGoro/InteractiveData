@@ -19,6 +19,6 @@ public class Concatenation extends Function<EmptyRequestData> {
 
     @Override
     public Collector<DataObject, ?, ?> toCollector() {
-        return mapping(dataObject -> dataObject.getProperty(getFieldName(), String.class), Collectors.joining(","));
+        return mapping(dataObject -> dataObject.getProperty(getFieldName()).toString(), Collectors.joining(","));
     }
 }

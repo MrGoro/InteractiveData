@@ -30,16 +30,6 @@ public abstract class Filter<D extends RequestData> extends Operation<D> {
     }
 
     /**
-     * Checks if the filter does have data so it does want to filter.
-     * If false no filtering is needed at all and should not be done.
-     *
-     * @return true if filter wants to filter, false if not
-     */
-    public boolean shouldFilter() {
-        return getRequestData() != null && getRequestData().hasData();
-    }
-
-    /**
      * Test if the given Data object is suitable for current filter.
      *
      * @param t DataObject

@@ -18,7 +18,11 @@ public abstract class Granularity<D extends RequestData> extends Operation<D> {
     protected abstract Object group(DataObject dataObject);
 
     public Function<DataObject, Object> toGroupFunction() {
-        return new GroupFunction(this);
+        if(shouldOperate()) {
+            return new GroupFunction(this);
+        } else {
+            return dataObject -> dataObject.getProperty(getFieldName());
+        }
     }
 
     private class GroupFunction implements Function<DataObject, Object> {

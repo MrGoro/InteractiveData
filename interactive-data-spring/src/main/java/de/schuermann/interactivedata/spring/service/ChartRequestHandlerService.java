@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Philipp Schürmann
@@ -32,15 +33,14 @@ public class ChartRequestHandlerService {
         this.chartDefinitionService = chartDefinitionService;
     }
 
-    public ChartData handleDataRequest(Request request) {
-        return getChartRequestHandler(request.getName()).handleDataRequest(request);
-    }
-
     @Cacheable("chartRequestHandler")
-    public ChartRequestHandler getChartRequestHandler(String name) {
-        log.debug("Getting ChartRequestHandler for chart with name: " + name);
+    public ChartRequestHandler getChartRequestHandler(String serviceName, String chartName) {
+        String identifier =  serviceName + "/" + chartName;
 
-        final AbstractChartDefinition<?, ? extends ChartData> chartDefinition = chartDefinitionService.getChartDefinition(name);
+        log.debug("Getting ChartRequestHandler for chart with name: " + identifier);
+
+        AbstractChartDefinition<?, ?> chartDefinition = chartDefinitionService.getChartDefinition(identifier)
+                .orElseThrow(() -> new ResourceNotFoundException("No ChartDefinition found for this resource."));
 
         ChartRequestHandler requestHandler = serviceProvider.getChartRequestHandler(chartDefinition)
                 .orElseThrow(() -> new ResourceNotFoundException("No ChartRequestHandler found for this resource."));

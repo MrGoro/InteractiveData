@@ -47,6 +47,10 @@ public abstract class Operation<D extends RequestData>  {
         this.requestData = requestData;
     }
 
+    public boolean shouldOperate() {
+        return getRequestData() != null && getRequestData().hasData();
+    }
+
     public static class Builder<F extends Operation<?>>  {
 
         protected DataMapperService dataMapperService;

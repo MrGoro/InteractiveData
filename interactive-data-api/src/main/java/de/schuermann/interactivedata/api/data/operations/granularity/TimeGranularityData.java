@@ -29,7 +29,6 @@ public class TimeGranularityData implements RequestData {
     }
 
     private STEP selected;
-    private List<TemporalField> temporalFields = new ArrayList<>();
 
     public TimeGranularityData() {
     }
@@ -44,23 +43,5 @@ public class TimeGranularityData implements RequestData {
 
     public void setSelected(STEP selected) {
         this.selected = selected;
-        createTemporalFields();
-    }
-
-    public List<TemporalField> getTemporalFields() {
-        return temporalFields;
-    }
-
-    private void createTemporalFields() {
-        switch (selected) {
-            case MILLISECOND: temporalFields.add(ChronoField.MILLI_OF_SECOND);
-            case SECOND: temporalFields.add(ChronoField.SECOND_OF_MINUTE);
-            case MINUTE: temporalFields.add(ChronoField.MINUTE_OF_HOUR);
-            case HOUR: temporalFields.add(ChronoField.HOUR_OF_DAY);
-            case DAY: temporalFields.add(ChronoField.DAY_OF_MONTH);
-            case WEEK: temporalFields.add(ChronoField.ALIGNED_WEEK_OF_MONTH);
-            case MONTH: temporalFields.add(ChronoField.MONTH_OF_YEAR);
-            case YEAR: temporalFields.add(ChronoField.YEAR);
-        }
     }
 }

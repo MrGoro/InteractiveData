@@ -1,5 +1,7 @@
 package de.schuermann.interactivedata.api.chart.annotations;
 
+import de.schuermann.interactivedata.api.data.DataSource;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -14,4 +16,9 @@ public @interface Chart {
 
     String value();
 
+    Class<? extends DataSource> dataSource();
+
+    FilterDef[] filter() default {};
+
+    OperationDef[] operations() default {};
 }

@@ -4,6 +4,8 @@ import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
+import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessHelper;
+import de.schuermann.interactivedata.api.service.annotations.ChartService;
 import de.schuermann.interactivedata.api.util.ReflectionUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,8 +47,8 @@ public class ChartDefinitionService {
      * @param name Name of the chart
      * @return {@Link AbstractChartDefinition ChartDefinition}
      */
-    public AbstractChartDefinition<?, ? extends ChartData> getChartDefinition(String name) {
-        return chartDefinitions.get(name);
+    public Optional<AbstractChartDefinition<?, ?>> getChartDefinition(String name) {
+        return Optional.ofNullable(chartDefinitions.get(name));
     }
 
     /**
@@ -55,8 +57,9 @@ public class ChartDefinitionService {
     private void loadChartDefinitionsUsingAnnotations() {
         Collection<Object> chartServices = serviceProvider.getChartServices();
         for(Object chartService : chartServices) {
+            ChartService serviceAnnotation = chartService.getClass().getAnnotation(ChartService.class);
             List<Method> methods = ReflectionUtil.findAnnotatedMethods(chartService.getClass(), Chart.class);
-            methods.forEach(method -> processMethodAnnotations(chartService, method));
+            methods.forEach(method -> processMethodAnnotations(chartService, method, serviceAnnotation));
         }
     }
 
@@ -66,16 +69,15 @@ public class ChartDefinitionService {
      * Uses an {@Link AnnotationProcessor AnnotationProcessor} suitable for the given annotation to extract the
      * information.
      */
-    private void processMethodAnnotations(Object bean, Method method) {
+    private void processMethodAnnotations(Object bean, Method method, ChartService serviceAnnotation) {
         log.debug("Generating API for Chart: " + method.getName());
         Annotation[] annotations = method.getDeclaredAnnotations();
 
-        String name = null;
+        Chart chart = null;
         Annotation chartAnnotation = null;
         for(Annotation annotation : annotations) {
             if(annotation.annotationType() == Chart.class) {
-                Chart chart = (Chart) annotation;
-                name = chart.value();
+                chart = (Chart) annotation;
             } else {
                 chartAnnotation = annotation;
             }
@@ -105,17 +107,18 @@ public class ChartDefinitionService {
             log.info("Method with @Chart annotation does not have ChartData or any sub class as its parameter type. Skipping post processing.");
         }
 
-        if(name != null && chartAnnotation != null) {
-            log.info("Processing Detail-Configuration for Chart: " + name);
+        if(chart != null && chartAnnotation != null) {
+            log.info("Processing Detail-Configuration for Chart: " + chart.value());
             try {
-                AbstractChartDefinition<?, ? extends ChartData> chartDefinition = serviceProvider
+                AbstractChartDefinition<?, ?> chartDefinition = serviceProvider
                         .getAnnotationProcessor(chartAnnotation)
                         .get()
-                        .process(name, chartAnnotation);
+                        .process(chartAnnotation);
                 chartDefinition.setChartPostProcessor(chartPostProcessor);
+                AnnotationProcessHelper.processChartAnnotation(chartDefinition, chart, serviceAnnotation);
                 chartDefinitions.put(chartDefinition.getName(), chartDefinition);
             } catch (NoSuchElementException | IllegalArgumentException e) {
-                log.warn(e.getMessage());
+                log.warn("Error Processing Annotation [" + chartAnnotation.annotationType().getSimpleName() + "]", e);
             }
         } else {
             log.warn("Invalid Chart definition on Method " + method.getName());

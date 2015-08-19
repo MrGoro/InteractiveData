@@ -11,9 +11,11 @@ import de.schuermann.interactivedata.api.service.annotations.ChartRequestHandler
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * @author Philipp Schürmann
@@ -29,14 +31,16 @@ public class LineChartRequestHandler extends ChartRequestHandler<LineChartDefini
 
     @Override
     protected LineChartData convertData(List<DataObject> chartData) {
-        Map data = new HashMap();
+        List<Map> data = new ArrayList<>();
         LineChartDefinition chartDefinition = getChartDefinition();
-        AxisDefinition axisDefinitionX = chartDefinition.getAxis(Axis.Type.X);
-        AxisDefinition axisDefinitionY = chartDefinition.getAxis(Axis.Type.Y);
-        for(DataObject dataObject : chartData) {
-            data.put(dataObject.getProperty(axisDefinitionX.getDataField()), dataObject.getProperty(axisDefinitionY.getDataField()));
+        AxisDefinition axisDefinitionX = chartDefinition.getAxis(Axis.Type.X).get(0);
+        List<AxisDefinition> axisDefinitionsY = chartDefinition.getAxis(Axis.Type.Y);
+        for(AxisDefinition axisDefinitionY : axisDefinitionsY) {
+            data.add(chartData.stream().collect(toMap(
+                    dataObject -> dataObject.getProperty(axisDefinitionX.getDataField()),
+                    dataObject -> dataObject.getProperty(axisDefinitionY.getDataField())
+            )));
         }
-        LineChartData lineChart = new LineChartData(chartDefinition.getName(), data);
-        return lineChart;
+        return new LineChartData(chartDefinition.getName(), data);
     }
 }

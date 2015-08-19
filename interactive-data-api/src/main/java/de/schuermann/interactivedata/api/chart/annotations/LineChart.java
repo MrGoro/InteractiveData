@@ -15,8 +15,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface LineChart {
 
-    Class<? extends DataSource> dataSource();
-
     Axis[] axis();
 
 }

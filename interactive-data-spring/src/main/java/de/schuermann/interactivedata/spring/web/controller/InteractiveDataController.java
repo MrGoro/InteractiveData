@@ -15,15 +15,16 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 /**
- * Controller for handling RESTful request.
+ * Controller for handling RESTful request and forwarding a request to a ChartRequestHandler.
  *
  * @author Philipp Schürmann
  */
 @RestController
 public class InteractiveDataController {
 
+    private static final String SERVICE_NAME = "service";
     private static final String CHART_NAME = "name";
-    private static final String BASE_MAPPING = "/api/{"+CHART_NAME+"}";
+    private static final String BASE_MAPPING = "/api/{"+SERVICE_NAME+"}/{"+CHART_NAME+"}";
 
     private ChartRequestHandlerService chartRequestHandlerService;
 
@@ -37,13 +38,15 @@ public class InteractiveDataController {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<?> getData(@PathVariable(CHART_NAME) String chartName, HttpServletRequest servletRequest) {
+    public ResponseEntity<?> getData(@PathVariable(SERVICE_NAME) String serviceName, @PathVariable(CHART_NAME) String chartName, HttpServletRequest servletRequest) {
         Request request = new Request(chartName, servletRequest.getParameterMap());
-        return Optional.ofNullable(chartRequestHandlerService.handleDataRequest(request))
+        return Optional.ofNullable(chartRequestHandlerService.getChartRequestHandler(serviceName, chartName))
             .map(
-                    chartData -> new ResponseEntity<>(chartData, HttpStatus.OK))
+                chartRequestHandler -> new ResponseEntity<>(
+                        chartRequestHandler.handleDataRequest(request),
+                        HttpStatus.OK))
             .orElse(
-                    new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                new ResponseEntity<>(HttpStatus.NOT_FOUND)
             );
     }
 
@@ -52,14 +55,14 @@ public class InteractiveDataController {
         method = RequestMethod.OPTIONS,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<?> getInformation(@PathVariable(CHART_NAME) String chartName) {
-        return Optional.ofNullable(chartRequestHandlerService.getChartRequestHandler(chartName))
+    public ResponseEntity<?> getInformation(@PathVariable(SERVICE_NAME) String serviceName, @PathVariable(CHART_NAME) String chartName) {
+        return Optional.ofNullable(chartRequestHandlerService.getChartRequestHandler(serviceName, chartName))
             .map(
-                    chartRequestHandler -> new ResponseEntity<>(
-                            chartRequestHandler.handleInfoRequest(),
-                            HttpStatus.OK))
+                chartRequestHandler -> new ResponseEntity<>(
+                        chartRequestHandler.handleInfoRequest(),
+                        HttpStatus.OK))
             .orElse(
-                    new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                new ResponseEntity<>(HttpStatus.NOT_FOUND)
             );
     }
 

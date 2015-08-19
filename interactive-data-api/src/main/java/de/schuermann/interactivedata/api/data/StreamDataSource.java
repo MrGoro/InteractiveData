@@ -46,7 +46,7 @@ public abstract class StreamDataSource<T> implements DataSource {
 
         // Apply all filters to the stream
         for(Filter<?> filter : dataRequest.getFilter()) {
-            if(filter.shouldFilter()) {
+            if(filter.shouldOperate()) {
                 stream = stream.filter(filter.toPredicate());
             }
         }
@@ -64,7 +64,7 @@ public abstract class StreamDataSource<T> implements DataSource {
         List<List<DataObject>> result = new ArrayList<>();
         for(DataRequest.Operation operation : dataRequest.getOperations()) {
             // Get a Data Object builder from function field names
-            String[] fieldNames = operation.getFunctions().stream().map(Function::getFieldName).toArray(String[]::new);
+            String[] fieldNames = operation.getFunctions().stream().map(Function::getTargetFieldName).toArray(String[]::new);
             DataObjectBuilder dataObjectBuilder = new DataObjectBuilder(fieldNames);
 
             // Extract Collectors from functions

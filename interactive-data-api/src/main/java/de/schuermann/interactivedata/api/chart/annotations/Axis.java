@@ -24,9 +24,9 @@ public @interface Axis {
 
     Class dataType() default Object.class;
 
-    Class<? extends Granularity<?>>[] granularity() default {};
-
     Class<? extends Filter<?>>[] filter() default {};
+
+    Class<? extends Granularity<?>>[] granularity() default {};
 
     Class<? extends Function<?>>[] functions() default {};
 }

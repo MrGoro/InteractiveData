@@ -1,6 +1,7 @@
 package de.schuermann.interactivedata.api.chart.data;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -8,18 +9,18 @@ import java.util.Map;
  */
 public class LineChartData extends ChartData {
 
-    Map data = new HashMap<>();
+    List<Map> data = new ArrayList<>();
 
     public LineChartData(String name) {
         super(name);
     }
 
-    public LineChartData(String name, Map data) {
+    public LineChartData(String name, List<Map> data) {
         super(name);
         this.data = data;
     }
 
-    public Map getData() {
+    public List<Map> getData() {
         return data;
     }
 
