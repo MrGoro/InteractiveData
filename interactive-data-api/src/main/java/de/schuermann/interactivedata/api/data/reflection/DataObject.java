@@ -9,6 +9,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Wrapper Class that makes access to properties using getters easier.
@@ -85,6 +86,10 @@ public class DataObject {
             }
         }
         return getExtraProperty(name);
+    }
+
+    public Optional<Object> getOptionalProperty(String name) {
+        return Optional.ofNullable(getProperty(name));
     }
 
     private Object getExtraProperty(String name) {

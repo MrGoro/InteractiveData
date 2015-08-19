@@ -10,6 +10,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * DataSource that uses a data file with separated values in each line.
@@ -23,7 +27,7 @@ import java.util.List;
  *
  * @author Philipp Schürmann
  */
-public abstract class FileDataSource extends StreamDataSource {
+public abstract class FileDataSource extends StreamDataSource<String> {
 
     private static Log log = LogFactory.getLog(FileDataSource.class);
 
@@ -62,7 +66,19 @@ public abstract class FileDataSource extends StreamDataSource {
      *
      * @return Mapping of columns inside the data file as an String Array
      */
-    protected abstract String[] getMappings();
+    protected String[] getMappings() {
+        try {
+            List<String[]> list = Files.lines(getPath()).limit(1).map(
+                    line -> line.split(getSeparator())
+            ).collect(toList());
+            if(list != null && list.size() == 1) {
+                return list.get(0);
+            }
+        } catch (IOException e) {
+            log.error("Could not read file: path[" + getPath() + "], returning zero data");
+        }
+        throw new IllegalArgumentException("Could not get Mapping for FileDataSource of file[" + getPath().getFileName() + "]");
+    }
 
     /**
      * Specifies the separator used to split the line into parts of values.
@@ -73,6 +89,32 @@ public abstract class FileDataSource extends StreamDataSource {
      */
     protected String getSeparator() {
         return ";";
+    }
+
+    /**
+     * Specifies the lines to skip.
+     *
+     * Useful when files like csv define a header with the mapping.
+     *
+     * @return Lines to skip
+     */
+    protected long skipLines() {
+        return 1;
+    }
+
+    @Override
+    protected Stream<String> getDataStream() {
+        try {
+            return Files.lines(getPath()).skip(skipLines());
+        } catch (IOException e) {
+            log.error("Could not read file: path[" + getPath() + "], returning zero data");
+        }
+        return new ArrayList<String>().stream();
+    }
+
+    @Override
+    protected Function<String, DataObject> getMapper() {
+        return this::convertLine;
     }
 
     /**
@@ -91,20 +133,5 @@ public abstract class FileDataSource extends StreamDataSource {
             }
         }
         return dataObject;
-    }
-
-    @Override
-    protected List<DataObject> getData() {
-        List<DataObject> data = new ArrayList<>();
-        try {
-            Files.lines(getPath()).forEach(
-                line -> {
-                    data.add((convertLine(line)));
-                }
-            );
-        } catch (IOException e) {
-            log.error("Could not read file: path[" + getPath() + "], returning zero data");
-        }
-        return data;
     }
 }

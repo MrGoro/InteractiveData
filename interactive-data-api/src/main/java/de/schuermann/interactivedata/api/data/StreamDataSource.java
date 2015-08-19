@@ -4,7 +4,10 @@ import de.schuermann.interactivedata.api.data.operations.filter.Filter;
 import de.schuermann.interactivedata.api.data.operations.functions.Function;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
@@ -19,19 +22,23 @@ import static java.util.stream.Collectors.toList;
 /**
  * @author Philipp Schürmann
  */
-public abstract class StreamDataSource implements DataSource {
+public abstract class StreamDataSource<T> implements DataSource {
 
-    protected abstract List<?> getData();
+    protected abstract Stream<T> getDataStream();
+
+    protected Stream<DataObject> mapToDataObject(Stream<T> dataList) {
+        return dataList.map(getMapper());
+    }
+
+    protected java.util.function.Function<T, DataObject> getMapper(){
+        return DataObject::create;
+    }
 
     @Override
     public List<DataObject> getData(DataRequest dataRequest) {
-        List<?> dbResult = getData();
-        return postProcess(getDataStream(dbResult), dataRequest);
-    }
-
-    protected Stream<DataObject> getDataStream(List<?> dataList) {
-        return dataList.parallelStream()
-                .map(DataObject::create);
+        Stream<T> rawData = getDataStream();
+        Stream<DataObject> dataStream = mapToDataObject(rawData);
+        return postProcess(dataStream, dataRequest);
     }
 
     protected List<DataObject> postProcess(Stream<DataObject> dataStream, DataRequest dataRequest) {

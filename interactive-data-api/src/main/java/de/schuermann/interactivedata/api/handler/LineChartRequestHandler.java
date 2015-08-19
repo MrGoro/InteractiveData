@@ -2,7 +2,6 @@ package de.schuermann.interactivedata.api.handler;
 
 import de.schuermann.interactivedata.api.chart.annotations.Axis;
 import de.schuermann.interactivedata.api.chart.data.LineChartData;
-import de.schuermann.interactivedata.api.chart.data.Variate;
 import de.schuermann.interactivedata.api.chart.definitions.AxisDefinition;
 import de.schuermann.interactivedata.api.chart.definitions.LineChartDefinition;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;

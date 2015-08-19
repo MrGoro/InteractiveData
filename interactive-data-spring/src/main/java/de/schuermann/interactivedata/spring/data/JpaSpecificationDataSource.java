@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Basic Implementation of a DataSource using Spring Data Repositories and Processors.
@@ -17,9 +18,13 @@ public abstract class JpaSpecificationDataSource<T> extends StreamDataSource {
 
     protected abstract JpaSpecificationExecutor<T> getRepository();
 
-    @Override
     protected List<Object> getData() {
         return (List<Object>) getRepository().findAll(getSpecification());
+    }
+
+    @Override
+    protected Stream getDataStream() {
+        return getData().parallelStream();
     }
 
     private Specification<T> getSpecification() {

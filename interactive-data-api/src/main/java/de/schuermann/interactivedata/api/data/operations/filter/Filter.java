@@ -45,7 +45,7 @@ public abstract class Filter<D extends RequestData> extends Operation<D> {
      * @param t DataObject
      * @return true if object has to be included, false if not
      */
-    protected abstract boolean test(DataObject t);
+    protected abstract boolean test(DataObject dataObject);
 
     private static class FilterPredicate implements Predicate<DataObject> {
 
