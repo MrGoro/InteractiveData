@@ -20,10 +20,25 @@ public class ServiceClassLocator {
 
     public static final String ANNOTATED_RESOURCE = "META-INF/annotations/";
 
+    /**
+     * Get a collection of all class definitions for classes annotated with the specified annotation.
+     *
+     * @param annotation Annotation to search for
+     * @return Collection of classes
+     */
     public static Collection<Class<?>> getAnnotated(Class<? extends Annotation> annotation) {
         return getAnnotated(annotation, Thread.currentThread().getContextClassLoader());
     }
 
+    /**
+     * Get a collection of all class definitions for classes annotated with the specified annotation.
+     *
+     * Uses the specified class loader to load the class definition.
+     *
+     * @param annotation Annotation to search for
+     * @param classLoader ClassLoader to use for loading the class definition
+     * @return  Collection of classes
+     */
     public static Collection<Class<?>> getAnnotated(Class<? extends Annotation> annotation, ClassLoader classLoader) {
         Iterable<String> entries = getAnnotatedNames(annotation, classLoader);
         Set<Class<?>> classes = new HashSet<>();
@@ -31,11 +46,7 @@ public class ServiceClassLocator {
         return classes;
     }
 
-    public static Collection<String> getAnnotatedNames(Class<? extends Annotation> annotation) {
-        return getAnnotatedNames(annotation, Thread.currentThread().getContextClassLoader());
-    }
-
-    public static Collection<String> getAnnotatedNames(Class<? extends Annotation> annotation, ClassLoader classLoader) {
+    private static Collection<String> getAnnotatedNames(Class<? extends Annotation> annotation, ClassLoader classLoader) {
         return readIndexFile(classLoader, ANNOTATED_RESOURCE + annotation.getCanonicalName());
     }
 
@@ -43,7 +54,6 @@ public class ServiceClassLocator {
         Set<String> entries = new HashSet<>();
         try {
             Enumeration<URL> resources = classLoader.getResources(resourceFile);
-
             while (resources.hasMoreElements()) {
                 URL resource = resources.nextElement();
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.openStream(), "UTF-8"))) {
@@ -53,10 +63,12 @@ public class ServiceClassLocator {
                         entries.add(line);
                         line = reader.readLine();
                     }
-                } catch (FileNotFoundException e) {}
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException("Resource file not found [" + resourceFile + "]", e);
+                }
             }
         } catch (IOException e) {
-            throw new RuntimeException("ClassIndex: Cannot read class index", e);
+            throw new RuntimeException("Error reading resource file [" + resourceFile + "]", e);
         }
         return entries;
     }

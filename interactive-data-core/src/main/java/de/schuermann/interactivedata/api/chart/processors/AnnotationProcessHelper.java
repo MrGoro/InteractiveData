@@ -12,6 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Annotation processor providing definitions for {@link Chart @Chart} base annotation.
+ *
+ * Provides helper methods for extracting information of {@link FilterDef @FilterDef}, {@link OperationDef @OperationDef},
+ * {@link FunctionDef @FunctionDef} and {@link Option @Option[]}.
+ */
 public class AnnotationProcessHelper {
 
     public static <T extends AbstractChartDefinition<?, ?>> T processChartAnnotation(T chartDefinition, Chart annotation, ChartService serviceAnnotation) {

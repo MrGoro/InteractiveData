@@ -16,23 +16,19 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Annotation Processor used to write Services to files to find them during runtime.
+ * Annotation Processor used to write Services to indexed files making them findable during runtime.
  *
- * Annotations for Services must be annotated with @ProcessedAnnotation themselves.
+ * Services that get indexed have to be annotated with {@link ProcessedAnnotation @ProcessedAnnotation}.
  *
  * @author Philipp Schürmann
  */
 @SupportedAnnotationTypes(value= {"de.schuermann.interactivedata.api.service.annotations.*"})
 public class ServiceAnnotationProcessor extends AbstractProcessor {
 
-    private Map<String, Set<String>> annotatedServices = new HashMap<>();
-
     private Filer filer;
     private Messager messager;
 
-    public ServiceAnnotationProcessor() {
-
-    }
+    private Map<String, Set<String>> annotatedServices = new HashMap<>();
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {

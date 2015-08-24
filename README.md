@@ -8,10 +8,10 @@ The complete document will be provided here after it is finished.
 InteractiveData is divided into multiple modules. See the table below for more information on every module:
 ```
 . InteractiveData
-├── interactive-data-api
-|     Generic API that can be used by various implementations
+├── interactive-data-core
+|     Core library including the api and basic functionality
 ├── interactive-data-spring
-|     Implementation of the API for use with Spring Boot
+|     Integration module for Spring Framework
 ├── interactive-data-spring-boot-starter
 |     Starter Template for easy start with the use of Spring Boot
 └── interactive-data-spring-sample

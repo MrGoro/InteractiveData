@@ -12,7 +12,7 @@
     <description>Root Project of Interactive Data Library containing specific sub modules</description>
 
     <modules>
-        <module>interactive-data-api</module>
+        <module>interactive-data-core</module>
         <module>interactive-data-processors</module>
         <module>interactive-data-spring</module>
         <module>interactive-data-spring-boot-starter</module>
@@ -20,9 +20,19 @@
     </modules>
 
     <properties>
+        <java.version>1.8</java.version>
         <project.type>multi</project.type>
         <dist.id>interactive-data</dist.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+
+        <spring.version>4.1.7.RELEASE</spring.version>
+        <spring.data.jpa.version>1.8.1.RELEASE</spring.data.jpa.version>
+        <spring.boot.version>1.2.5.RELEASE</spring.boot.version>
+
+        <hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
+        <jackson.version>2.6.0</jackson.version>
+        <servlet.version>3.1.0</servlet.version>
     </properties>
 
     <developers>
