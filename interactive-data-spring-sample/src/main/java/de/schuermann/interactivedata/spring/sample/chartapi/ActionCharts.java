@@ -29,14 +29,14 @@ import java.util.Date;
  * Demonstrates two different types of chart definitions with the same result.
  * The first one is easier to define. The second offers more flexibility.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Service
 @ChartService("db")
 public class ActionCharts {
 
     @Chart(
-        value = "actionsline1",
+        name = "actionsline1",
         dataSource = ActionDataSource.class
     )
     @LineChart(
@@ -68,7 +68,7 @@ public class ActionCharts {
     }
 
     @Chart(
-        value = "actionsline2",
+        name = "actionsline2",
         dataSource = ActionDataSource.class,
         filter = {
             @FilterDef(fieldName = "time", fieldClass = Date.class, filter = TimeFilter.class)
@@ -118,7 +118,7 @@ public class ActionCharts {
     }
 
     @Chart(
-        value = "actionspie1",
+        name = "actionspie1",
         dataSource = ActionDataSource.class,
         filter = {
             @FilterDef(fieldName = "time", fieldClass = Date.class, filter = TimeFilter.class)
@@ -154,7 +154,7 @@ public class ActionCharts {
     }
 
     @Chart(
-            value = "actionspie2",
+            name = "actionspie2",
             dataSource = ActionDataSource.class,
             filter = {
                 @FilterDef(fieldName = "time", fieldClass = Date.class, filter = TimeFilter.class)

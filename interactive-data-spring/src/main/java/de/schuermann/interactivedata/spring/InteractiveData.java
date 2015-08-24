@@ -5,7 +5,7 @@ package de.schuermann.interactivedata.spring;
  *
  * Used for Component scanning.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public @interface InteractiveData {
 }

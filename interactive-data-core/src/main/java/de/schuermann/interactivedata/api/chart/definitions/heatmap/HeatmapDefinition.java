@@ -5,7 +5,7 @@ import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefiniti
 import de.schuermann.interactivedata.api.chart.definitions.AbstractDimension;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class HeatmapDefinition extends AbstractChartDefinition<AbstractDimension, HeatmapData> {
 }

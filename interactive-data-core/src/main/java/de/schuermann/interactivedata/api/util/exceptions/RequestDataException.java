@@ -5,7 +5,7 @@ package de.schuermann.interactivedata.api.util.exceptions;
  *
  * See the message for detail information on how to solve this issue.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class RequestDataException extends RuntimeException {
 

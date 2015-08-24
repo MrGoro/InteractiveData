@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class ClassLocatorUtil {
 

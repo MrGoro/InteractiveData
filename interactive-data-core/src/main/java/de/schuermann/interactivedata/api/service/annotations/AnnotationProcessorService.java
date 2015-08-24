@@ -1,17 +1,18 @@
 package de.schuermann.interactivedata.api.service.annotations;
 
+import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
 import de.schuermann.interactivedata.processors.ProcessedAnnotation;
 
 import java.lang.annotation.*;
 
 /**
- * Annotation to mark a {@Link de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor} as a
+ * Annotation to mark a {@link AnnotationProcessor} as a
  * Services. This makes the service available.
  *
- * Custom AnnotationProcessors that extend the {@Link de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor}
+ * Custom AnnotationProcessors that extend the {@link AnnotationProcessor}
  * are already marked as AnnotationProcessorService as the Annotation inherits.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Documented
 @Inherited

@@ -1,10 +1,13 @@
 package de.schuermann.interactivedata.api.data.operations.granularity;
 
-import de.schuermann.interactivedata.api.data.operations.EmptyRequestData;
+import de.schuermann.interactivedata.api.data.operations.OperationData;
+import de.schuermann.interactivedata.api.data.operations.common.TimeFormatOptions;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import de.schuermann.interactivedata.api.util.exceptions.ChartDefinitionException;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
@@ -12,18 +15,39 @@ import java.util.Arrays;
 import java.util.Date;
 
 /**
- * @author Philipp Schürmann
+ * Granularity based on levels of time.
+ * <p>
+ * The level of granularity is specified by the request attribute {@link TimeGranularityData#selected} and has one
+ * of the following values: MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR (see {@link TimeGranularityData.STEP})
+ * <p>
+ * When grouping at a specific level only date information at that level is used for equality checking. For example if
+ * the level is month, information on the day, hour, minute etc are stripped.
+ * <p>
+ * Data is restricted to the following types: {@link Instant}, {@link LocalDateTime}, {@link LocalDate}, {@link Date}
+ * and all classes that implement the {@link TemporalAccessor} interface. Strings are supported and parsed. You can
+ * specify the pattern for parsing in the filters options. Default is {@link DateTimeFormatter#ISO_LOCAL_DATE_TIME}.
+ *
+ * <blockquote>
+ *     <b>Request Data:</b><br>
+ *     selected - {@link TimeGranularityData.STEP} e.g. MONTH
+ * </blockquote>
+ * <blockquote>
+ *     <b>Options:</b><br>
+ *     pattern - '{@code d MMM uuuu}' for '3 Dec 2011', details in {@link DateTimeFormatterBuilder#appendPattern(String)}
+ * </blockquote>
+ *
+ * @author Philipp Sch&uuml;rmann
  */
-public class TimeGranularity extends Granularity<TimeGranularityData, EmptyRequestData> {
+public class TimeGranularity extends Granularity<TimeGranularity.TimeGranularityData, TimeFormatOptions> {
 
-    public TimeGranularity(String fieldName, Class fieldClass, TimeGranularityData requestData, EmptyRequestData options) {
+    public TimeGranularity(String fieldName, Class fieldClass, TimeGranularityData requestData, TimeFormatOptions options) {
         super(fieldName, fieldClass, requestData, options);
     }
 
     @Override
     protected Object group(DataObject dataObject) {
         Object value = dataObject.getOptionalProperty(getFieldName()).orElseThrow(
-                () -> new ChartDefinitionException("Data with field name [" + getFieldName() + "] must not be null")
+            () -> new ChartDefinitionException("Data with field name [" + getFieldName() + "] must not be null")
         );
         if (Instant.class.isAssignableFrom(value.getClass())) {
             Instant instant = (Instant) value;
@@ -42,26 +66,21 @@ public class TimeGranularity extends Granularity<TimeGranularityData, EmptyReque
     }
 
     /**
-     * Group by a date of type String.
+     * Group by a date of type String with parsing.
      * <p>
-     * Date String must have a format of e.g. {@code 2007-12-03T10:15:30}
-     * <p>
-     * The string must represent a valid date-time and is parsed using
-     * {@link java.time.format.DateTimeFormatter#ISO_LOCAL_DATE_TIME}.
+     * Date String must have the format specified in options data (see {@link TimeFormatOptions}). Default format
+     * is {@link DateTimeFormatter#ISO_LOCAL_DATE_TIME}.
      *
-     * @implNote Parses the String value to a LocalDateTime and uses group(TemporalAccessor).
-     *
-     * @param date Date String
+     * @param text Date String
      * @return Group Object
      */
-    private Object group(String date) {
+    private Object group(String text) {
         try {
-            return group(LocalDateTime.parse(date));
+            return group(LocalDateTime.parse(text));
         } catch (DateTimeParseException e) {
             throw new ChartDefinitionException(
-                    "Text [" + date + "] cannot be parsed to a date. " +
-                    "Provide dates of the format 2007-12-03T10:15:30. " +
-                    "See DateTimeFormatter#ISO_LOCAL_DATE_TIME.", e);
+                    "Text [" + text + "] cannot be parsed to a date. " +
+                            "Provide dates of the format " + getOptions().getPattern(), e);
         }
     }
 
@@ -109,5 +128,47 @@ public class TimeGranularity extends Granularity<TimeGranularityData, EmptyReque
         }
     }
 
+    /**
+     * Specification of request parameters for {@link TimeGranularity}.
+     *
+     * @see TimeGranularity
+     */
+    public static class TimeGranularityData implements OperationData {
 
+        @Override
+        public boolean hasData() {
+            return getSelected() != null;
+        }
+
+        /**
+         * Levels of granularity
+         */
+        public enum STEP {
+            MILLISECOND,
+            SECOND,
+            MINUTE,
+            HOUR,
+            DAY,
+            WEEK,
+            MONTH,
+            YEAR
+        }
+
+        private STEP selected;
+
+        public TimeGranularityData() {
+        }
+
+        public TimeGranularityData(STEP selected) {
+            this.selected = selected;
+        }
+
+        public STEP getSelected() {
+            return selected;
+        }
+
+        public void setSelected(STEP selected) {
+            this.selected = selected;
+        }
+    }
 }

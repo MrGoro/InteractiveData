@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Controller for a RESTful API to output all Actions.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @RestController
 @RequestMapping("/rest")

@@ -7,19 +7,19 @@ import de.schuermann.interactivedata.api.service.annotations.AnnotationProcessor
 import java.lang.annotation.Annotation;
 
 /**
- * Interface Definition for a Processor that is able to process the information of an Annotation
- * into a ChartDefinition.
+ * Interface definition for a processor that is able to process the information of an annotation
+ * into a {@link AbstractChartDefinition ChartDefinition}.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @AnnotationProcessorService
 public interface AnnotationProcessor<T extends Annotation> {
 
     /**
-     * Generates the Definition of the Chart from the Annotation an a name.
+     * Generates the definition of the chart from the Annotation an a name.
      *
-     * @param annotation Annotation of the Chart
-     * @return Chart Definition
+     * @param annotation Annotation of the chart
+     * @return Chart definition
      */
     AbstractChartDefinition<?, ? extends ChartData> process(T annotation);
 

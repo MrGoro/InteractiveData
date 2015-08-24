@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Data Object for wrapping information about a specific request for chart data.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class Request {
 

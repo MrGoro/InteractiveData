@@ -8,14 +8,14 @@ import de.schuermann.interactivedata.spring.sample.datasource.LocationDataSource
 import org.springframework.stereotype.Service;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Service
 @ChartService("location")
 public class LocationHeatmap {
 
     @Chart(
-        value = "heatmap",
+        name = "heatmap",
         dataSource = LocationDataSource.class
     )
     @Heatmap(

@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 /**
  * Spring Data JPA Repository for accessing actions from database.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public interface ActionRepository extends CrudRepository<Action, Long>, JpaSpecificationExecutor {
 }

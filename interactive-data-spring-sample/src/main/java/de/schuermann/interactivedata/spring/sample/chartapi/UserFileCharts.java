@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Service
 @ChartService("file")
 public class UserFileCharts {
 
     @Chart(
-        value = "lastnamecount",
+        name = "lastnamecount",
         dataSource = UserCsvDataSource.class
     )
     @LineChart(

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Philipp Schürmann
+ * DTO for {@link de.schuermann.interactivedata.api.chart.annotations.heatmap.Heatmap Heatmap}.
+ *
+ * @author Philipp Sch&uuml;rmann
  */
 public class HeatmapData extends ChartData {
 

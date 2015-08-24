@@ -17,14 +17,14 @@ import java.time.Instant;
 import java.util.List;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Service
 @ChartService("counter")
 public class ChartController {
 
     @Chart(
-        value = "line",
+        name = "line",
         dataSource = MockDataSource.class
     )
     @LineChart(

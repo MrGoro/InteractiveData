@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Philipp Schürmann
+ * Implementation of the {@link DataMapperService} interfaces that uses Jackson object mapper for conversion.
+ *
+ * @author Philipp Sch&uuml;rmann
  */
 @Service
 public class JacksonDataMapperService implements DataMapperService {
@@ -43,16 +45,16 @@ public class JacksonDataMapperService implements DataMapperService {
     }
 
     /**
-     * Convert a {@Link Map Map<String, String[]>} to a {@Link Map Map<String, Object>}.
+     * Convert a Map<String, String[]> to a Map Map<String, Object>.
+     * <p>
+     * Replaces {@link List Lists} with only one Object by the object itself.
      *
-     * Replaces {@Link List Lists} with only one Object by the object itself.
-     *
-     * @param stringMap {@Link Map Map<String, String[]>} to convertData
-     * @return {@Link Map Map<String, Object>}
+     * @param stringMap Map to convert
+     * @return Converted map
      */
     private Map<String, Object> getAsMap(Map<String, String[]> stringMap) {
         Map<String, Object> map = new HashMap<>();
-        for(Map.Entry<String, String[]> entry : stringMap.entrySet()) {
+        for (Map.Entry<String, String[]> entry : stringMap.entrySet()) {
             List<String> value = Arrays.asList(entry.getValue());
             if (value.size() > 1) {
                 map.put(entry.getKey(), value);

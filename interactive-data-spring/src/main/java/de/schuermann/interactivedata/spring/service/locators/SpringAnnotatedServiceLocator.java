@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * Service Locator that uses Springs ClassPathScanningCandidateComponentProvider to find Classes.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Service
 public class SpringAnnotatedServiceLocator extends AnnotatedServiceLocator {

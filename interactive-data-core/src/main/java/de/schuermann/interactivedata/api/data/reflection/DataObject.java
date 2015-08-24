@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * Wrapper Class that makes access to properties using getters easier.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class DataObject {
 
@@ -36,7 +36,8 @@ public class DataObject {
     /**
      * Create a new DataObject that just uses Key Value Pairs.
      *
-     * @implNote This is just a wrapper around a Map
+     * This is just a wrapper around a Map.
+     *
      * @param map the Map with initial data
      * @return DataObject
      */

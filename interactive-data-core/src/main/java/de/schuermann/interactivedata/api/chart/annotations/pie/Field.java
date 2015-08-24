@@ -10,21 +10,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface Field {
 
-    enum Type { DATA, LABEL }
-
     String dataField();
 
     Class dataType() default Object.class;
 
-    Class<? extends Filter<?,?>>[] filter() default {};
+    Class<? extends Filter<?, ?>>[] filter() default {};
 
-    Class<? extends Granularity<?,?>>[] granularity() default {};
+    Class<? extends Granularity<?, ?>>[] granularity() default {};
 
-    Class<? extends Function<?,?>>[] functions() default {};
+    Class<? extends Function<?, ?>>[] functions() default {};
+
+    enum Type {DATA, LABEL}
 }

@@ -18,29 +18,34 @@ import static java.util.stream.Collectors.toList;
 /**
  * DataSource that uses a data file with separated values in each line.
  *
- * Generates {@Link DataObject DataObjects} for each line. Mapping is used to associate values to their property names.
+ * Generates {@link DataObject DataObjects} for each line. Mapping is used to associate values to their property names.
  *
- * To use the DataSource extend this class and override the abstract methods getPath() and getMapping().
- * See the method description for details on their implementation.
+ * To use the DataSource you have to extend this abstract class and override at least the method {@link #getPath()} to
+ * specify the path of your file you want to use.
  *
- * To change the separator (default is ; ) override the method getSeparator().
+ * A mapper is used to convert each line into a {@link DataObject}. The default mapping is derived from the first line
+ * of the file. The default separator to split the values of each line is ;. To adjust this behaviour override the methods
+ * {@link #getMappings()} and {@link #getSeparator()}.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public abstract class FileDataSource extends StreamDataSource<String> {
 
     private static Log log = LogFactory.getLog(FileDataSource.class);
 
     /**
-     * Specifies the {@Link Path} of the data file.
+     * Specifies the {@link Path} of the data file.
      *
      * Example:
-     * <code>
-     *     @Override
-     *     protected Path getPath() {
-     *         return FileSystem.getPath("folder", "data.csv");
-     *     }
-     * </code>
+     * <pre>
+     * {@code
+     *      {@literal @}Override
+     *      protected Path getPath() {
+     *          FileSystem filesystem = ...
+     *          return filesystem.getPath("folder", "data.csv");
+     *      }
+     * }
+     * </pre>
      *
      * @see FileSystem#getPath(String, String...)
      *
@@ -49,20 +54,26 @@ public abstract class FileDataSource extends StreamDataSource<String> {
     protected abstract Path getPath();
 
     /**
-     * Specifies the Mapping of columns inside the data file.
+     * Specifies the Mapping of columns inside the data file. The Mapping maps columns to properties in the data objects.
      *
-     * The Mapping maps columns to propertys in the data objects.
+     * The default mapping is derived from the first line of the file. The separator from {@link #getSeparator()} is used.
      *
      * Example:
-     * <code>
-     *     @Override
-     *     protected String[] getMapping() {
-     *         return { "id", "name", "age" };
-     *     }
-     * </code>
+     * <pre>
+     * {@code
+     *      {@literal @}Override
+     *      protected String[] getMapping() {
+     *          return { "id", "name", "age" };
+     *      }
+     * }
+     * </pre>
+     *
      * With the example mapping objects created form the data source have the properties id, name and age.
      * Each line represents an object. Values in the first column are associated to the property id, values
      * in the second column to the property name and values in the third column to the property age.
+     *
+     * When overriding the method note to adjust (override) the method {@link #skipLines()} so that the first line
+     * is not skipped.
      *
      * @return Mapping of columns inside the data file as an String Array
      */
@@ -96,6 +107,7 @@ public abstract class FileDataSource extends StreamDataSource<String> {
      *
      * Useful when files like csv define a header with the mapping.
      *
+     * @see #getMappings()
      * @return Lines to skip
      */
     protected long skipLines() {
@@ -118,8 +130,9 @@ public abstract class FileDataSource extends StreamDataSource<String> {
     }
 
     /**
-     * Convert a textual line into a {@Link DataObject} using the specified mapping and separator.
+     * Convert a textual line into a {@link DataObject} using the specified mapping and separator.
      *
+     * @see #getMapper()
      * @param line Line to convert
      * @return DataObject with values of the line
      */

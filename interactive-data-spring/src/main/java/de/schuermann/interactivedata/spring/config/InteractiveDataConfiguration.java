@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Base Configuration for interactive-data-spring
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Configuration
 @ComponentScan({"de.schuermann.interactivedata"})
@@ -28,16 +28,20 @@ public class InteractiveDataConfiguration {
     }
 
     /**
-     * Configure properties
+     * Configure properties.
      *
-     * @param properties
+     * Override this method to customize properties.
+     *
+     * @param properties Properties
      */
     public void configureProperties(InteractiveDataProperties properties) {}
 
     /**
      * The Jackson {@link ObjectMapper} used for serialization.
      *
-     * @return
+     * Override this method to customize the object mapper.
+     *
+     * @return Jackson Object Mapper
      */
     @Bean
     public ObjectMapper objectMapper() {

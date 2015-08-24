@@ -1,18 +1,37 @@
 package de.schuermann.interactivedata.api.data.operations.functions;
 
-import de.schuermann.interactivedata.api.data.operations.EmptyRequestData;
+import de.schuermann.interactivedata.api.data.operations.EmptyOperationData;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import de.schuermann.interactivedata.api.util.exceptions.ChartDefinitionException;
 
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
- * @author Philipp Schürmann
+ * Function that calculates the sum of numeric values.
+ * <p>
+ * Integer, Long and Double are supported.
+ *
+ * <blockquote>
+ *     <b>Request Data:</b><br>
+ *     none
+ * </blockquote>
+ * <blockquote>
+ *     <b>Options:</b><br>
+ *     none
+ * </blockquote>
+ *
+ * @see Collectors#summarizingInt(ToIntFunction)
+ * @see Collectors#summarizingLong(ToLongFunction)
+ * @see Collectors#summarizingDouble(ToDoubleFunction)
+ * @author Philipp Sch&uuml;rmann
  */
-public class Sum extends Function<EmptyRequestData, EmptyRequestData> {
+public class Sum extends Function<EmptyOperationData, EmptyOperationData> {
 
-    public Sum(String fieldName, Class fieldClass, EmptyRequestData requestData, EmptyRequestData options) {
+    public Sum(String fieldName, Class fieldClass, EmptyOperationData requestData, EmptyOperationData options) {
         super(fieldName, fieldClass, requestData, options);
     }
 

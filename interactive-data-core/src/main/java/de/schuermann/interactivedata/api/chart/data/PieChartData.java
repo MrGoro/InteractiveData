@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Philipp Schürmann
+ * DTO for {@link de.schuermann.interactivedata.api.chart.annotations.pie.PieChart PieChart}.
+ *
+ * @author Philipp Sch&uuml;rmann
  */
 public class PieChartData extends ChartData {
 

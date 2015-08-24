@@ -20,7 +20,7 @@ import java.util.Set;
  *
  * Services that get indexed have to be annotated with {@link ProcessedAnnotation @ProcessedAnnotation}.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @SupportedAnnotationTypes(value= {"de.schuermann.interactivedata.api.service.annotations.*"})
 public class ServiceAnnotationProcessor extends AbstractProcessor {

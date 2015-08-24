@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * Controller for handling RESTful request and forwarding a request to a ChartRequestHandler.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @RestController
 public class InteractiveDataController {

@@ -1,7 +1,9 @@
 package de.schuermann.interactivedata.api.data.operations;
 
+import de.schuermann.interactivedata.api.data.operations.filter.Filter;
+import de.schuermann.interactivedata.api.data.operations.functions.Function;
+import de.schuermann.interactivedata.api.data.operations.granularity.Granularity;
 import de.schuermann.interactivedata.api.service.DataMapperService;
-import de.schuermann.interactivedata.api.util.exceptions.ChartDefinitionException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -9,12 +11,22 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import static java.util.stream.Collectors.toMap;
-
 /**
- * @author Philipp Schürmann
+ * Generic definition of an operation. An Operation does "something" with a field in a data set. As an operation
+ * is abstract it cannot directly be instantiated.
+ * <p>
+ * Operation is the base type of {@link Filter}, {@link Granularity} and {@link Function}.
+ * <p>
+ * Operations are parameterized with request data and options. Options are set once. Request data originates from
+ * a specific request and is therefore set per request. {@link Operation.Builder} helps creating these instances
+ * with changing request data. The Framework automatically populates the data for options
+ * and requests. Filters only have to specify the form of the data with custom {@link OperationData} classes.
+ *
+ * @param <D> Type of the Request Data Object
+ * @param <O> Type of the Options Object
+ * @author Philipp Sch&uuml;rmann
  */
-public abstract class Operation<D extends RequestData, O extends RequestData>  {
+public abstract class Operation<D extends OperationData, O extends OperationData> {
 
     protected String fieldName;
     protected Class fieldClass;
@@ -64,41 +76,60 @@ public abstract class Operation<D extends RequestData, O extends RequestData>  {
         return getRequestData() != null && getRequestData().hasData();
     }
 
-    public static class Builder<F extends Operation<?, ?>>  {
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + ": " +
+                "RequestData[" + getRequestData().toString() + "] " +
+                "Options[" + getRequestData().toString() + "]";
+    }
+
+    /**
+     * Builder for easy creating of {@link Operation Operations} with often changing request data.
+     * <p>
+     * Allows to only set the changing request data to the builder for creating the {@link Operation} object.
+     * <p>
+     * Note: Performance of reflective operations is improved as calls are cached.
+     *
+     * @param <F> Type of the Operation
+     */
+    public static class Builder<F extends Operation<?, ?>> {
 
         protected DataMapperService dataMapperService;
         protected String fieldName;
         protected Class fieldClass;
-        protected RequestData requestData;
-        protected RequestData options;
+        protected OperationData requestData;
+        protected OperationData options;
         protected Class<F> operationClass;
-        protected Class<? extends RequestData> requestDataClass;
-        protected Class<? extends RequestData> optionsClass;
+        protected Class<? extends OperationData> requestDataClass;
+        protected Class<? extends OperationData> optionsClass;
         protected Constructor<F> constructor;
 
         /**
-         * Create a new Instance of a Operation.Builder
+         * Create a new Instance of a Operation.Builder.
          *
-         * @param operationClass Class of the Operation
-         * @param <X> Type of the Operation
+         * @param operationClass    Class of the Operation
+         * @param dataMapperService Mapper used for setting request and options data
+         * @param <X>               Type of the Operation
          * @return New Operation.Builder Instance
          */
         @SuppressWarnings("unchecked")
         public static <X extends Operation<?, ?>> Builder<X> getInstance(Class<X> operationClass, DataMapperService dataMapperService) {
             ParameterizedType parameterizedType = (ParameterizedType) operationClass.getGenericSuperclass();
-            if(parameterizedType.getActualTypeArguments().length != 2) {
+            if (parameterizedType.getActualTypeArguments().length != 2) {
                 throw new IllegalArgumentException("Cannot instantiate builder of class [" + operationClass.getSimpleName() + "] " +
                         "because it has not exactly one generic superclass");
             }
             Type genericType1 = parameterizedType.getActualTypeArguments()[0];
             Type genericType2 = parameterizedType.getActualTypeArguments()[1];
-            Class<? extends RequestData> requestDataClass = (Class<? extends RequestData>) genericType1;
-            Class<? extends RequestData> optionsClass = (Class<? extends RequestData>) genericType2;
+            Class<? extends OperationData> requestDataClass = (Class<? extends OperationData>) genericType1;
+            Class<? extends OperationData> optionsClass = (Class<? extends OperationData>) genericType2;
             return new Builder<>(operationClass, requestDataClass, optionsClass, dataMapperService);
         }
-        private Builder(Class<F> operationClass, Class<? extends RequestData> requestDataClass, Class<? extends RequestData> optionsClass, DataMapperService dataMapperService) {
+
+        private Builder(Class<F> operationClass, Class<? extends OperationData> requestDataClass, Class<? extends OperationData> optionsClass, DataMapperService dataMapperService) {
             this.dataMapperService = dataMapperService;
-            if(operationClass == null || requestDataClass == null || optionsClass == null) {
+            if (operationClass == null || requestDataClass == null || optionsClass == null) {
                 throw new IllegalArgumentException("Operation class or request data class or options class are not allowed to be null for a Filter.Builder");
             }
             this.operationClass = operationClass;
@@ -112,55 +143,89 @@ public abstract class Operation<D extends RequestData, O extends RequestData>  {
                         "appropriate visibility of form (String, Class, " + requestDataClass.getSimpleName() + ", " + optionsClass.getSimpleName() + ")", e);
             }
         }
+
+        /**
+         * Specify the name of the field
+         *
+         * @param fieldName name of the field
+         * @return Builder
+         */
         public Builder<F> fieldName(String fieldName) {
             this.fieldName = fieldName;
             return this;
         }
+
+        /**
+         * Specify the class of the field.
+         *
+         * @param fieldClass class of the field
+         * @return Builder
+         */
         public Builder<F> fieldClass(Class fieldClass) {
             this.fieldClass = fieldClass;
             return this;
         }
-        public Builder<F> requestData(RequestData requestData) {
+
+        /**
+         * Specify the request data.
+         *
+         * @param requestData Request data
+         * @return Builder
+         */
+        public Builder<F> requestData(OperationData requestData) {
             this.requestData = requestData;
             return this;
         }
+
+        /**
+         * Specify the request data as a {@code Map<String, String[]>}. A {@link DataMapperService} is used to
+         * map the data to the request object.
+         *
+         * @param data Request data as map
+         * @return Builder
+         */
         public Builder<F> requestData(Map<String, String[]> data) {
             this.requestData = this.dataMapperService.mapMultiDataOnObject(data, requestDataClass);
             return this;
         }
+
+        /**
+         * Specify the options.
+         *
+         * @param options Options
+         * @return Builder
+         */
+        public Builder<F> options(OperationData options) {
+            this.options = options;
+            return this;
+        }
+
+        /**
+         * Specify the options as a {@code Map<String, String[]>}. A {@link DataMapperService} is used to
+         * map the data to the options object.
+         *
+         * @param options Options as a map2
+         * @return Builder
+         */
         public Builder<F> options(Map<String, String> options) {
             this.options = this.dataMapperService.mapDataOnObject(options, optionsClass);
             return this;
         }
-        protected String getFieldName() {
-            return fieldName;
-        }
-        protected Class getFieldClass() {
-            return fieldClass;
-        }
-        protected RequestData getRequestData() {
-            return requestData;
-        }
-        protected RequestData getOptions() {
-            return options;
-        }
 
-        public Class<? extends RequestData> getOptionsClass() {
-            return optionsClass;
-        }
-
-        public Class<F> getOperationClass() {
-            return operationClass;
-        }
-        public Class<? extends RequestData> getRequestDataClass() {
-            return requestDataClass;
-        }
-        public F build() {
+        /**
+         * Build the Operations instance using the previously specified information.
+         *
+         * Note: This uses a cached constructor for better performance.
+         *
+         * @throws IllegalArgumentException when information specified are incorrect and instance cannot be built
+         * @return Instance of the Operation
+         */
+        public F build() throws IllegalArgumentException {
             // Check parameters before building
-            if(getFieldName() == null || getFieldName().isEmpty()) {
+            if (getFieldName() == null || getFieldName().isEmpty()) {
                 throw new IllegalArgumentException("Cannot build Operation, FieldName cannot be null or empty");
             }
-            if(getFieldClass() == null) {
+            if (getFieldClass() == null) {
                 throw new IllegalArgumentException("Cannot build Operation, FieldClass cannot be null");
             }
             try {
@@ -170,6 +235,34 @@ public abstract class Operation<D extends RequestData, O extends RequestData>  {
                 throw new IllegalArgumentException("Operation [" + operationClass.getSimpleName() + "] does not provide a Constructor with " +
                         "appropriate visibility of form (String, Class, " + requestDataClass.getSimpleName() + ", " + optionsClass.getSimpleName() + ")", e);
             }
+        }
+
+        protected String getFieldName() {
+            return fieldName;
+        }
+
+        protected Class getFieldClass() {
+            return fieldClass;
+        }
+
+        protected OperationData getRequestData() {
+            return requestData;
+        }
+
+        protected OperationData getOptions() {
+            return options;
+        }
+
+        public Class<? extends OperationData> getOptionsClass() {
+            return optionsClass;
+        }
+
+        public Class<F> getOperationClass() {
+            return operationClass;
+        }
+
+        public Class<? extends OperationData> getRequestDataClass() {
+            return requestDataClass;
         }
     }
 }

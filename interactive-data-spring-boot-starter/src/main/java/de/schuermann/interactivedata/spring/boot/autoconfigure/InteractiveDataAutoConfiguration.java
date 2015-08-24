@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Import;
  * Once in effect, the auto-configuration allows to configure any property of
  * {@link InteractiveDataProperties} using the {@code interactive-data} prefix.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Configuration
 @ConditionalOnMissingBean(InteractiveDataConfiguration.class)

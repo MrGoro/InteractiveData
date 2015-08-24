@@ -5,6 +5,7 @@ import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefiniti
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
 import de.schuermann.interactivedata.api.data.DataSource;
 import de.schuermann.interactivedata.api.handler.ChartRequestHandler;
+import de.schuermann.interactivedata.api.service.annotations.ChartService;
 import de.schuermann.interactivedata.api.util.ReflectionUtil;
 
 import java.lang.annotation.Annotation;
@@ -15,7 +16,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public abstract class ServiceProvider {
 
@@ -41,9 +42,9 @@ public abstract class ServiceProvider {
     }
 
     /**
-     * Get all Chart {@Link ChartService ChartServices} as Beans
+     * Get all Chart {@link ChartService ChartServices} as Beans
      *
-     * @return Collection of all {@Link ChartService ChartServices} as Beans.
+     * @return Collection of all {@link ChartService ChartServices} as Beans.
      */
     public Collection<Object> getChartServices() {
         Collection<Class<?>> chartServiceClasses = serviceLocator.getChartServices();
@@ -58,8 +59,9 @@ public abstract class ServiceProvider {
      * Get an AnnotationProcessor that is capable of processing the given Annotation.
      *
      * @param annotation Annotation
+     * @param <A> Type of the annotation
      * @return AnnotationProcessor
-     * @throws IllegalArgumentException when no {@Link AnnotationProcessor} was found or could be instantiated for the given annotation
+     * @throws IllegalArgumentException when no {@link AnnotationProcessor} was found or could be instantiated for the given annotation
      */
     @SuppressWarnings("unchecked")
     public <A extends Annotation> Optional<AnnotationProcessor<A>> getAnnotationProcessor(A annotation) {
@@ -70,8 +72,8 @@ public abstract class ServiceProvider {
     }
 
     /**
-     * Get an {@Link de.schuermann.interactivedata.api.handler.ChartRequestHandler} that is capable of processing the given
-     * {@Link de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition ChartDefinition}.
+     * Get an {@link ChartRequestHandler} that is capable of processing the given
+     * {@link AbstractChartDefinition ChartDefinition}.
      *
      * @param chartDefinition ChartDefinition to process with the ChartRequestHandler
      * @param <T> Type of the ChartDefinition

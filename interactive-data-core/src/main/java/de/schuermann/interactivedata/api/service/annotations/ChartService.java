@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 /**
  * Annotation indicating the root of a collection of corresponding APIs.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Documented
 @Inherited
@@ -17,10 +17,12 @@ import java.lang.annotation.*;
 public @interface ChartService {
 
     /**
-     * Path (URL) the API will be available at.
+     * Name of the service.
+     * <p>
+     * The name is part of the identification pattern for the api. The identification of a chart api has the format
+     * of %Service-Name%/%Chart-Name%.
      *
      * @return Path String
      */
     String value();
-
 }

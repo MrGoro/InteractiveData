@@ -7,7 +7,7 @@ import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefiniti
 import java.util.Optional;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class PieChartDefinition extends AbstractChartDefinition<FieldDefinition, PieChartData> {
 

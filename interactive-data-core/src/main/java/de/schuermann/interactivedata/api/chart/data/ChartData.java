@@ -4,7 +4,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * @author Philipp Schürmann
+ * Base Data Transfer Object for data of charts. Used by the api - after serialization.
+ * <p>
+ * Custom DTOs of each chart type must extent this data type.
+ *
+ * @author Philipp Sch&uuml;rmann
  */
 public class ChartData implements Serializable {
 
@@ -19,15 +23,15 @@ public class ChartData implements Serializable {
         return name;
     }
 
+    protected void setName(String name) {
+        this.name = name;
+    }
+
     public LocalDateTime getTime() {
         return time;
     }
 
     protected void setTime(LocalDateTime time) {
         this.time = time;
-    }
-
-    protected void setName(String name) {
-        this.name = name;
     }
 }

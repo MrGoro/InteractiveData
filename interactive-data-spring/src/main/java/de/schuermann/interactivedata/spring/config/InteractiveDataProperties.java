@@ -3,7 +3,7 @@ package de.schuermann.interactivedata.spring.config;
 /**
  * Interactive Data Configurations Options
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class InteractiveDataProperties {
 

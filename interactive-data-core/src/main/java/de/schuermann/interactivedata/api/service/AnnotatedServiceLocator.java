@@ -15,10 +15,10 @@ import java.util.Comparator;
 import java.util.Optional;
 
 /**
- * Default Implementation of an {@Link ServiceLocator} that uses the Pluggable Annotationn Processing API
+ * Default Implementation of an {@link ServiceLocator} that uses the Pluggable Annotation Processing API
  * (JSR-269) to find Services that are annotated with Service Annotations.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public abstract class AnnotatedServiceLocator implements ServiceLocator {
 
@@ -65,6 +65,7 @@ public abstract class AnnotatedServiceLocator implements ServiceLocator {
             new AnnotationToLongFunction<>(ChartRequestHandlerService.class, "value");
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends AbstractChartDefinition<?, ?>> Class<? extends ChartRequestHandler<T, ?>> getChartRequestHandlerService(Class<? extends AbstractChartDefinition> chartDefinition) {
         // Get all suitable Services
         Collection<Class<?>> serviceClasses = getChartRequestHandlerServices();

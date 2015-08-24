@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class ChartDefinitionService {
 
@@ -33,27 +33,27 @@ public class ChartDefinitionService {
     }
 
     /**
-     * Get a Map with all {@Link AbstractChartDefinition ChartDefinitions}.
+     * Get a Map with all {@link AbstractChartDefinition ChartDefinitions}.
      *
      * The name of the chart is the key of the Map.
      *
-     * @return Map with all {@Link AbstractChartDefinition ChartDefinitions}
+     * @return Map with all {@link AbstractChartDefinition ChartDefinitions}
      */
     public Map<String, AbstractChartDefinition<?, ? extends ChartData>> getChartDefinitions() {
         return chartDefinitions;
     }
 
     /**
-     * Get a {@Link AbstractChartDefinition ChartDefinition} for the chart with the given name.
+     * Get a {@link AbstractChartDefinition ChartDefinition} for the chart with the given name.
      * @param name Name of the chart
-     * @return {@Link AbstractChartDefinition ChartDefinition}
+     * @return {@link AbstractChartDefinition ChartDefinition}
      */
     public Optional<AbstractChartDefinition<?, ?>> getChartDefinition(String name) {
         return Optional.ofNullable(chartDefinitions.get(name));
     }
 
     /**
-     * Search for {@Link AbstractChartDefinition ChartDefinitions} using the Annotations.
+     * Search for {@link AbstractChartDefinition ChartDefinitions} using the Annotations.
      */
     private void loadChartDefinitionsUsingAnnotations() {
         Collection<Object> chartServices = serviceProvider.getChartServices();
@@ -65,10 +65,10 @@ public class ChartDefinitionService {
     }
 
     /**
-     * Extract the {@Link AbstractChartDefinition ChartDefinition} from a Method.
+     * Extract the {@link AbstractChartDefinition ChartDefinition} from a Method.
      *
-     * Uses an {@Link AnnotationProcessor AnnotationProcessor} suitable for the given annotation to extract the
-     * information.
+     * Uses an {@link de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor AnnotationProcessor}
+     * suitable for the given annotation to extract the information.
      */
     @SuppressWarnings("unchecked")
     private void processMethodAnnotations(Object bean, Method method, ChartService serviceAnnotation) {

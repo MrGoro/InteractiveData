@@ -1,6 +1,5 @@
 package de.schuermann.interactivedata.spring.data.processors;
 
-import de.schuermann.interactivedata.api.data.operations.RequestData;
 import de.schuermann.interactivedata.api.data.operations.filter.Filter;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +11,7 @@ import javax.persistence.criteria.Root;
 /**
  * Interface that has to be implemented by every FilterProcessor
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Component
 public interface FilterProcessor<T extends Filter<?,?>> {

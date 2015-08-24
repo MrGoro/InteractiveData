@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Data Entity for Actions (Counts)
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Entity
 public class Action {

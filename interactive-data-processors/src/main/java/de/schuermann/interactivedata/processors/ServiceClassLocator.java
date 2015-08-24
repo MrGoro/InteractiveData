@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * Locator for Service Classes. Uses index files from an annotation processor (JSR-268).
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class ServiceClassLocator {
 

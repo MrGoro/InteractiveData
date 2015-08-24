@@ -4,7 +4,7 @@ import de.schuermann.interactivedata.api.chart.annotations.pie.Field;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractDimension;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class FieldDefinition extends AbstractDimension {
 

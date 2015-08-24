@@ -5,14 +5,14 @@ import de.schuermann.interactivedata.api.data.operations.granularity.Granularity
 import java.util.List;
 
 public class OperationInfo extends AbstractFieldInfo {
-    private Class<? extends Granularity<?,?>> granularity;
+    private Class<? extends Granularity<?, ?>> granularity;
     private List<FunctionInfo> functionInfos;
 
-    public Class<? extends Granularity<?,?>> getGranularity() {
+    public Class<? extends Granularity<?, ?>> getGranularity() {
         return granularity;
     }
 
-    public void setGranularity(Class<? extends Granularity<?,?>> granularity) {
+    public void setGranularity(Class<? extends Granularity<?, ?>> granularity) {
         this.granularity = granularity;
     }
 

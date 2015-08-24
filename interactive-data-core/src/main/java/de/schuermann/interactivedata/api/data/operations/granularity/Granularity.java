@@ -1,42 +1,53 @@
 package de.schuermann.interactivedata.api.data.operations.granularity;
 
 import de.schuermann.interactivedata.api.data.operations.Operation;
-import de.schuermann.interactivedata.api.data.operations.RequestData;
+import de.schuermann.interactivedata.api.data.operations.OperationData;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;
 
 import java.util.function.Function;
 
 /**
- * @author Philipp Schürmann
+ * Specification of a Granularity.
+ * <p>
+ * A granularity is capable of returning a different granularity levels of a single object. Granularity is used
+ * when grouping multiple objects. Based on the level of granularity the amount of grouping is specified.
+ * {@link Function Functions} are used when to aggregate fields that are not grouped.
+ * <p>
+ * Functions are parameterized with request data and options. Options are set once. Request data originates from
+ * a specific request and is therefore set per request. The Framework automatically populates the data for options
+ * and requests. Functions only have to specify the form of the data with custom {@link OperationData} classes.
+ *
+ * @param <D> Type of the Request Data Object
+ * @param <O> Type of the Options Object
+ * @author Philipp Sch&uuml;rman
  */
-public abstract class Granularity<D extends RequestData, O extends RequestData> extends Operation<D, O> {
+public abstract class Granularity<D extends OperationData, O extends OperationData> extends Operation<D, O> {
 
-    public Granularity(String fieldName, Class fieldClass, D requestData, O options) {
-        super(fieldName, fieldClass, requestData, options);
-    }
-
+    /**
+     * Transform an object to the specified granularity level.
+     * <p>
+     * Grouping is based on this object. Equal objects are grouped.
+     *
+     * @param dataObject Object to transform
+     * @return Object at granularity level
+     */
     protected abstract Object group(DataObject dataObject);
 
+    /**
+     * Get a {@link Function} for grouping from the Granularity.
+     *
+     * @return Granularity group function
+     */
     public Function<DataObject, Object> toGroupFunction() {
         if(shouldOperate()) {
-            return new GroupFunction(this);
+            return this::group;
         } else {
             return dataObject -> dataObject.getProperty(getFieldName());
         }
     }
 
-    private class GroupFunction implements Function<DataObject, Object> {
-
-        private Granularity granularity;
-
-        private GroupFunction(Granularity granularity) {
-            this.granularity = granularity;
-        }
-
-        @Override
-        public Object apply(DataObject dataObject) {
-            return granularity.group(dataObject);
-        }
+    public Granularity(String fieldName, Class fieldClass, D requestData, O options) {
+        super(fieldName, fieldClass, requestData, options);
     }
 
 }

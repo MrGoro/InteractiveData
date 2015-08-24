@@ -1,7 +1,10 @@
 package de.schuermann.interactivedata.api.chart.definitions;
 
 /**
- * @author Philipp Schürmann
+ * Generic definition of a dimension of a chart.
+ * Dimensions specify the data to extract for visualization.
+ *
+ * @author Philipp Sch&uuml;rmann
  */
 public abstract class AbstractDimension {
 
@@ -23,5 +26,5 @@ public abstract class AbstractDimension {
     public void setDataType(Class dataType) {
         this.dataType = dataType;
     }
-    
+
 }

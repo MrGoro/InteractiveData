@@ -1,7 +1,7 @@
 # InteractiveData
 Java Library for easy creation of RESTful interfaces for interactive data visualization.
 
-InteractiveData is developed by Philipp Schürmann for his Master Thesis hat University of Hamburg.
+InteractiveData is developed by Philipp Sch&uuml;rmann for his Master Thesis hat University of Hamburg.
 The complete document will be provided here after it is finished.
 
 ## Project Structure

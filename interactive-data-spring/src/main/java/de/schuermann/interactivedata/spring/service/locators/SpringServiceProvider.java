@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 /**
  * Service for searching the correct implementations of interfaces.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Service
 public class SpringServiceProvider extends ServiceProvider {

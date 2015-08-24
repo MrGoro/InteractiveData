@@ -18,7 +18,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.toMap;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @ChartRequestHandlerService
 @Named

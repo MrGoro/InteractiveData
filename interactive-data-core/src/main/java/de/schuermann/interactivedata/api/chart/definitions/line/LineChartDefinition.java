@@ -9,7 +9,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class LineChartDefinition extends AbstractChartDefinition<AxisDefinition, LineChartData> {
 

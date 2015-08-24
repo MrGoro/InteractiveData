@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Philipp Schürmann
+ * DTO for {@link de.schuermann.interactivedata.api.chart.annotations.line.LineChart LineChart}.
+ *
+ * @author Philipp Sch&uuml;rmann
  */
 public class LineChartData extends ChartData {
 

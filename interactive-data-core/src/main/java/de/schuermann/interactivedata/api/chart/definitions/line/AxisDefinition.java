@@ -4,7 +4,7 @@ import de.schuermann.interactivedata.api.chart.annotations.line.Axis;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractDimension;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class AxisDefinition extends AbstractDimension {
 

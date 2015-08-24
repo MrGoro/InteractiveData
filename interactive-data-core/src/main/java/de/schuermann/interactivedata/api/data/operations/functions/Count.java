@@ -1,17 +1,31 @@
 package de.schuermann.interactivedata.api.data.operations.functions;
 
-import de.schuermann.interactivedata.api.data.operations.EmptyRequestData;
+import de.schuermann.interactivedata.api.data.operations.EmptyOperationData;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;
 
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
- * @author Philipp Schürmann
+ * Function that counts the number of objects that are aggregated.
+ * <p>
+ * This function is independent on the field name and field data type.
+ *
+ * <blockquote>
+ *     <b>Request Data:</b><br>
+ *     none
+ * </blockquote>
+ * <blockquote>
+ *     <b>Options:</b><br>
+ *     none
+ * </blockquote>
+ *
+ * @see Collectors#counting()
+ * @author Philipp Sch&uuml;rmann
  */
-public class Count extends Function<EmptyRequestData, EmptyRequestData> {
+public class Count extends Function<EmptyOperationData, EmptyOperationData> {
 
-    public Count(String fieldName, Class fieldClass, EmptyRequestData requestData, EmptyRequestData options) {
+    public Count(String fieldName, Class fieldClass, EmptyOperationData requestData, EmptyOperationData options) {
         super(fieldName, fieldClass, requestData, options);
     }
 

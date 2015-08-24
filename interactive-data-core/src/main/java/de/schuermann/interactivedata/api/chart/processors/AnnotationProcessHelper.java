@@ -14,21 +14,21 @@ import java.util.Map;
 
 /**
  * Annotation processor providing definitions for {@link Chart @Chart} base annotation.
- *
+ * <p>
  * Provides helper methods for extracting information of {@link FilterDef @FilterDef}, {@link OperationDef @OperationDef},
  * {@link FunctionDef @FunctionDef} and {@link Option @Option[]}.
  */
 public class AnnotationProcessHelper {
 
     public static <T extends AbstractChartDefinition<?, ?>> T processChartAnnotation(T chartDefinition, Chart annotation, ChartService serviceAnnotation) {
-        chartDefinition.setName(serviceAnnotation.value() + "/" + annotation.value());
+        chartDefinition.setName(serviceAnnotation.value() + "/" + annotation.name());
         chartDefinition.setDataSource(annotation.dataSource());
 
-        for(FilterDef filterDef : annotation.filter()) {
+        for (FilterDef filterDef : annotation.filter()) {
             chartDefinition.addFilter(getFilterInfo(filterDef));
         }
 
-        for(OperationDef operationDef : annotation.operations()) {
+        for (OperationDef operationDef : annotation.operations()) {
             chartDefinition.addOperation(getOperationInfo(operationDef));
         }
 
@@ -58,7 +58,7 @@ public class AnnotationProcessHelper {
 
     private static List<FunctionInfo> getFunctionInfos(FunctionDef[] functions) {
         List<FunctionInfo> functionInfos = new ArrayList<>();
-        for(FunctionDef functionDef : functions) {
+        for (FunctionDef functionDef : functions) {
             functionInfos.add(getFunctionInfo(functionDef));
         }
         return functionInfos;
@@ -75,7 +75,7 @@ public class AnnotationProcessHelper {
 
     public static Map<String, String> getOptions(Option[] options) {
         Map<String, String> map = new HashMap<>();
-        for(Option option : options) {
+        for (Option option : options) {
             map.put(option.key(), option.value());
         }
         return map;

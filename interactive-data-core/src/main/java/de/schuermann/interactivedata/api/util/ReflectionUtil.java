@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Utility for various reflection tasks.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class ReflectionUtil {
 
@@ -46,7 +46,7 @@ public class ReflectionUtil {
     }
 
     /**
-     * Check if Class is of generic type <code>Class1<Class2></code>
+     * Check if Class is of generic type {@code Class1<Class2>}.
      *
      * @param test Class to test
      * @param clazz1 Class1
@@ -86,7 +86,7 @@ public class ReflectionUtil {
     /**
      * Check if the Type is parameterized and has at least one of its Generic Interfaces is the specified Class
      *
-     * @param interfaceType  Type to search in ({@Link ParameterizedType})
+     * @param interfaceType  Type to search in ({@link ParameterizedType})
      * @param clazz Class to check for
      * @return true if at least one generic interface is the class specified
      */
@@ -103,7 +103,7 @@ public class ReflectionUtil {
     }
 
     /**
-     * Find the Generic Type of the form Class<GenericType>.
+     * Find the Generic Type of the form {@code Class<GenericType>}.
      *
      * @param clazz Class
      * @param index Index of the Generic Type

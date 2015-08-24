@@ -5,7 +5,7 @@ import de.schuermann.interactivedata.processors.ProcessedAnnotation;
 import java.lang.annotation.*;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Documented
 @Inherited

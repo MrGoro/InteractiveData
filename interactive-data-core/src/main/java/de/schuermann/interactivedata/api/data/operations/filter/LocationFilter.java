@@ -1,13 +1,13 @@
 package de.schuermann.interactivedata.api.data.operations.filter;
 
-import de.schuermann.interactivedata.api.data.operations.RequestData;
+import de.schuermann.interactivedata.api.data.operations.OperationData;
 import de.schuermann.interactivedata.api.data.reflection.DataObject;
 import de.schuermann.interactivedata.api.util.exceptions.ChartDefinitionException;
 
 import java.util.OptionalDouble;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public class LocationFilter extends Filter<LocationFilter.LocationFilterData, LocationFilter.LocationOptions> {
 
@@ -45,7 +45,7 @@ public class LocationFilter extends Filter<LocationFilter.LocationFilterData, Lo
                 (getRequestData().left() > getRequestData().right() && (getRequestData().left() <= longitude || longitude <= getRequestData().right()));
     }
 
-    public static class LocationOptions implements RequestData {
+    public static class LocationOptions implements OperationData {
 
         enum Type {
             LATITUDE, LONGITUDE
@@ -67,7 +67,7 @@ public class LocationFilter extends Filter<LocationFilter.LocationFilterData, Lo
         }
     }
 
-    public static class LocationFilterData implements RequestData {
+    public static class LocationFilterData implements OperationData {
 
         // Use Java 8 Optionals to differentiate between 0.0 and absent
         private OptionalDouble top;
@@ -130,6 +130,16 @@ public class LocationFilter extends Filter<LocationFilter.LocationFilterData, Lo
 
         public double left() {
             return this.left.getAsDouble();
+        }
+
+        @Override
+        public String toString() {
+            return "LocationFilterData{" +
+                    "top=" + top +
+                    ", right=" + right +
+                    ", bottom=" + bottom +
+                    ", left=" + left +
+                    '}';
         }
     }
 }

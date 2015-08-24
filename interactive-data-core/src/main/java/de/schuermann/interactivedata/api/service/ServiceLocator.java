@@ -3,65 +3,68 @@ package de.schuermann.interactivedata.api.service;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
 import de.schuermann.interactivedata.api.handler.ChartRequestHandler;
+import de.schuermann.interactivedata.api.service.annotations.AnnotationProcessorService;
+import de.schuermann.interactivedata.api.service.annotations.ChartRequestHandlerService;
+import de.schuermann.interactivedata.api.service.annotations.ChartService;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 public interface ServiceLocator {
 
     /**
      * Get all services registered with the specified Annotation
      *
+     * @param annotation Annotation to search for
      * @return Collection of Classes that are registered Services.
      */
     Collection<Class<?>> getServices(Class<? extends Annotation> annotation);
 
     /**
-     * Get all registered {@Link ChartService ChartServices}.
+     * Get all registered {@link ChartService ChartServices}.
      *
-     * @return Collection of Classes that are registered as {@Link ChartService ChartService}
+     * @return Collection of Classes that are registered as {@link ChartService ChartService}
      */
     Collection<Class<?>> getChartServices();
 
     /**
-     * Get all registered {@Link AnnotationProcessorService AnnotationProcessorServices}.
+     * Get all registered {@link AnnotationProcessorService AnnotationProcessorServices}.
      *
-     * @return Collection of Classes that are registered as {@Link AnnotationProcessorService AnnotationProcessorService}
+     * @return Collection of Classes that are registered as {@link AnnotationProcessorService AnnotationProcessorService}
      */
     Collection<Class<?>> getAnnotationProcessorServices();
 
     /**
-     * Get all registered {@Link AnnotationProcessorService AnnotationProcessorServices}.
+     * Get all registered {@link AnnotationProcessorService AnnotationProcessorServices}.
      *
-     * @return Collection of Classes that are registered as {@Link AnnotationProcessorService AnnotationProcessorService}
+     * @return Collection of Classes that are registered as {@link AnnotationProcessorService AnnotationProcessorService}
      */
     Collection<Class<?>> getChartRequestHandlerServices();
 
     /**
-     * Get the Class of the {@Link de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor} that
+     * Get the Class of the {@link de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor} that
      * can use the specified Annotation.
      *
-     * This will respect the priority of the {@Link AnnotationProcessorService AnnotationProcessorService}.
+     * This will respect the priority of the {@link AnnotationProcessorService AnnotationProcessorService}.
      *
      * @param annotationClass Class of the Annotation that should be processed
      * @param <A> Annotation Type
-     * @return Class of the {@Link de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor}
+     * @return Class of the {@link de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor}
      */
     <A extends Annotation> Class<? extends AnnotationProcessor<A>> getAnnotationProcessorService(Class<A> annotationClass);
 
     /**
-     * Get the Class of the {@Link de.schuermann.interactivedata.api.handler.ChartRequestHandler} that is capable of
-     * handling Request for charts of the given {@Link de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition ChartDefinition}.
+     * Get the Class of the {@link ChartRequestHandler} that is capable of
+     * handling Request for charts of the given {@link AbstractChartDefinition ChartDefinition}.
      *
-     * This will respect the priority of the {@Link ChartRequestHandlerService ChartRequestHandlerService}.
+     * This will respect the priority of the {@link ChartRequestHandlerService ChartRequestHandlerService}.
      *
      * @param chartDefinition Class of the ChartDefinition
      * @param <T> Type of the ChartDefinition
-     * //@param <D> Type of the ChartData
-     * @return Class of the {@Link de.schuermann.interactivedata.api.handler.ChartRequestHandler}
+     * @return Class of the {@link ChartRequestHandler}
      */
     <T extends AbstractChartDefinition<?, ?>> Class<? extends ChartRequestHandler<T, ?>> getChartRequestHandlerService(Class<? extends AbstractChartDefinition> chartDefinition);
 }

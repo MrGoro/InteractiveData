@@ -8,7 +8,7 @@ import java.lang.annotation.*;
  * This annotation is only used internal. Service Annotation are already marked and as this annotation
  * is inherited it is not needed any further.
  *
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Documented
 @Inherited
