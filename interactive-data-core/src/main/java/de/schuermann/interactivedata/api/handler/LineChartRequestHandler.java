@@ -12,9 +12,11 @@ import de.schuermann.interactivedata.api.service.annotations.ChartRequestHandler
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -31,16 +33,21 @@ public class LineChartRequestHandler extends ChartRequestHandler<LineChartDefini
 
     @Override
     protected LineChartData convertData(List<DataObject> chartData) {
-        List<Map> data = new ArrayList<>();
+        List<List<Object[]>> data = new ArrayList<>();
         LineChartDefinition chartDefinition = getChartDefinition();
         AxisDefinition axisDefinitionX = chartDefinition.getAxis(Axis.Type.X).get(0);
         List<AxisDefinition> axisDefinitionsY = chartDefinition.getAxis(Axis.Type.Y);
         for(AxisDefinition axisDefinitionY : axisDefinitionsY) {
-            data.add(chartData.stream().collect(toMap(
-                    dataObject -> dataObject.getProperty(axisDefinitionX.getDataField()),
-                    dataObject -> dataObject.getProperty(axisDefinitionY.getDataField())
-            )));
+            data.add(chartData.stream()
+                    .map(dataObject -> new Object[]{
+                            dataObject.getProperty(axisDefinitionX.getDataField()),
+                            dataObject.getProperty(axisDefinitionY.getDataField())
+                    })
+                    .sorted(arrayIndexComparator)
+                    .collect(toList()));
         }
         return new LineChartData(chartDefinition.getName(), data);
     }
+
+    private Comparator<Object[]> arrayIndexComparator = (objects, otherobjects) -> ((Comparable)objects[0]).compareTo(otherobjects[0]);
 }

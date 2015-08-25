@@ -31,11 +31,11 @@ public class PieChartRequestHandler extends ChartRequestHandler<PieChartDefiniti
     protected PieChartData convertData(List<DataObject> chartData) {
         FieldDefinition fieldData = getChartDefinition().getField(Field.Type.DATA).get();
         FieldDefinition fieldLabel = getChartDefinition().getField(Field.Type.LABEL).orElse(fieldData);
-        List<PieChartData.Pair> data = chartData.stream().map(dataObject ->
-            new PieChartData.Pair(
+        List<Object[]> data = chartData.stream().map(dataObject ->
+            new Object[]{
                 dataObject.getProperty(fieldData.getDataField()),
                 dataObject.getProperty(fieldLabel.getDataField())
-            )
+            }
         ).collect(toList());
         return new PieChartData(getChartDefinition().getName(), data);
     }

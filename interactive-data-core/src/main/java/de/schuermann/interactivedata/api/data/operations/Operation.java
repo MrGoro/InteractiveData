@@ -4,6 +4,7 @@ import de.schuermann.interactivedata.api.data.operations.filter.Filter;
 import de.schuermann.interactivedata.api.data.operations.functions.Function;
 import de.schuermann.interactivedata.api.data.operations.granularity.Granularity;
 import de.schuermann.interactivedata.api.service.DataMapperService;
+import de.schuermann.interactivedata.api.util.ReflectionUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -104,6 +105,8 @@ public abstract class Operation<D extends OperationData, O extends OperationData
         protected Class<? extends OperationData> requestDataClass;
         protected Class<? extends OperationData> optionsClass;
         protected Constructor<F> constructor;
+        protected OperationData defaultRequestData;
+        protected OperationData defaultOptions;
 
         /**
          * Create a new Instance of a Operation.Builder.
@@ -135,6 +138,8 @@ public abstract class Operation<D extends OperationData, O extends OperationData
             this.operationClass = operationClass;
             this.requestDataClass = requestDataClass;
             this.optionsClass = optionsClass;
+            this.defaultRequestData = ReflectionUtil.getInstance(requestDataClass);
+            this.defaultOptions = ReflectionUtil.getInstance(optionsClass);
             try {
                 this.constructor = operationClass.getConstructor(String.class, Class.class, getRequestDataClass(), getOptionsClass());
                 this.constructor.newInstance(null, null, null, null); // Check if Constructor is available during initialization.
@@ -186,6 +191,9 @@ public abstract class Operation<D extends OperationData, O extends OperationData
          */
         public Builder<F> requestData(Map<String, String[]> data) {
             this.requestData = this.dataMapperService.mapMultiDataOnObject(data, requestDataClass);
+            if(this.requestData == null) {
+                this.requestData = this.defaultRequestData;
+            }
             return this;
         }
 
@@ -209,6 +217,9 @@ public abstract class Operation<D extends OperationData, O extends OperationData
          */
         public Builder<F> options(Map<String, String> options) {
             this.options = this.dataMapperService.mapDataOnObject(options, optionsClass);
+            if(this.options == null) {
+                this.options = this.defaultOptions;
+            }
             return this;
         }
 

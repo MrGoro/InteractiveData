@@ -11,8 +11,10 @@ import de.schuermann.interactivedata.api.chart.annotations.pie.PieChart;
 import de.schuermann.interactivedata.api.chart.data.LineChartData;
 import de.schuermann.interactivedata.api.chart.data.PieChartData;
 import de.schuermann.interactivedata.api.data.operations.filter.TimeFilter;
+import de.schuermann.interactivedata.api.data.operations.functions.Average;
 import de.schuermann.interactivedata.api.data.operations.functions.Concatenation;
 import de.schuermann.interactivedata.api.data.operations.functions.Count;
+import de.schuermann.interactivedata.api.data.operations.functions.Function;
 import de.schuermann.interactivedata.api.data.operations.granularity.DistinctGranularity;
 import de.schuermann.interactivedata.api.data.operations.granularity.TimeGranularity;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Demo for an api that uses an database source and offers a line chart with two Y axis.
@@ -58,7 +61,7 @@ public class ActionCharts {
                 dataField = "id",
                 dataType = Long.class,
                 type = Axis.Type.Y,
-                functions = Concatenation.class
+                functions = Average.class
             )
         }
     )
@@ -87,7 +90,7 @@ public class ActionCharts {
                     @FunctionDef(
                         fieldName = "id",
                         fieldClass = Long.class,
-                        function = Concatenation.class
+                        function = Average.class
                     )
                 }
             )
@@ -101,19 +104,21 @@ public class ActionCharts {
                 type = Axis.Type.X
             ),
             @Axis(
-                    dataField = "id.count",
-                    dataType = Long.class,
-                    type = Axis.Type.Y
+                dataField = "id.count",
+                dataType = Long.class,
+                type = Axis.Type.Y
             ),
             @Axis(
-                dataField = "id.concatenation",
+                dataField = "id.average",
                 dataType = Long.class,
                 type = Axis.Type.Y
             )
         }
     )
-    public LineChartData actions2(LineChartData data) {
-        // Further enhance data before sending
+    public LineChartData actions2(LineChartData data) throws InterruptedException {
+        // Delay based on Data Count
+        long count = data.getData().stream().mapToInt(List::size).sum();
+        Thread.sleep(count);
         return data;
     }
 

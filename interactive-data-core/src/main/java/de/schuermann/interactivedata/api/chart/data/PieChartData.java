@@ -10,18 +10,18 @@ import java.util.List;
  */
 public class PieChartData extends ChartData {
 
-    List<Pair> data = new ArrayList<>();
+    List<Object[]> data = new ArrayList<>();
 
     public PieChartData(String name) {
         super(name);
     }
 
-    public PieChartData(String name, List<Pair> data) {
+    public PieChartData(String name, List<Object[]> data) {
         super(name);
         this.data = data;
     }
 
-    public List<Pair> getData() {
+    public List<Object[]> getData() {
         return data;
     }
 

@@ -74,19 +74,13 @@
         <button id="btnResetTimeFilter" class="btn btn-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></button>
 
         <label for="granularity">Granularity: </label>
-        <select name="granularity" class="form-control">
+        <select id="granularity" name="granularity" class="form-control">
             <option>Second</option>
             <option>Minute</option>
             <option>Hour</option>
             <option>Day</option>
             <option>Month</option>
             <option>Year</option>
-        </select>
-
-        <label for="aggregation">Aggregation: </label>
-        <select name="aggregation" class="form-control">
-            <option>Sum</option>
-            <option>Average</option>
         </select>
 
         <button id="btnApply" class="btn btn-primary"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
@@ -129,11 +123,11 @@
     function loadData() {
         loading(true);
         $.ajax({
-            url: "data.json",
+            url: "/api/db/actionsline1?start=2015-01-01T00:00:00&end=2015-02-01T00:00:00",
             dataType: "json",
         })
                 .success(function(data) {
-                    drawChart(data);
+                    drawChart(data.data);
                 })
                 .fail(function() {
                     alert("Error Loading data...");
@@ -146,7 +140,8 @@
     function drawChart(data) {
         var dataGroup = d3.nest()
                 .key(function(d) {
-                    return d.Client;
+                    return d.time;
+                    //return 1;
                 })
                 .entries(data);
 
@@ -167,25 +162,25 @@
         var xScale = d3.time.scale().range([MARGINS.left, WIDTH - MARGINS.right])
                 .domain([
                     d3.min(data, function(d) {
-                        return new Date(d.year);
+                        return new Date(d.time);
                     }),
                     d3.max(data, function(d) {
-                        return new Date(d.year);
+                        return new Date(d.time);
                     })
                 ]);
         var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom])
                 .domain([
                     d3.min(data, function(d) {
-                        return d.sale;
+                        return d['id.count'];
                     }),
                     d3.max(data, function(d) {
-                        return d.sale;
+                        return d['id.count'];
                     })
                 ]);
 
         var xAxis = d3.svg.axis()
                 .scale(xScale)
-                .ticks(d3.time.year, 1)
+                .ticks(d3.time.second, 1)
                 .tickFormat(d3.time.format('%Y'));
         var yAxis = d3.svg.axis()
                 .scale(yScale)
@@ -201,10 +196,10 @@
                 .call(yAxis);
         var lineGen = d3.svg.line()
                 .x(function(d) {
-                    return xScale(new Date(d.year));
+                    return xScale(new Date(d.time));
                 })
                 .y(function(d) {
-                    return yScale(d.sale);
+                    return yScale(d['id.count']);
                 })
                 .interpolate("basis");
 

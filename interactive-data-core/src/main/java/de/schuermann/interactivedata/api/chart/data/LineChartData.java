@@ -11,18 +11,18 @@ import java.util.Map;
  */
 public class LineChartData extends ChartData {
 
-    List<Map> data = new ArrayList<>();
+    List<List<Object[]>> data = new ArrayList<>();
 
     public LineChartData(String name) {
         super(name);
     }
 
-    public LineChartData(String name, List<Map> data) {
+    public LineChartData(String name, List<List<Object[]>> data) {
         super(name);
         this.data = data;
     }
 
-    public List<Map> getData() {
+    public List<List<Object[]>> getData() {
         return data;
     }
 

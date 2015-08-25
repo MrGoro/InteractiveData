@@ -140,5 +140,7 @@ public class DataObject {
         extraProperties.put(name, value);
     }
 
-
+    public Map<String, Object> getAsMap() {
+        return extraProperties;
+    }
 }
