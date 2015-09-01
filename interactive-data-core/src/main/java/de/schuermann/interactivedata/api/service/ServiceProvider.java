@@ -47,12 +47,10 @@ public abstract class ServiceProvider {
      * @return Collection of all {@link ChartService ChartServices} as Beans.
      */
     public Collection<Object> getChartServices() {
-        Collection<Class<?>> chartServiceClasses = serviceLocator.getChartServices();
-        Collection<Object> beans =  chartServiceClasses.stream()
-                .map(chartServiceClass -> (Object) getInstanceOfClass(chartServiceClass))
+        return serviceLocator.getChartServices().stream()
+                .map(this::getInstanceOfClass)
                 .filter(Objects::nonNull)
                 .collect(toList());
-        return beans;
     }
 
     /**

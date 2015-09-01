@@ -8,7 +8,6 @@ import de.schuermann.interactivedata.spring.web.exceptions.ResourceNotFoundExcep
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -25,7 +24,7 @@ public class ChartRequestHandlerService {
     private ServiceProvider serviceProvider;
     private ChartDefinitionService chartDefinitionService;
 
-    Map<String, ChartRequestHandler> handlers = new HashMap<>();
+    private Map<String, ChartRequestHandler> handlers = new HashMap<>();
 
     @Autowired
     public ChartRequestHandlerService(ServiceProvider serviceProvider, ChartDefinitionService chartDefinitionService) {
@@ -33,7 +32,6 @@ public class ChartRequestHandlerService {
         this.chartDefinitionService = chartDefinitionService;
     }
 
-    @Cacheable("chartRequestHandler")
     @SuppressWarnings("unchecked")
     public ChartRequestHandler getChartRequestHandler(String serviceName, String chartName) {
         String identifier =  serviceName + "/" + chartName;
@@ -56,5 +54,4 @@ public class ChartRequestHandlerService {
         }
         return requestHandler;
     }
-
 }

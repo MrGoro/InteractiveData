@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
- * Utility for various reflection tasks.
+ * Utility for various reflective tasks.
  *
  * @author Philipp Sch&uuml;rmann
  */
@@ -50,7 +50,7 @@ public class ReflectionUtil {
      *
      * @param test Class to test
      * @param clazz1 Class1
-     * @param interfacesArray Class2
+     * @param interfacesArray Interfaces or
      * @return true if it is a generic implementation, false if not
      */
     public static boolean isGenericImplementation(Class<?> test, Class<?> clazz1, Class<?>... interfacesArray) {
