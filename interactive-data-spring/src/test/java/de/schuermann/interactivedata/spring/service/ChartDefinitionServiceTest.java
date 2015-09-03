@@ -3,7 +3,7 @@ package de.schuermann.interactivedata.spring.service;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.service.ChartDefinitionService;
 import de.schuermann.interactivedata.spring.config.InteractiveDataTestConfiguration;
-import de.schuermann.interactivedata.spring.web.exceptions.ResourceNotFoundException;
+import de.schuermann.interactivedata.spring.web.ResourceNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 /**
- * @author Philipp Sch�rmann
+ * @author Philipp Sch&uuml;rmann
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = InteractiveDataTestConfiguration.class)

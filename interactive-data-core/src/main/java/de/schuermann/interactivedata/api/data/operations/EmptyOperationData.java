@@ -17,6 +17,6 @@ public class EmptyOperationData implements OperationData {
 
     @Override
     public String toString() {
-        return "EmptyOperationData{}";
+        return "Empty{}";
     }
 }

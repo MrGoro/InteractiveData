@@ -57,11 +57,11 @@ public class DataRequest {
 
     public class Operation {
         private Granularity<?,?> granularity;
-        private List<Function<?,?>> function;
+        private List<Function<?,?>> functions;
 
         private Operation(Granularity<?,?> granularity, List<Function<?,?>> functions) {
             this.granularity = granularity;
-            this.function = functions;
+            this.functions = functions;
         }
 
         public Granularity<?,?> getGranularity() {
@@ -69,7 +69,24 @@ public class DataRequest {
         }
 
         public List<Function<?,?>> getFunctions() {
-            return function;
+            return functions;
         }
+
+        @Override
+        public String toString() {
+            return "Operation{" +
+                    "granularity=" + granularity +
+                    ", functions=" + functions +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "DataRequest{" +
+                "chartDefinition=" + chartDefinition +
+                ", filter=" + filter +
+                ", operations=" + operations +
+                '}';
     }
 }

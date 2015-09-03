@@ -4,7 +4,7 @@ import de.schuermann.interactivedata.api.chart.annotations.line.Axis;
 import de.schuermann.interactivedata.api.chart.data.LineChartData;
 import de.schuermann.interactivedata.api.chart.definitions.line.AxisDefinition;
 import de.schuermann.interactivedata.api.chart.definitions.line.LineChartDefinition;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 import de.schuermann.interactivedata.api.service.DataMapperService;
 import de.schuermann.interactivedata.api.service.ServiceProvider;
 import de.schuermann.interactivedata.api.service.annotations.ChartRequestHandlerService;
@@ -40,8 +40,8 @@ public class LineChartRequestHandler extends ChartRequestHandler<LineChartDefini
         for(AxisDefinition axisDefinitionY : axisDefinitionsY) {
             data.add(chartData.stream()
                     .map(dataObject -> new Object[]{
-                            dataObject.getProperty(axisDefinitionX.getDataField()),
-                            dataObject.getProperty(axisDefinitionY.getDataField())
+                            dataObject.getOptionalProperty(axisDefinitionX.getDataField()).orElse(""),
+                            dataObject.getOptionalProperty(axisDefinitionY.getDataField()).orElse("")
                     })
                     .sorted(arrayIndexComparator)
                     .collect(toList()));

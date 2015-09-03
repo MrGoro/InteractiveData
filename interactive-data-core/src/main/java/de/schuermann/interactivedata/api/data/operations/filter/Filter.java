@@ -2,7 +2,7 @@ package de.schuermann.interactivedata.api.data.operations.filter;
 
 import de.schuermann.interactivedata.api.data.operations.Operation;
 import de.schuermann.interactivedata.api.data.operations.OperationData;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 
 import java.util.function.Predicate;
 

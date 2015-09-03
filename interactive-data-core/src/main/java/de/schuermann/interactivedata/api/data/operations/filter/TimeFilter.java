@@ -2,7 +2,7 @@ package de.schuermann.interactivedata.api.data.operations.filter;
 
 import de.schuermann.interactivedata.api.data.operations.OperationData;
 import de.schuermann.interactivedata.api.data.operations.common.TimeFormatOptions;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 import de.schuermann.interactivedata.api.util.exceptions.ChartDefinitionException;
 
 import java.time.Instant;

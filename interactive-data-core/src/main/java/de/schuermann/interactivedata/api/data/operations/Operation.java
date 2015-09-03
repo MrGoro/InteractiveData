@@ -1,5 +1,6 @@
 package de.schuermann.interactivedata.api.data.operations;
 
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 import de.schuermann.interactivedata.api.data.operations.filter.Filter;
 import de.schuermann.interactivedata.api.data.operations.functions.Function;
 import de.schuermann.interactivedata.api.data.operations.granularity.Granularity;
@@ -39,6 +40,10 @@ public abstract class Operation<D extends OperationData, O extends OperationData
         this.fieldClass = fieldClass;
         this.requestData = requestData;
         this.options = options;
+    }
+
+    protected Object getProperty(DataObject dataObject) {
+        return dataObject.getOptionalProperty(getFieldName()).orElse(null);
     }
 
     public String getFieldName() {

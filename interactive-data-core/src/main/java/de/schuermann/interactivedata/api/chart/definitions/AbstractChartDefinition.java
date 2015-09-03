@@ -3,7 +3,7 @@ package de.schuermann.interactivedata.api.chart.definitions;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.operations.FilterInfo;
 import de.schuermann.interactivedata.api.chart.definitions.operations.OperationInfo;
-import de.schuermann.interactivedata.api.data.DataSource;
+import de.schuermann.interactivedata.api.data.source.DataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,5 +92,22 @@ public abstract class AbstractChartDefinition<T extends AbstractDimension, D ext
 
     public void addOperation(OperationInfo operationInfo) {
         operations.add(operationInfo);
+    }
+
+    @Override
+    public String toString() {
+        String dataSourceName = "null";
+        if(dataSource != null) {
+            dataSourceName = dataSource.getSimpleName();
+        }
+        String chartPostProcessorName = "null";
+        if(chartPostProcessor != null) {
+            chartPostProcessorName = chartPostProcessor.getClass().getSimpleName();
+        }
+        return "AbstractChartDefinition{" +
+                "name='" + name + '\'' +
+                ", dataSource=" + dataSourceName +
+                ", chartPostProcessor=" + chartPostProcessorName +
+                '}';
     }
 }

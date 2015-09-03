@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.api.data.operations.granularity;
 
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 import de.schuermann.interactivedata.api.data.operations.EmptyOperationData;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
 
 /**
  * Granularity that groups identical objects. There is only one level of granularity.
@@ -23,8 +23,19 @@ public class DistinctGranularity extends Granularity<EmptyOperationData, EmptyOp
         super(fieldName, fieldClass, requestData, options);
     }
 
+    /**
+     * Method wont get called as {@link #shouldOperate()} returns true so that the identity is always used.
+     *
+     * @param dataObject Object to transform
+     * @return Property of the DataObject
+     */
     @Override
     protected Object group(DataObject dataObject) {
-        return dataObject.getProperty(getFieldName(), getFieldClass());
+        return getProperty(dataObject);
+    }
+
+    @Override
+    public boolean shouldOperate() {
+        return false; // results in an implicit Distinct Granularity
     }
 }

@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.api.data.operations.functions;
 
 import de.schuermann.interactivedata.api.data.operations.EmptyOperationData;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 
 import java.util.stream.Collector;
 import java.util.stream.Collectors;

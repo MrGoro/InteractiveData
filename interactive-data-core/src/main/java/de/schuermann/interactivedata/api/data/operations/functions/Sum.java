@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.api.data.operations.functions;
 
 import de.schuermann.interactivedata.api.data.operations.EmptyOperationData;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 import de.schuermann.interactivedata.api.util.exceptions.ChartDefinitionException;
 
 import java.util.function.ToDoubleFunction;
@@ -38,14 +38,14 @@ public class Sum extends Function<EmptyOperationData, EmptyOperationData> {
     @Override
     public Collector<DataObject, ?, ?> toCollector() {
         if(getFieldClass() == Long.class) {
-            return Collectors.summingLong(value -> value.getProperty(getFieldName(), Long.class));
+            return Collectors.summingLong(value -> value.getOptionalProperty(getFieldName(), Long.class).orElse(0L));
         } if(getFieldClass() == Integer.class) {
-            return Collectors.summarizingInt(value -> value.getProperty(getFieldName(), Integer.class));
+            return Collectors.summarizingInt(value -> value.getOptionalProperty(getFieldName(), Integer.class).orElse(0));
         } if(getFieldClass() == Double.class) {
-            return Collectors.summingDouble(value -> value.getProperty(getFieldName(), Double.class));
+            return Collectors.summingDouble(value -> value.getOptionalProperty(getFieldName(), Double.class).orElse(0D));
         } else {
             throw new ChartDefinitionException("Field [ " + getFieldName() + "] " +
-                    "of Class [" + getFieldClass().getSimpleName() + "] " +
+                    "of Type [" + getFieldClass().getSimpleName() + "] " +
                     "not supported for sum calculation");
         }
     }

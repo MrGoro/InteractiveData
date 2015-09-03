@@ -1,13 +1,14 @@
-package de.schuermann.interactivedata.api.data;
+package de.schuermann.interactivedata.api.data.source;
 
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObjectFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -31,7 +32,7 @@ import static java.util.stream.Collectors.toList;
  */
 public abstract class FileDataSource extends StreamDataSource<String> {
 
-    private static Log log = LogFactory.getLog(FileDataSource.class);
+    private static final Log log = LogFactory.getLog(FileDataSource.class);
 
     /**
      * Specifies the {@link Path} of the data file.
@@ -52,6 +53,28 @@ public abstract class FileDataSource extends StreamDataSource<String> {
      * @return Path to the data file
      */
     protected abstract Path getPath();
+
+    /**
+     * Helper method to provide easy access to a Path by its filename.
+     *
+     * The method first searches the classpath for the specified filename.
+     * If the file is non existent on the classpath the method uses the {@link FileSystems#getDefault() Default Filesystem}
+     * which usually points to the users home directory.
+     *
+     * @param filename Filename
+     * @return Path of the file
+     */
+    protected static Path getPathFromFromFilename(String filename) {
+        // Search the classpath
+        try {
+            URL resource = FileDataSource.class.getClassLoader().getResource(filename);
+            if(resource != null) {
+                return Paths.get(resource.toURI());
+            }
+        } catch (URISyntaxException ignored) {}
+        // Use Default Filesystem instead
+        return FileSystems.getDefault().getPath(filename);
+    }
 
     /**
      * Specifies the Mapping of columns inside the data file. The Mapping maps columns to properties in the data objects.
@@ -137,7 +160,7 @@ public abstract class FileDataSource extends StreamDataSource<String> {
      * @return DataObject with values of the line
      */
     protected DataObject convertLine(String line) {
-        DataObject dataObject = DataObject.createEmpty();
+        DataObject dataObject = DataObjectFactory.createEmpty();
         String[] mappings = getMappings();
         String[] parts = line.split(getSeparator());
         for(int i=0; i < parts.length; i++) {

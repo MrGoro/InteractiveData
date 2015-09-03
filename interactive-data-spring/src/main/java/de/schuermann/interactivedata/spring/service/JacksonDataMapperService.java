@@ -21,7 +21,7 @@ import java.util.Map;
 @Service
 public class JacksonDataMapperService implements DataMapperService {
 
-    private static Log log = LogFactory.getLog(JacksonDataMapperService.class);
+    private static final Log log = LogFactory.getLog(JacksonDataMapperService.class);
 
     private ObjectMapper objectMapper;
 

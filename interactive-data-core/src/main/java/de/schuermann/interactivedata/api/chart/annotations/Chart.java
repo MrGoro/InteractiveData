@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.api.chart.annotations;
 
 import de.schuermann.interactivedata.api.chart.data.ChartData;
-import de.schuermann.interactivedata.api.data.DataSource;
+import de.schuermann.interactivedata.api.data.source.DataSource;
 import de.schuermann.interactivedata.api.data.operations.Operation;
 import de.schuermann.interactivedata.api.data.operations.filter.Filter;
 

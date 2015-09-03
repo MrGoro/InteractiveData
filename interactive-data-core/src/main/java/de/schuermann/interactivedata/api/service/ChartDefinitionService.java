@@ -17,16 +17,28 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
+ * Service for providing definitions of all charts.
+ *
+ * Information is loaded during initialization of the service. ServiceProvider is used to find Classes to further search for.
+ * For performance reasons the initialization should take place during applications startup.
+ *
  * @author Philipp Sch&uuml;rmann
  */
 public class ChartDefinitionService {
 
-    private Log log = LogFactory.getLog(ChartDefinitionService.class);
+    private static final Log log = LogFactory.getLog(ChartDefinitionService.class);
 
     private ServiceProvider serviceProvider;
 
     private Map<String, AbstractChartDefinition<?, ? extends ChartData>> chartDefinitions = new HashMap<>();
 
+    /**
+     * Create a new ChartDefinitionService using a service provider.
+     *
+     * The service provider is used to provide classes that should be further searched for appropriate annotations.
+     *
+     * @param serviceProvider Service provider
+     */
     public ChartDefinitionService(ServiceProvider serviceProvider) {
         this.serviceProvider = serviceProvider;
         loadChartDefinitionsUsingAnnotations();
@@ -53,7 +65,7 @@ public class ChartDefinitionService {
     }
 
     /**
-     * Search for {@link AbstractChartDefinition ChartDefinitions} using the Annotations.
+     * Create {@link AbstractChartDefinition ChartDefinitions} using the annotations.
      */
     private void loadChartDefinitionsUsingAnnotations() {
         Collection<Object> chartServices = serviceProvider.getChartServices();
@@ -114,18 +126,17 @@ public class ChartDefinitionService {
             try {
                 AbstractChartDefinition<?, ?> chartDefinition = serviceProvider
                         .getAnnotationProcessor(chartAnnotation)
-                        .get()
+                        .orElseThrow(() -> new ChartDefinitionException("No AnnotationProcessor found for chart annotation [" + chartTypeName + "]"))
                         .process(chartAnnotation);
                 chartDefinition.setChartPostProcessor(chartPostProcessor);
                 AnnotationProcessHelper.processChartAnnotation(chartDefinition, chart, serviceAnnotation);
                 chartDefinitions.put(chartDefinition.getName(), chartDefinition);
                 log.info("Chart of type [" + chartTypeName + "] with id [" + chartDefinition.getName() + "]");
-            } catch (NoSuchElementException | IllegalArgumentException e) {
+            } catch (IllegalArgumentException | ChartDefinitionException e) {
                 log.warn("Error Processing Annotation [" + chartAnnotation.annotationType().getSimpleName() + "]", e);
             }
         } else {
             log.warn("Invalid Chart definition on Method " + method.getName());
         }
     }
-
 }

@@ -11,7 +11,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>interactive-data-processors</artifactId>
-    <description>Annotations Processors</description>
+    <name>Interactive Data Processors</name>
+    <description>Annotations Processors using JSR 269 Pluggable Annotation Processing API</description>
+    <packaging>jar</packaging>
 
     <build>
         <plugins>

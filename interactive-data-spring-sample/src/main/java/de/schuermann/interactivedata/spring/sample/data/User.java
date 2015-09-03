@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 /**
- * Data Entity for users
+ * Data Entity for Users
  *
  * @author Philipp Sch&uuml;rmann
  */
@@ -18,7 +18,7 @@ public class User {
     private String firstName;
     private String lastName;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
     private List<Action> actions;
 
     public Long getId() {

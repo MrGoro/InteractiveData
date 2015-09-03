@@ -5,11 +5,11 @@ import de.schuermann.interactivedata.api.chart.annotations.line.Axis;
 import de.schuermann.interactivedata.api.chart.annotations.line.LineChart;
 import de.schuermann.interactivedata.api.chart.data.LineChartData;
 import de.schuermann.interactivedata.api.data.DataRequest;
-import de.schuermann.interactivedata.api.data.DataSource;
+import de.schuermann.interactivedata.api.data.source.DataSource;
 import de.schuermann.interactivedata.api.data.operations.filter.TimeFilter;
 import de.schuermann.interactivedata.api.data.operations.functions.Count;
 import de.schuermann.interactivedata.api.data.operations.granularity.TimeGranularity;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
 import org.springframework.stereotype.Service;
 

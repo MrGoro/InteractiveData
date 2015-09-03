@@ -1,8 +1,10 @@
-package de.schuermann.interactivedata.spring.web.controller;
+package de.schuermann.interactivedata.spring.web;
 
 import de.schuermann.interactivedata.api.handler.Request;
 import de.schuermann.interactivedata.api.util.exceptions.RequestDataException;
 import de.schuermann.interactivedata.spring.service.ChartRequestHandlerService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +22,8 @@ import java.util.Optional;
 @RestController
 public class InteractiveDataController {
 
+    private static final Log log = LogFactory.getLog(InteractiveDataController.class);
+
     private static final String SERVICE_NAME = "service";
     private static final String CHART_NAME = "name";
     private static final String BASE_MAPPING = "/api/{"+SERVICE_NAME+"}/{"+CHART_NAME+"}";
@@ -36,7 +40,12 @@ public class InteractiveDataController {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<?> getData(@PathVariable(SERVICE_NAME) String serviceName, @PathVariable(CHART_NAME) String chartName, HttpServletRequest servletRequest) {
+    public ResponseEntity<?> getData(@PathVariable(SERVICE_NAME) String serviceName,
+                                     @PathVariable(CHART_NAME) String chartName,
+                                     HttpServletRequest servletRequest) {
+
+        log.info("Requesting data for chart: service[" + serviceName + "] chart[" + chartName + "]");
+
         Request request = new Request(chartName, servletRequest.getParameterMap());
         return Optional.ofNullable(chartRequestHandlerService.getChartRequestHandler(serviceName, chartName))
             .map(
@@ -54,6 +63,9 @@ public class InteractiveDataController {
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> getInformation(@PathVariable(SERVICE_NAME) String serviceName, @PathVariable(CHART_NAME) String chartName) {
+
+        log.info("Requesting info for chart: service[" + serviceName + "] chart[" + chartName + "]");
+
         return Optional.ofNullable(chartRequestHandlerService.getChartRequestHandler(serviceName, chartName))
             .map(
                 chartRequestHandler -> new ResponseEntity<>(

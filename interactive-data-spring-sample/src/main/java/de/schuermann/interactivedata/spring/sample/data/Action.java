@@ -7,7 +7,7 @@ import javax.persistence.ManyToOne;
 import java.util.Date;
 
 /**
- * Data Entity for Actions (Counts)
+ * Data Entity for Actions
  *
  * @author Philipp Sch&uuml;rmann
  */

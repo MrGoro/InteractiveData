@@ -1,6 +1,8 @@
 package de.schuermann.interactivedata.api.handler;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Data Object for wrapping information about a specific request for chart data.
@@ -35,5 +37,19 @@ public class Request {
 
     public void setData(Map<String, String[]> data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "name='" + name + '\'' +
+                ", data={" + stringifyData() + "}" +
+                '}';
+    }
+
+    private String stringifyData() {
+        return data.entrySet().stream()
+                .map(entry -> entry.getKey() + "->" + Arrays.toString(entry.getValue()))
+                .collect(Collectors.joining(", "));
     }
 }

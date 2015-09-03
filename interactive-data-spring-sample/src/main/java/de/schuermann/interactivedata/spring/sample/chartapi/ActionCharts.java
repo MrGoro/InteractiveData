@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Demo for an api that uses an database source and offers a line chart with two Y axis.
+ * Demo for an api that uses an database source and offers two line and to pie charts from the {@link ActionDataSource}.
  *
  * Demonstrates two different types of chart definitions with the same result.
  * The first one is easier to define. The second offers more flexibility.
