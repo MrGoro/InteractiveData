@@ -10,6 +10,6 @@ public class InteractiveDataTestConfiguration extends InteractiveDataConfigurati
 
     @Override
     public void configureProperties(InteractiveDataProperties properties) {
-        properties.setPath("de.schuermann.interactivedata.spring");
+        properties.setPath("de.schuermann.interactivedata");
     }
 }

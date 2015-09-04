@@ -3,6 +3,7 @@ package de.schuermann.interactivedata.spring.service;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.service.ChartDefinitionService;
 import de.schuermann.interactivedata.spring.config.InteractiveDataTestConfiguration;
+import de.schuermann.interactivedata.spring.service.controllers.ChartController;
 import de.schuermann.interactivedata.spring.web.ResourceNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +24,12 @@ public class ChartDefinitionServiceTest {
 
     @Test
     public void testLineChart() throws Exception {
-        AbstractChartDefinition chartDefinition = chartDefinitionService.getChartDefinition("line")
+        AbstractChartDefinition chartDefinition = chartDefinitionService.getChartDefinition("counter/line")
                 .orElseThrow(() -> new ResourceNotFoundException("No ChartRequestHandler found for this resource."));
         Assert.notNull(chartDefinition);
+        Assert.isInstanceOf(ChartController.MockDataSource.class.getClass(), chartDefinition.getDataSource());
+        Assert.notNull(chartDefinition.getChartPostProcessor());
+        Assert.notEmpty(chartDefinition.getFilters());
+        Assert.notEmpty(chartDefinition.getOperations());
     }
 }

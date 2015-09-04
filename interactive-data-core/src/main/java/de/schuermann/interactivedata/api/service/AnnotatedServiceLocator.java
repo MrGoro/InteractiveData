@@ -61,7 +61,7 @@ public abstract class AnnotatedServiceLocator implements ServiceLocator {
         return processorClassTyped;
     }
 
-    private AnnotationToLongFunction<ChartRequestHandlerService> chartReqeustHandlerServicePriorityFunction =
+    private AnnotationToLongFunction<ChartRequestHandlerService> chartRequestHandlerServicePriorityFunction =
             new AnnotationToLongFunction<>(ChartRequestHandlerService.class, "value");
 
     @Override
@@ -73,7 +73,7 @@ public abstract class AnnotatedServiceLocator implements ServiceLocator {
         // Filter by generic implementation and get the one with the lowest priority value
         Optional<Class<?>> requestHandlerClasses = serviceClasses.stream()
                 .filter(aClass -> ReflectionUtil.isGenericImplementation(aClass, ChartRequestHandler.class, chartDefinition))
-                .sorted(Comparator.comparingLong(chartReqeustHandlerServicePriorityFunction))
+                .sorted(Comparator.comparingLong(chartRequestHandlerServicePriorityFunction))
                 .findFirst();
 
         // Make it typed (already checked in filter)

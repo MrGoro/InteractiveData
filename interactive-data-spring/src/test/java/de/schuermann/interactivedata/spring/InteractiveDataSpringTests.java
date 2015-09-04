@@ -14,7 +14,6 @@ public class InteractiveDataSpringTests {
 
     @Test
     public void contextLoads() {
-
     }
 
 }
