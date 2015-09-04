@@ -1,4 +1,4 @@
-package de.schuermann.interactivedata.api.util;
+package de.schuermann.interactivedata.api.service.annotations;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;

@@ -6,7 +6,7 @@ import de.schuermann.interactivedata.api.handler.ChartRequestHandler;
 import de.schuermann.interactivedata.api.service.annotations.AnnotationProcessorService;
 import de.schuermann.interactivedata.api.service.annotations.ChartRequestHandlerService;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
-import de.schuermann.interactivedata.api.util.AnnotationToLongFunction;
+import de.schuermann.interactivedata.api.service.annotations.AnnotationToLongFunction;
 import de.schuermann.interactivedata.api.util.ReflectionUtil;
 
 import java.lang.annotation.Annotation;

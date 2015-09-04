@@ -15,6 +15,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Service for providing definitions of all charts.
@@ -97,26 +98,18 @@ public class ChartDefinitionService {
             }
         }
 
-        long appropriateTypesCount = Arrays.asList(method.getParameterTypes())
-                .stream()
-                .filter(ChartData.class::isAssignableFrom)
-                .count();
-
-        ChartPostProcessor chartPostProcessor = data -> data;
-        if(method.getParameterCount() == appropriateTypesCount) {
-            if(ChartData.class.isAssignableFrom(method.getReturnType())) {
-                final Class<? extends ChartData> dataType = (Class<? extends ChartData>) method.getReturnType();
-                chartPostProcessor = data -> {
-                    try {
-                        return dataType.cast(method.invoke(bean, data));
-                    } catch (InvocationTargetException | IllegalAccessException e) {
-                        log.error("Cannot access Method annotated with @Chart for post processing, " + e.getMessage());
-                        return data;
-                    }
-                };
-            } else {
-                log.warn("Method with @Chart annotation does not have ChartData or any sub class as its return type. Return Type is required if the method should post process auto generated ChartData. Skipping post process.");
-            }
+        ChartPostProcessor chartPostProcessor = ChartPostProcessor.identity();
+        // Method has one parameter of type ? extends ChartData
+        if(method.getParameterCount() == 1 && ChartData.class.isAssignableFrom(method.getParameterTypes()[0])) {
+            Class<? extends ChartData> dataType = (Class<? extends ChartData>) method.getReturnType();
+            chartPostProcessor = data -> {
+                try {
+                    return dataType.cast(method.invoke(bean, data));
+                } catch (InvocationTargetException | IllegalAccessException e) {
+                    log.error("Cannot access Method annotated with @Chart for post processing, " + e.getMessage());
+                    return data;
+                }
+            };
         } else {
             log.info("Method with @Chart annotation does not have ChartData or any sub class as its parameter type. Skipping post processing.");
         }

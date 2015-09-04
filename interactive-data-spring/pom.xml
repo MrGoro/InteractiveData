@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>de.schuermann.interactivedata</groupId>
-            <artifactId>interactive-data-api</artifactId>
+            <artifactId>interactive-data-core</artifactId>
             <version>${project.version}</version>
         </dependency>
 

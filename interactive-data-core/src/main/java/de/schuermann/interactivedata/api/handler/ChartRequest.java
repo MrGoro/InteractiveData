@@ -1,24 +1,24 @@
 package de.schuermann.interactivedata.api.handler;
 
-import java.util.Arrays;
+import de.schuermann.interactivedata.api.util.Utils;
+
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Data Object for wrapping information about a specific request for chart data.
  *
  * @author Philipp Sch&uuml;rmann
  */
-public class Request {
+public class ChartRequest {
 
     public String name;
     public Map<String, String[]> data;
 
-    public Request(String name) {
+    public ChartRequest(String name) {
         this.name = name;
     }
 
-    public Request(String name, Map<String, String[]> data) {
+    public ChartRequest(String name, Map<String, String[]> data) {
         this.name = name;
         this.data = data;
     }
@@ -41,15 +41,9 @@ public class Request {
 
     @Override
     public String toString() {
-        return "Request{" +
+        return "ChartRequest{" +
                 "name='" + name + '\'' +
-                ", data={" + stringifyData() + "}" +
+                ", data={" + Utils.stringify(data) + "}" +
                 '}';
-    }
-
-    private String stringifyData() {
-        return data.entrySet().stream()
-                .map(entry -> entry.getKey() + "->" + Arrays.toString(entry.getValue()))
-                .collect(Collectors.joining(", "));
     }
 }
