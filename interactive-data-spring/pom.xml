@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>interactive-data-spring</artifactId>
-
     <name>Interactive Data Spring</name>
     <description>Integration Module for Interactive Data with Spring Framework</description>
+    <packaging>jar</packaging>
 
     <parent>
         <groupId>de.schuermann.interactivedata</groupId>
@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>de.schuermann.interactivedata</groupId>
-            <artifactId>interactive-data-api</artifactId>
+            <artifactId>interactive-data-core</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -80,6 +80,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

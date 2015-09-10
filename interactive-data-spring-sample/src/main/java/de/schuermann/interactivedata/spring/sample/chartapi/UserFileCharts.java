@@ -8,12 +8,15 @@ import de.schuermann.interactivedata.api.data.operations.filter.RegexFilter;
 import de.schuermann.interactivedata.api.data.operations.functions.Count;
 import de.schuermann.interactivedata.api.data.operations.granularity.DistinctGranularity;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
+import de.schuermann.interactivedata.spring.sample.datasource.ActionDataSource;
 import de.schuermann.interactivedata.spring.sample.datasource.UserCsvDataSource;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
 /**
+ * Demo for an api that uses an csv file source and offers a line chart from the {@link UserCsvDataSource}.
+ *
  * @author Philipp Sch&uuml;rmann
  */
 @Service

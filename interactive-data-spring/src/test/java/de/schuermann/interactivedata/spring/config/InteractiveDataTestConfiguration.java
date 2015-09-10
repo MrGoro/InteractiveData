@@ -3,13 +3,13 @@ package de.schuermann.interactivedata.spring.config;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author Philipp Schürmann
+ * @author Philipp Sch&uuml;rmann
  */
 @Configuration
 public class InteractiveDataTestConfiguration extends InteractiveDataConfiguration {
 
     @Override
     public void configureProperties(InteractiveDataProperties properties) {
-        properties.setPath("de.schuermann.interactivedata.spring");
+        properties.setPath("de.schuermann.interactivedata");
     }
 }

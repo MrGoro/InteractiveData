@@ -2,7 +2,7 @@ package de.schuermann.interactivedata.api.data.operations.filter;
 
 import de.schuermann.interactivedata.api.data.operations.EmptyOperationData;
 import de.schuermann.interactivedata.api.data.operations.OperationData;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 
 /**
  * Filter that applies a regular expression for filtering.
@@ -28,7 +28,7 @@ public class RegexFilter extends Filter<RegexFilter.RegexFilterData, EmptyOperat
     @Override
     protected boolean test(DataObject dataObject) {
         // apply the regex on the data
-        return dataObject.getProperty(getFieldName(), String.class).matches(getRequestData().getRegex());
+        return dataObject.getOptionalProperty(getFieldName(), String.class).orElse("").matches(getRequestData().getRegex());
     }
 
     /**

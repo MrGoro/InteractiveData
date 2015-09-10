@@ -2,7 +2,7 @@ package de.schuermann.interactivedata.api.data.operations.filter;
 
 import de.schuermann.interactivedata.api.data.operations.EmptyOperationData;
 import de.schuermann.interactivedata.api.data.operations.OperationData;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 
 /**
  * Filter that searches for equality of the data and the parameter.
@@ -27,7 +27,7 @@ public class SearchFilter extends Filter<SearchFilter.SearchFilterData, EmptyOpe
 
     @Override
     protected boolean test(DataObject dataObject) {
-        return dataObject.getProperty(getFieldName()).equals(getRequestData().getSearch()) ^ getRequestData().isInvert();
+        return getProperty(dataObject).equals(getRequestData().getSearch()) ^ getRequestData().isInvert();
     }
 
     /**

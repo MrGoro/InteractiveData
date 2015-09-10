@@ -5,15 +5,17 @@ import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefiniti
 import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
 import de.schuermann.interactivedata.api.chart.definitions.operations.OperationInfo;
 import de.schuermann.interactivedata.api.data.DataRequest;
-import de.schuermann.interactivedata.api.data.DataSource;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 import de.schuermann.interactivedata.api.data.operations.Operation;
 import de.schuermann.interactivedata.api.data.operations.filter.Filter;
 import de.schuermann.interactivedata.api.data.operations.functions.Function;
 import de.schuermann.interactivedata.api.data.operations.granularity.Granularity;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.source.DataSource;
 import de.schuermann.interactivedata.api.service.DataMapperService;
 import de.schuermann.interactivedata.api.service.ServiceProvider;
 import de.schuermann.interactivedata.api.service.annotations.ChartRequestHandlerService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,10 +28,12 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * Basic Implementation of a RequestHandler that is able to process a request for a specific chart.
- *
+ * <p>
  * Abstract implementation that solves basic functionality. Should be extended for specialized purpose.
- * Every type of chart (ChartDefinition) must have a corresponding RequestHandler.
- *
+ * Every type of chart ({@link AbstractChartDefinition ChartDefinition}) must have a corresponding RequestHandler.
+ * <p>
+ * T
+ * <p>
  * Every RequestHandler must at least override the convert method to support its special conversion from
  * generic data to the specific ChartData.
  *
@@ -39,97 +43,174 @@ import static java.util.stream.Collectors.toList;
 @Named
 public abstract class ChartRequestHandler<T extends AbstractChartDefinition<?, D>, D extends ChartData> {
 
+    private static final Log log = LogFactory.getLog(ChartRequestHandler.class);
+
     private DataMapperService dataMapperService;
     private ServiceProvider serviceProvider;
 
     private T chartDefinition;
     private DataSource dataSource;
-    private List<Operation.Builder<? extends Filter<?,?>>> filterBuilder = new ArrayList<>();
-    private Map<Operation.Builder<? extends Granularity<?,?>>, List<Operation.Builder<? extends Function<?,?>>>> operationBuilder = new HashMap<>();
-    private ChartPostProcessor<D> postProcessor;
+    private ChartPostProcessor<D, ?> postProcessor;
+    private List<Operation.Builder<? extends Filter<?, ?>>> filterBuilder = new ArrayList<>();
+    private Map<Operation.Builder<? extends Granularity<?, ?>>, List<Operation.Builder<? extends Function<?, ?>>>> operationBuilder = new HashMap<>();
 
     @Inject
     public ChartRequestHandler(DataMapperService dataMapperService, ServiceProvider serviceProvider) {
-        // Dependencies
         this.dataMapperService = dataMapperService;
         this.serviceProvider = serviceProvider;
     }
 
-    public void setChartDefinition(T chartDefinition) {
-        this.chartDefinition = chartDefinition;
+    /**
+     * Initialize a ChartRequestHandler with the information specified by the appropriate
+     * {@link AbstractChartDefinition ChartDefinition}.
+     * <p>
+     * This will initialize {@link de.schuermann.interactivedata.api.data.operations.Operation.Builder} for quick
+     * creating of {@link DataRequest DataRequests} with {@link Filter Filters}, {@link Granularity Granularities} and
+     * {@link Function Functions} populated with the parameters from the request.
+     * <p>
+     * This will also instantiate the {@link DataSource} with the class provided in the {@link AbstractChartDefinition}
+     * using the {@link ServiceProvider}.
+     *
+     * @param chartDefinition ChartDefinition containing all information about the chart this RequestHandler should handle
+     */
+    public void initialize(T chartDefinition) {
+        if (this.chartDefinition == null) {
+            this.chartDefinition = chartDefinition;
 
-        dataSource = serviceProvider.getDataSource(chartDefinition.getDataSource());
-        postProcessor = chartDefinition.getChartPostProcessor();
+            this.filterBuilder = new ArrayList<>();
+            this.operationBuilder = new HashMap<>();
 
-        // Initialize Builders to speed up Filter/Granularity/Function creating
-        // not needing Reflection at runtime / every request
-        //
-        // Filter.Builder
-        chartDefinition.getFilters().stream()
-                .map(filterInfo ->
-                    Operation.Builder.getInstance(filterInfo.getFilter(), dataMapperService)
-                            .fieldName(filterInfo.getFieldName())
-                            .fieldClass(filterInfo.getFieldClass())
-                            .options(filterInfo.getOptions()))
-                .collect(toList())
-                .forEach(filterBuilder::add);
+            dataSource = serviceProvider.getDataSource(chartDefinition.getDataSource());
+            postProcessor = chartDefinition.getChartPostProcessor();
 
-        // Operations (Granularity.Builder, Function.Builder)
-        for(OperationInfo operationInfo : chartDefinition.getOperations()) {
-            Operation.Builder<? extends Granularity<?,?>> granularityBuilder =
-                    Operation.Builder.getInstance(operationInfo.getGranularity(), dataMapperService)
-                                                            .fieldName(operationInfo.getFieldName())
-                                                            .fieldClass(operationInfo.getFieldClass())
-                                                            .options(operationInfo.getOptions());
+            // Initialize Builders to speed up Filter/Granularity/Function creating
+            // not needing Reflection at runtime / every request
+            //
+            // Filter.Builder
+            chartDefinition.getFilters().stream()
+                    .map(filterInfo ->
+                            Operation.Builder.getInstance(filterInfo.getFilter(), dataMapperService)
+                                    .fieldName(filterInfo.getFieldName())
+                                    .fieldClass(filterInfo.getFieldClass())
+                                    .options(filterInfo.getOptions()))
+                    .collect(toList())
+                    .forEach(filterBuilder::add);
 
-            List<Operation.Builder<? extends Function<?,?>>> functionBuilder = operationInfo.getFunctionInfos().stream()
-                .map(functionInfo ->
-                                Operation.Builder.getInstance(functionInfo.getFunction(), dataMapperService)
-                                        .fieldName(functionInfo.getFieldName())
-                                        .fieldClass(functionInfo.getFieldClass())
-                                        .options(functionInfo.getOptions())
-                ).collect(toList());
+            // Operations (Granularity.Builder, Function.Builder)
+            for (OperationInfo operationInfo : chartDefinition.getOperations()) {
+                Operation.Builder<? extends Granularity<?, ?>> granularityBuilder =
+                        Operation.Builder.getInstance(operationInfo.getGranularity(), dataMapperService)
+                                .fieldName(operationInfo.getFieldName())
+                                .fieldClass(operationInfo.getFieldClass())
+                                .options(operationInfo.getOptions());
 
-            operationBuilder.put(granularityBuilder, functionBuilder);
+                List<Operation.Builder<? extends Function<?, ?>>> functionBuilder = operationInfo.getFunctionInfos().stream()
+                        .map(functionInfo ->
+                                        Operation.Builder.getInstance(functionInfo.getFunction(), dataMapperService)
+                                                .fieldName(functionInfo.getFieldName())
+                                                .fieldClass(functionInfo.getFieldClass())
+                                                .options(functionInfo.getOptions())
+                        ).collect(toList());
+
+                operationBuilder.put(granularityBuilder, functionBuilder);
+            }
         }
     }
 
-    public D handleDataRequest(Request request) {
-        List<DataObject> chartData = getData(chartDefinition, request);
+    /**
+     * Handle the ChartRequest for data and return an Object that is completely processed through all steps.
+     *
+     * @param chartRequest ChartRequest
+     * @return Object containing data
+     */
+    public Object handleDataRequest(ChartRequest chartRequest) {
+        log.debug(chartRequest);
+
+        // Get DataRequest from ChartRequest
+        DataRequest dataRequest = getDataRequest(chartRequest);
+        // Query DataSource for Data with DataRequest
+        List<DataObject> chartData = getData(dataRequest);
+        // Convert to specific ChartData with specialized Handler
         D specificChartData = convertData(chartData);
+        // Post process before returning
         return postProcessor.process(specificChartData);
     }
 
+    /**
+     * Convert generic {@link DataObject DataObjects} into the specific {@link ChartData} used for the chart type.
+     * <p>
+     * As this method is abstract extending classes always have to provide an implementation of the method. The
+     * Implementation has to transform the generic data to the type used for the chart type.
+     *
+     * @param chartData Generic data queried from DataSource
+     * @return ChartData for the specific chart type
+     */
     protected abstract D convertData(List<DataObject> chartData);
 
-    protected List<DataObject> getData(T chartDefinition, Request request) {
-        return dataSource.getData(getDataRequest(request));
+    protected List<DataObject> getData(DataRequest dataRequest) {
+        return dataSource.getData(dataRequest);
     }
 
-    protected DataRequest getDataRequest(Request request) {
+    /**
+     * Get a {@link DataRequest} from a {@link ChartRequest}.
+     * <p>
+     * Uses {@link de.schuermann.interactivedata.api.data.operations.Operation.Builder} to populate request parameters
+     * to the objects.
+     *
+     * @param chartRequest ChartRequest
+     * @return DataRequest
+     */
+    protected DataRequest getDataRequest(ChartRequest chartRequest) {
         DataRequest dataRequest = new DataRequest();
         dataRequest.setChartDefinition(chartDefinition);
         dataRequest.setFilter(
-            filterBuilder.stream()
-                    .map(builder -> builder.requestData(request.getData()).build())
-                    .collect(toList())
+                // Create Filter objects with request data
+                filterBuilder.stream()
+                        .map(builder -> builder.requestData(chartRequest.getData()).build())
+                        .collect(toList())
         );
-        for(Map.Entry<Operation.Builder<? extends Granularity<?,?>>, List<Operation.Builder<? extends Function<?,?>>>> entry : operationBuilder.entrySet()) {
+
+        // Create Operation object with request data for Granularity and Function
+        for (Map.Entry<Operation.Builder<? extends Granularity<?, ?>>, List<Operation.Builder<? extends Function<?, ?>>>> entry : operationBuilder.entrySet()) {
             dataRequest.addOperation(
-                    entry.getKey().requestData(request.getData()).build(),
+                    entry.getKey().requestData(chartRequest.getData()).build(),
                     entry.getValue().stream()
-                            .map(builder -> builder.requestData(request.getData()).build())
+                            .map(builder -> builder.requestData(chartRequest.getData()).build())
                             .collect(toList())
             );
         }
+
+        log.debug(dataRequest.toString());
+
         return dataRequest;
     }
 
+    /**
+     * Return any type providing the documentation for the chart type.
+     * <p>
+     * Default returns {@link AbstractChartDefinition ChartDefinition} from {@link #getChartDefinition()}.
+     *
+     * @return Object of documentation
+     */
+    public Object handleInfoRequest() {
+        return getChartDefinition();
+    }
+
+    /**
+     * Get the ChartDefinition the RequestHandler is initialized with.
+     *
+     * @return ChartDefinition
+     */
     protected T getChartDefinition() {
         return chartDefinition;
     }
 
-    public String handleInfoRequest() {
-        return "Ganz viele Infos zum Chart mit dem Namen " + chartDefinition.getName();
+    /**
+     * Get the ChartPostProcessor, the function that calls the annotated method.
+     *
+     * @return ChartPostProcessor
+     */
+    protected ChartPostProcessor<D, ?> getPostProcessor() {
+        return postProcessor;
     }
 }

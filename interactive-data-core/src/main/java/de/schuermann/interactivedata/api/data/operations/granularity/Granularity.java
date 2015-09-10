@@ -2,7 +2,7 @@ package de.schuermann.interactivedata.api.data.operations.granularity;
 
 import de.schuermann.interactivedata.api.data.operations.Operation;
 import de.schuermann.interactivedata.api.data.operations.OperationData;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 
 import java.util.function.Function;
 
@@ -42,7 +42,7 @@ public abstract class Granularity<D extends OperationData, O extends OperationDa
         if(shouldOperate()) {
             return this::group;
         } else {
-            return dataObject -> dataObject.getProperty(getFieldName());
+            return this::getProperty;
         }
     }
 

@@ -3,15 +3,20 @@ package de.schuermann.interactivedata.spring.sample.controller;
 import de.schuermann.interactivedata.spring.sample.data.Action;
 import de.schuermann.interactivedata.spring.sample.repository.ActionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
- * Controller for a RESTful API to output all Actions.
+ * Sample for demonstrating "details on demand" to access all or a specific action resource.
  *
  * @author Philipp Sch&uuml;rmann
  */
@@ -22,11 +27,28 @@ public class ActionRestController {
     @Autowired
     private ActionRepository actionRepository;
 
-    @RequestMapping(value = "/actions", method = RequestMethod.GET)
-    private List<Action> getAllActions() {
-        List<Action> list = new ArrayList<>();
-        Iterable<Action> actions = actionRepository.findAll();
-        actions.forEach(list::add);
-        return list;
+    @RequestMapping(
+            value = "/actions",
+            method = RequestMethod.GET
+    )
+    @Cacheable("/rest/actions")
+    public List<Action> getAllActions() {
+        List<Action> actions = new ArrayList<>();
+        actionRepository.findAll().forEach(actions::add);
+        return actions;
+    }
+
+    @RequestMapping(
+            value = "/action/{id}",
+            method = RequestMethod.GET
+    )
+    @Cacheable("/rest/action/id")
+    public ResponseEntity<Action> getActionById(@PathVariable long id) {
+        return Optional.ofNullable(actionRepository.findOne(id))
+            .map(
+                action -> new ResponseEntity<>(action, HttpStatus.OK)
+            ).orElse(
+                new ResponseEntity<>(HttpStatus.NOT_FOUND)
+            );
     }
 }

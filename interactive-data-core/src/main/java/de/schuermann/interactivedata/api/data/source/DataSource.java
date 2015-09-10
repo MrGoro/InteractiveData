@@ -1,6 +1,7 @@
-package de.schuermann.interactivedata.api.data;
+package de.schuermann.interactivedata.api.data.source;
 
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.DataRequest;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 
 import java.util.List;
 

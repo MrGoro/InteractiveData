@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
+ * Data Entity for Locations
+ *
  * @author Philipp Sch&uuml;rmann
  */
 @Entity

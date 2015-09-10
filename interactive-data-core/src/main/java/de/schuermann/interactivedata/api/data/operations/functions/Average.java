@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.api.data.operations.functions;
 
 import de.schuermann.interactivedata.api.data.operations.EmptyOperationData;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 import de.schuermann.interactivedata.api.util.exceptions.ChartDefinitionException;
 
 import java.util.function.ToDoubleFunction;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Function that calculates the average of numeric values.
  * <p>
- * Integer, Long and Double are supported.
+ * Integer, Long and Double are supported. String is supported when parsable by {@link Double#parseDouble(String)}.
  *
  * <blockquote>
  *     <b>Request Data:</b><br>
@@ -38,14 +38,16 @@ public class Average extends Function<EmptyOperationData, EmptyOperationData> {
     @Override
     public Collector<DataObject, ?, ?> toCollector() {
         if(getFieldClass() == Long.class) {
-            return Collectors.averagingLong(value -> value.getProperty(getFieldName(), Long.class));
-        } if(getFieldClass() == Integer.class) {
-            return Collectors.averagingInt(value -> value.getProperty(getFieldName(), Integer.class));
-        } if(getFieldClass() == Double.class) {
-            return Collectors.averagingDouble(value -> value.getProperty(getFieldName(), Double.class));
+            return Collectors.averagingLong(value -> value.getOptionalProperty(getFieldName(), Long.class).orElse(0L));
+        } else if(getFieldClass() == Integer.class) {
+            return Collectors.averagingInt(value -> value.getOptionalProperty(getFieldName(), Integer.class).orElse(0));
+        } else if(getFieldClass() == Double.class) {
+            return Collectors.averagingDouble(value -> value.getOptionalProperty(getFieldName(), Double.class).orElse(0D));
+        } else if(getFieldClass() == String.class) {
+            return Collectors.averagingDouble(value -> Double.parseDouble(value.getOptionalProperty(getFieldName(), String.class).orElse("0.0")));
         } else {
             throw new ChartDefinitionException("Field [ " + getFieldName() + "] " +
-                    "of Class [" + getFieldClass().getSimpleName() + "] " +
+                    "of Type [" + getFieldClass().getSimpleName() + "] " +
                     "not supported for average calculation");
         }
     }

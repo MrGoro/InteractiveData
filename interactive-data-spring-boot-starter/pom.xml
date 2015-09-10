@@ -6,9 +6,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>interactive-data-spring-boot-starter</artifactId>
-
     <name>Spring Boot Starter for Interactive Data</name>
     <description>Easy start with Spring Boot and Interactive Data</description>
+    <packaging>jar</packaging>
 
     <parent>
         <artifactId>interactive-data</artifactId>

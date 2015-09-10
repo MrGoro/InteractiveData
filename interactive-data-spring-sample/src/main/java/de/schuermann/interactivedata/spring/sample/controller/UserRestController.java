@@ -1,16 +1,22 @@
 package de.schuermann.interactivedata.spring.sample.controller;
 
-import de.schuermann.interactivedata.spring.sample.UserService;
 import de.schuermann.interactivedata.spring.sample.data.User;
+import de.schuermann.interactivedata.spring.sample.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
- * Controller for a RESTful API to output all Users.
+ * Sample for demonstrating "details on demand" to access all or a specific user resource.
  *
  * @author Philipp Sch&uuml;rmann
  */
@@ -19,10 +25,30 @@ import java.util.List;
 public class UserRestController {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @RequestMapping(
+            value = "/users",
+            method = RequestMethod.GET
+    )
+    @Cacheable("/rest/users")
     public List<User> getAllUsers() {
-        return userService.findAll();
+        List<User> actions = new ArrayList<>();
+        userRepository.findAll().forEach(actions::add);
+        return actions;
+    }
+
+    @RequestMapping(
+            value = "/user/{id}",
+            method = RequestMethod.GET
+    )
+    @Cacheable("/rest/user/id")
+    public ResponseEntity<User> getUserById(@PathVariable long id) {
+        return Optional.ofNullable(userRepository.findOne(id))
+            .map(
+                    user -> new ResponseEntity<>(user, HttpStatus.OK)
+            ).orElse(
+                new ResponseEntity<>(HttpStatus.NOT_FOUND)
+            );
     }
 }

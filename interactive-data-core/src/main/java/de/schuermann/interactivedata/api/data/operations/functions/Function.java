@@ -3,7 +3,7 @@ package de.schuermann.interactivedata.api.data.operations.functions;
 import de.schuermann.interactivedata.api.data.operations.Operation;
 import de.schuermann.interactivedata.api.data.operations.OperationData;
 import de.schuermann.interactivedata.api.data.operations.granularity.Granularity;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 
 import java.util.stream.Collector;
 

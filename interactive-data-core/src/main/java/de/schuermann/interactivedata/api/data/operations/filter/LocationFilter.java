@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.api.data.operations.filter;
 
 import de.schuermann.interactivedata.api.data.operations.OperationData;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 import de.schuermann.interactivedata.api.util.exceptions.ChartDefinitionException;
 
 import java.util.OptionalDouble;
@@ -19,11 +19,11 @@ public class LocationFilter extends Filter<LocationFilter.LocationFilterData, Lo
     protected boolean test(DataObject dataObject) {
         double coord;
         if(getFieldClass() == String.class) {
-            coord = Double.parseDouble(dataObject.getProperty(getFieldName(), String.class));
+            coord = Double.parseDouble(dataObject.getOptionalProperty(getFieldName(), String.class).orElse("0.0"));
         } else if(getFieldClass() == Double.class || getFieldClass() == double.class) {
-            coord = dataObject.getProperty(getFieldName(), double.class);
+            coord = dataObject.getOptionalProperty(getFieldName(), double.class).orElse(0.0);
         } else {
-            throw new ChartDefinitionException("Latitude or Longitude for LocationFilter must be of type double or String (parseable double)");
+            throw new ChartDefinitionException("Latitude or Longitude for LocationFilter must be of type double or String (parsable double)");
         }
         if(isLatitude()) {
             return checkLatitude(coord);

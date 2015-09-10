@@ -1,8 +1,10 @@
-package de.schuermann.interactivedata.api.data;
+package de.schuermann.interactivedata.api.data.source;
 
+import de.schuermann.interactivedata.api.data.DataRequest;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObjectFactory;
 import de.schuermann.interactivedata.api.data.operations.filter.Filter;
 import de.schuermann.interactivedata.api.data.operations.functions.Function;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,8 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 /**
+ * // TODO
+ *
  * @author Philipp Sch&uuml;rmann
  */
 public abstract class StreamDataSource<T> implements DataSource {
@@ -31,7 +35,7 @@ public abstract class StreamDataSource<T> implements DataSource {
     }
 
     protected java.util.function.Function<T, DataObject> getMapper(){
-        return DataObject::create;
+        return DataObjectFactory::create;
     }
 
     @Override
@@ -173,7 +177,7 @@ public abstract class StreamDataSource<T> implements DataSource {
             for(int i = 0; i < keys.length; i++) {
                 map.put(keys[i], values[i]);
             }
-            return DataObject.create(map);
+            return DataObjectFactory.create(map);
         }
     }
 }

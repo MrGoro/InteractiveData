@@ -3,10 +3,11 @@ package de.schuermann.interactivedata.api.chart.definitions;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.operations.FilterInfo;
 import de.schuermann.interactivedata.api.chart.definitions.operations.OperationInfo;
-import de.schuermann.interactivedata.api.data.DataSource;
+import de.schuermann.interactivedata.api.data.source.DataSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Generic definition of a chart. Base definition that every specific chart definition must extend.
@@ -29,23 +30,47 @@ public abstract class AbstractChartDefinition<T extends AbstractDimension, D ext
 
     private String name;
     private Class<? extends DataSource> dataSource;
-    private ChartPostProcessor<D> chartPostProcessor;
+    private ChartPostProcessor<D, ?> chartPostProcessor;
     private List<T> dimensions = new ArrayList<>();
     private List<FilterInfo> filters = new ArrayList<>();
     private List<OperationInfo> operations = new ArrayList<>();
 
+    /**
+     * Get the name of the chart.
+     *
+     * @return Name of the chart
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Set the name of the chart.
+     *
+     * @param name Name of the chart
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Get the class of the {@link DataSource} to use for querying data for the chart.
+     * <p>
+     * The class is instantiated before querying by the {@link de.schuermann.interactivedata.api.service.ServiceProvider}.
+     *
+     * @return Class of the DataSource
+     */
     public Class<? extends DataSource> getDataSource() {
         return dataSource;
     }
 
+    /**
+     * Set the class of the {@link DataSource} to use for querying data for the chart.
+     * <p>
+     * The class is instantiated before querying by the {@link de.schuermann.interactivedata.api.service.ServiceProvider}.
+     *
+     * @param dataSource Class of the DataSource
+     */
     public void setDataSource(Class<? extends DataSource> dataSource) {
         this.dataSource = dataSource;
     }
@@ -62,11 +87,11 @@ public abstract class AbstractChartDefinition<T extends AbstractDimension, D ext
         dimensions.add(dimension);
     }
 
-    public ChartPostProcessor<D> getChartPostProcessor() {
+    public ChartPostProcessor<D, ?> getChartPostProcessor() {
         return chartPostProcessor;
     }
 
-    public void setChartPostProcessor(ChartPostProcessor<D> chartPostProcessor) {
+    public void setChartPostProcessor(ChartPostProcessor<D, ?> chartPostProcessor) {
         this.chartPostProcessor = chartPostProcessor;
     }
 
@@ -92,5 +117,22 @@ public abstract class AbstractChartDefinition<T extends AbstractDimension, D ext
 
     public void addOperation(OperationInfo operationInfo) {
         operations.add(operationInfo);
+    }
+
+    @Override
+    public String toString() {
+        String dataSourceName = "null";
+        if(dataSource != null) {
+            dataSourceName = dataSource.getSimpleName();
+        }
+        String chartPostProcessorName = "null";
+        if(chartPostProcessor != null) {
+            chartPostProcessorName = chartPostProcessor.getClass().getSimpleName();
+        }
+        return "AbstractChartDefinition{" +
+                "name='" + name + '\'' +
+                ", dataSource=" + dataSourceName +
+                ", chartPostProcessor=" + chartPostProcessorName +
+                '}';
     }
 }

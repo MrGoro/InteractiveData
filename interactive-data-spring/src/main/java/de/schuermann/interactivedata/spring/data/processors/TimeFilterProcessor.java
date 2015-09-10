@@ -12,10 +12,10 @@ import javax.persistence.criteria.Root;
  * @author Philipp Sch&uuml;rmann
  */
 @Component
-public class TimeFilterProcessor implements FilterProcessor<TimeFilter> {
+public class TimeFilterProcessor implements FilterToPredicateProcessor<TimeFilter> {
 
     @Override
-    public Predicate filter(Root root, CriteriaQuery<?> query, CriteriaBuilder cb, TimeFilter filter) {
+    public Predicate toPredicate(Root root, CriteriaQuery<?> query, CriteriaBuilder cb, TimeFilter filter) {
         return cb.between(root.get(filter.getFieldName()), filter.getRequestData().getStart(), filter.getRequestData().getEnd());
     }
 }

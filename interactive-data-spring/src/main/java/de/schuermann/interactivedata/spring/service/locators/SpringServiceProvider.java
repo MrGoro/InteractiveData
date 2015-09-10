@@ -1,6 +1,6 @@
 package de.schuermann.interactivedata.spring.service.locators;
 
-import de.schuermann.interactivedata.api.data.DataSource;
+import de.schuermann.interactivedata.api.data.source.DataSource;
 import de.schuermann.interactivedata.api.service.ServiceLocator;
 import de.schuermann.interactivedata.api.service.ServiceProvider;
 import org.springframework.beans.BeansException;

@@ -3,7 +3,7 @@ package de.schuermann.interactivedata.api.service;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessor;
-import de.schuermann.interactivedata.api.data.DataSource;
+import de.schuermann.interactivedata.api.data.source.DataSource;
 import de.schuermann.interactivedata.api.handler.ChartRequestHandler;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
 import de.schuermann.interactivedata.api.util.ReflectionUtil;

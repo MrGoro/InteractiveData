@@ -2,7 +2,7 @@ package de.schuermann.interactivedata.api.data.operations.functions;
 
 import de.schuermann.interactivedata.api.data.operations.EmptyOperationData;
 import de.schuermann.interactivedata.api.data.operations.OperationData;
-import de.schuermann.interactivedata.api.data.reflection.DataObject;
+import de.schuermann.interactivedata.api.data.bean.DataObject;
 
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -36,7 +36,7 @@ public class Concatenation extends Function<EmptyOperationData, Concatenation.Co
     @Override
     public Collector<DataObject, ?, ?> toCollector() {
         return mapping(
-                dataObject -> dataObject.getProperty(getFieldName()).toString(),
+                dataObject -> getProperty(dataObject).toString(),
                 Collectors.joining(getOptions().getSeparator())
         );
     }

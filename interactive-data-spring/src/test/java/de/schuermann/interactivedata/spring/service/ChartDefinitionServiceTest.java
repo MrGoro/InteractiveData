@@ -3,7 +3,8 @@ package de.schuermann.interactivedata.spring.service;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.service.ChartDefinitionService;
 import de.schuermann.interactivedata.spring.config.InteractiveDataTestConfiguration;
-import de.schuermann.interactivedata.spring.web.exceptions.ResourceNotFoundException;
+import de.schuermann.interactivedata.spring.service.controllers.ChartController;
+import de.schuermann.interactivedata.spring.web.ResourceNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 /**
- * @author Philipp Sch�rmann
+ * @author Philipp Sch&uuml;rmann
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = InteractiveDataTestConfiguration.class)
@@ -23,8 +24,12 @@ public class ChartDefinitionServiceTest {
 
     @Test
     public void testLineChart() throws Exception {
-        AbstractChartDefinition chartDefinition = chartDefinitionService.getChartDefinition("line")
+        AbstractChartDefinition chartDefinition = chartDefinitionService.getChartDefinition("counter/line")
                 .orElseThrow(() -> new ResourceNotFoundException("No ChartRequestHandler found for this resource."));
         Assert.notNull(chartDefinition);
+        Assert.isInstanceOf(ChartController.MockDataSource.class.getClass(), chartDefinition.getDataSource());
+        Assert.notNull(chartDefinition.getChartPostProcessor());
+        Assert.notEmpty(chartDefinition.getFilters());
+        Assert.notEmpty(chartDefinition.getOperations());
     }
 }
