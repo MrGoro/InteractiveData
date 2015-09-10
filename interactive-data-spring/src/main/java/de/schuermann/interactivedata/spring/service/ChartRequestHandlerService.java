@@ -4,6 +4,7 @@ import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefiniti
 import de.schuermann.interactivedata.api.handler.ChartRequestHandler;
 import de.schuermann.interactivedata.api.service.ChartDefinitionService;
 import de.schuermann.interactivedata.api.service.ServiceProvider;
+import de.schuermann.interactivedata.api.util.exceptions.RequestDataException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,10 +63,10 @@ public class ChartRequestHandlerService {
         log.debug("Creating new RequestHandler for chart wit id [" + identifier + "]");
 
         AbstractChartDefinition<?, ?> chartDefinition = chartDefinitionService.getChartDefinition(identifier)
-                .orElseThrow(() -> new ResourceNotFoundException("No ChartDefinition found for this resource."));
+                .orElseThrow(() -> new RequestDataException("No ChartDefinition found for this resource."));
 
         ChartRequestHandler requestHandler = serviceProvider.getChartRequestHandler(chartDefinition)
-                .orElseThrow(() -> new ResourceNotFoundException("No ChartRequestHandler found for this resource."));
+                .orElseThrow(() -> new RequestDataException("No ChartRequestHandler found for this resource."));
         requestHandler.initialize(chartDefinition);
 
         return requestHandler;
