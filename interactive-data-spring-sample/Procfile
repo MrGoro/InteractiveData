@@ -1,1 +1,0 @@
-web: java -Dserver.port=$PORT -jar target/interactive-data-spring-sample-1.0-SNAPSHOT.jar
