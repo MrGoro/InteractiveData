@@ -7,6 +7,8 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.schuermann.interactivedata.api.service.ChartDefinitionService;
 import de.schuermann.interactivedata.api.service.ServiceProvider;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +21,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan({"de.schuermann.interactivedata"})
 public class InteractiveDataConfiguration {
+
+    private static final Log log = LogFactory.getLog(InteractiveDataConfiguration.class);
 
     @Bean
     public InteractiveDataProperties properties() {
@@ -74,6 +78,7 @@ public class InteractiveDataConfiguration {
 
     @Bean
     public ChartDefinitionService chartDefinitionService(ServiceProvider serviceProvider) {
+        log.info("Creating ChartDefinitionService");
         return new ChartDefinitionService(serviceProvider);
     }
 
