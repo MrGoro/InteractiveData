@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar interactive-data-spring-sample/target/interactive-data-spring-sample-1.0-SNAPSHOT.jar --spring.profiles.active=dev
+web: java -Dspring.profiles.active=dev,hsql -Dserver.port=$PORT -jar interactive-data-spring-sample/target/interactive-data-spring-sample-1.0-SNAPSHOT.jar
