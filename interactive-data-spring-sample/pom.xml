@@ -5,6 +5,7 @@
 
     <groupId>de.schuermann.interactivedata</groupId>
     <artifactId>interactive-data-spring-sample</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <name>Interactive Data Spring Samples</name>
     <description>Sample project for interactive data library for use with Spring Boot</description>
     <packaging>jar</packaging>
@@ -12,7 +13,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.3.0.M4</version>
+        <version>1.3.0.M5</version>
         <relativePath/>
         <!-- lookup parent from repository -->
     </parent>
@@ -56,12 +57,12 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>org.springframework.boot</groupId>-->
+                <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
     </build>
 
     <repositories>
