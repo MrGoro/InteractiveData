@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -Dspring.profiles.active=$PROFILES -Dspring.datasource.url=$DATABASE_URL -Dspring.datasource.username=$DB_USER -Dspring.datasource.password=$DB_PASSWORD -Dserver.port=$PORT -jar interactive-data-spring-sample/target/interactive-data-spring-sample-*.jar
+web: java $JAVA_OPTS -Dspring.profiles.active=$PROFILES -Dspring.datasource.url=jdbc:$DATABASE_URL -Dspring.datasource.username=$DB_USER -Dspring.datasource.password=$DB_PASSWORD -Dserver.port=$PORT -jar interactive-data-spring-sample/target/interactive-data-spring-sample-*.jar
