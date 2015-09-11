@@ -1,7 +1,7 @@
 package de.schuermann.interactivedata.spring.sample.controller;
 
-import de.schuermann.interactivedata.spring.sample.data.User;
-import de.schuermann.interactivedata.spring.sample.repository.UserRepository;
+import de.schuermann.interactivedata.spring.sample.data.Person;
+import de.schuermann.interactivedata.spring.sample.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -25,16 +25,16 @@ import java.util.Optional;
 public class UserRestController {
 
     @Autowired
-    private UserRepository userRepository;
+    private PersonRepository personRepository;
 
     @RequestMapping(
             value = "/users",
             method = RequestMethod.GET
     )
     @Cacheable("/rest/users")
-    public List<User> getAllUsers() {
-        List<User> actions = new ArrayList<>();
-        userRepository.findAll().forEach(actions::add);
+    public List<Person> getAllUsers() {
+        List<Person> actions = new ArrayList<>();
+        personRepository.findAll().forEach(actions::add);
         return actions;
     }
 
@@ -43,8 +43,8 @@ public class UserRestController {
             method = RequestMethod.GET
     )
     @Cacheable("/rest/user/id")
-    public ResponseEntity<User> getUserById(@PathVariable long id) {
-        return Optional.ofNullable(userRepository.findOne(id))
+    public ResponseEntity<Person> getUserById(@PathVariable long id) {
+        return Optional.ofNullable(personRepository.findOne(id))
             .map(
                     user -> new ResponseEntity<>(user, HttpStatus.OK)
             ).orElse(

@@ -12,13 +12,11 @@ import de.schuermann.interactivedata.api.chart.data.LineChartData;
 import de.schuermann.interactivedata.api.chart.data.PieChartData;
 import de.schuermann.interactivedata.api.data.operations.filter.TimeFilter;
 import de.schuermann.interactivedata.api.data.operations.functions.Average;
-import de.schuermann.interactivedata.api.data.operations.functions.Concatenation;
 import de.schuermann.interactivedata.api.data.operations.functions.Count;
-import de.schuermann.interactivedata.api.data.operations.functions.Function;
 import de.schuermann.interactivedata.api.data.operations.granularity.DistinctGranularity;
 import de.schuermann.interactivedata.api.data.operations.granularity.TimeGranularity;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
-import de.schuermann.interactivedata.spring.sample.data.User;
+import de.schuermann.interactivedata.spring.sample.data.Person;
 import de.schuermann.interactivedata.spring.sample.datasource.ActionDataSource;
 import org.springframework.stereotype.Service;
 
@@ -130,8 +128,8 @@ public class ActionCharts {
         },
         operations = {
             @OperationDef(
-                fieldName = "user",
-                fieldClass = User.class,
+                fieldName = "person",
+                fieldClass = Person.class,
                 granularity = DistinctGranularity.class,
                 functions = {
                     @FunctionDef(
@@ -149,8 +147,8 @@ public class ActionCharts {
             dataType = Long.class
         ),
         label = @Field(
-            dataField = "user",
-            dataType = User.class
+            dataField = "person",
+            dataType = Person.class
         )
     )
     public PieChartData actionsPie1(PieChartData data) {
@@ -172,8 +170,8 @@ public class ActionCharts {
             functions = Count.class
         ),
         label = @Field(
-            dataField = "user",
-            dataType = User.class,
+            dataField = "person",
+            dataType = Person.class,
             granularity = DistinctGranularity.class
         )
     )

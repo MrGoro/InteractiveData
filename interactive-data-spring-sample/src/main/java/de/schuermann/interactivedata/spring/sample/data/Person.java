@@ -9,7 +9,7 @@ import java.util.List;
  * @author Philipp Sch&uuml;rmann
  */
 @Entity
-public class User {
+public class Person {
 
     @Id
     @GeneratedValue

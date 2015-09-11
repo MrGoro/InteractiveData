@@ -1,9 +1,6 @@
 package de.schuermann.interactivedata.spring.sample.data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -15,13 +12,14 @@ import java.util.Date;
 public class Action {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "action_seq_gen")
+    @SequenceGenerator(name = "action_seq_gen", sequenceName = "action_id_seq")
     private Long id;
 
     private Date time;
 
     @ManyToOne
-    private User user;
+    private Person person;
 
     public Long getId() {
         return id;
@@ -39,11 +37,11 @@ public class Action {
         this.time = time;
     }
 
-    public User getUser() {
-        return user;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }
