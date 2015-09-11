@@ -10,6 +10,8 @@ InteractiveData is divided into multiple modules. See the table below for more i
 . InteractiveData
 ├── interactive-data-core
 |     Core library including the api and basic functionality
+├── interactive-data-processors
+|     Annotation Processors for JSR 269
 ├── interactive-data-spring
 |     Integration module for Spring Framework
 ├── interactive-data-spring-boot-starter
