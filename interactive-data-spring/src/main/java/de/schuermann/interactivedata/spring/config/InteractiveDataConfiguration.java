@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 /**
  * Base Configuration for interactive-data-spring
@@ -51,8 +52,6 @@ public class InteractiveDataConfiguration {
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        //objectMapper.registerModule(new JSR310Module());
-        // TODO Upgrade to JavaTimeModule with Spring Boot 1.3
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.registerModule(new Jdk8Module());
 
