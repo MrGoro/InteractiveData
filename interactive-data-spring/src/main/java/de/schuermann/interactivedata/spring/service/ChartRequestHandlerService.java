@@ -2,6 +2,7 @@ package de.schuermann.interactivedata.spring.service;
 
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.handler.ChartRequestHandler;
+import de.schuermann.interactivedata.api.service.ChartDefinitionService;
 import de.schuermann.interactivedata.api.service.ServiceProvider;
 import de.schuermann.interactivedata.api.util.exceptions.RequestDataException;
 import org.apache.commons.logging.Log;
