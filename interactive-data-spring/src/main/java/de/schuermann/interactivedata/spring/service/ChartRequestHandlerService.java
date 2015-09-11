@@ -2,14 +2,12 @@ package de.schuermann.interactivedata.spring.service;
 
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.handler.ChartRequestHandler;
-import de.schuermann.interactivedata.api.service.ChartDefinitionService;
 import de.schuermann.interactivedata.api.service.ServiceProvider;
 import de.schuermann.interactivedata.api.util.exceptions.RequestDataException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**

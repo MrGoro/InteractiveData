@@ -1,15 +1,17 @@
-package de.schuermann.interactivedata.api.service;
+package de.schuermann.interactivedata.spring.service;
 
 import de.schuermann.interactivedata.api.chart.annotations.Chart;
 import de.schuermann.interactivedata.api.chart.data.ChartData;
 import de.schuermann.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import de.schuermann.interactivedata.api.chart.definitions.ChartPostProcessor;
 import de.schuermann.interactivedata.api.chart.processors.AnnotationProcessHelper;
+import de.schuermann.interactivedata.api.service.ServiceProvider;
 import de.schuermann.interactivedata.api.service.annotations.ChartService;
 import de.schuermann.interactivedata.api.util.ReflectionUtil;
 import de.schuermann.interactivedata.api.util.exceptions.ChartDefinitionException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.scheduling.annotation.Async;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -67,9 +69,12 @@ public class ChartDefinitionService {
     /**
      * Create {@link AbstractChartDefinition ChartDefinitions} using the annotations.
      */
-    private void loadChartDefinitionsUsingAnnotations() {
+    @Async
+    public void loadChartDefinitionsUsingAnnotations() {
+        log.debug("Loading ChartDefinitions using annotations");
         Collection<Object> chartServices = serviceProvider.getChartServices();
         for(Object chartService : chartServices) {
+            log.debug("Processing ChartService [" + chartService.getClass().getSimpleName() + "]");
             ChartService serviceAnnotation = chartService.getClass().getAnnotation(ChartService.class);
             List<Method> methods = ReflectionUtil.findAnnotatedMethods(chartService.getClass(), Chart.class);
             methods.forEach(method -> processMethodAnnotations(chartService, method, serviceAnnotation));

@@ -57,7 +57,7 @@ public class ReflectionUtil {
         List<Class<?>> interfaces = Arrays.asList(interfacesArray);
         if(clazz1.isAssignableFrom(test)) {
             Class<?> checkingClass = test;
-            while(checkingClass != Object.class) {
+            while(checkingClass != Object.class && checkingClass != null) {
                 Type[] interfaceTypes = test.getGenericInterfaces();
 
                 AtomicLong parameterizedCount = new AtomicLong(0);
