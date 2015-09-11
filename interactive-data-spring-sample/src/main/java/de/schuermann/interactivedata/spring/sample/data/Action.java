@@ -12,8 +12,7 @@ import java.util.Date;
 public class Action {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "action_seq_gen")
-    @SequenceGenerator(name = "action_seq_gen", sequenceName = "action_id_seq")
+    @GeneratedValue
     private Long id;
 
     private Date time;
