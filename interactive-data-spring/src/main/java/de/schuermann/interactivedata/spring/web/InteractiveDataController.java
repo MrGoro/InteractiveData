@@ -57,8 +57,8 @@ public class InteractiveDataController {
             .map(
                 chartRequestHandler -> new ResponseEntity<>(
                         chartRequestHandler.handleDataRequest(chartRequest),
-                        HttpStatus.OK))
-            .orElse(
+                        HttpStatus.OK)
+            ).orElse(
                 new ResponseEntity<>(HttpStatus.NOT_FOUND)
             );
     }
@@ -76,8 +76,8 @@ public class InteractiveDataController {
             .map(
                 chartRequestHandler -> new ResponseEntity<>(
                         chartRequestHandler.handleInfoRequest(),
-                        HttpStatus.OK))
-            .orElse(
+                        HttpStatus.OK)
+            ).orElse(
                 new ResponseEntity<>(HttpStatus.NOT_FOUND)
             );
     }

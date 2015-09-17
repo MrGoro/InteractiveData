@@ -32,8 +32,6 @@ import static java.util.stream.Collectors.toList;
  * Abstract implementation that solves basic functionality. Should be extended for specialized purpose.
  * Every type of chart ({@link AbstractChartDefinition ChartDefinition}) must have a corresponding RequestHandler.
  * <p>
- * T
- * <p>
  * Every RequestHandler must at least override the convert method to support its special conversion from
  * generic data to the specific ChartData.
  *

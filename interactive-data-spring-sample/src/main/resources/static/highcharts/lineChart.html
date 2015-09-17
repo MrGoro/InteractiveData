@@ -72,17 +72,39 @@
 
         <button id="btnApply" class="btn btn-primary"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
         <button id="save" class="btn btn-primary"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button>
+        <button id="btnInfo" class="btn btn-primary" type="button" data-toggle="modal" data-target="#requestInfoModal"><span class="glyphicon glyphicon-eye-open"></span></button>
     </div>
 
     <div id="spinner" class="spinner">
         <span class="glyphicon glyphicon-refresh spinning"></span>
     </div>
     <div id="graph" class="overlay"></div>
+
+    <!-- Request Info Modal -->
+    <div class="modal fade" id="requestInfoModal" tabindex="-1" role="dialog" aria-labelledby="requestInfoModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="requestInfoModalLabel">Latest Request Info</h4>
+                </div>
+                <div class="modal-body">
+                    TODO
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-2.1.4.min.js" charset="utf-8"></script>
 <script src="https://code.highcharts.com/highcharts.js" charset="utf-8"></script>
 <script>
+    var lastRequestTime = null;
+    var lastRequestSize = null;
+
     $("#btnResetTimeFilter").click(function() {
         $("#start").val("");
         $("#end").val("");
@@ -128,15 +150,15 @@
             url: url,
             dataType: "json"
         })
-                .success(function(data) {
-                    drawChart(data.data);
-                })
-                .fail(function() {
-                    alert("Error Loading data...");
-                })
-                .complete(function() {
-                    loading(false);
-                });
+        .success(function(data) {
+            drawChart(data.data);
+        })
+        .fail(function() {
+            alert("Error Loading data...");
+        })
+        .complete(function() {
+            loading(false);
+        });
     }
 
     function convertDate(dateArray) {
