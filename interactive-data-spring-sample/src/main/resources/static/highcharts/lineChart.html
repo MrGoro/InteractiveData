@@ -89,7 +89,18 @@
                     <h4 class="modal-title" id="requestInfoModalLabel">Latest Request Info</h4>
                 </div>
                 <div class="modal-body">
-                    TODO
+                    <table class="table">
+                        <tr>
+                            <th scope="row">Time</th>
+                            <td id="requestTime">no Request</td>
+                            <td>Seconds</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Size</th>
+                            <td id="requestSize">no Request</td>
+                            <td>KiB</td>
+                        </tr>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -147,7 +158,8 @@
     function loadData() {
         loading(true);
         var url = "/api/db/actionsline1?selected="+getGranularity()+getStartAndEnd();
-        $.ajax({
+        var start_time = new Date().getTime();
+        var xhr = $.ajax({
             url: url,
             dataType: "json"
         })
@@ -158,6 +170,13 @@
             alert("Error Loading data...");
         })
         .complete(function() {
+            // Request time
+            var request_time = new Date().getTime() - start_time;
+            $("#requestTime").text(request_time/1000 % 60);
+            // Request size
+            var size = Math.round(xhr.responseText.length/1024);
+            $("#requestSize").text(size);
+
             loading(false);
         });
     }
