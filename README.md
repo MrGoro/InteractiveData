@@ -9,13 +9,13 @@ InteractiveData is divided into multiple modules. See the table below for more i
 ```
 . InteractiveData
 ├── interactive-data-core
-|     Core library including the api and basic functionality
+|     Core library for basic functionality
 ├── interactive-data-processors
-|     Annotation Processors for JSR 269
+|     Annotation Processors for JSR 269 Service Locator
 ├── interactive-data-spring
 |     Integration module for Spring Framework
 ├── interactive-data-spring-boot-starter
-|     Starter Template for easy start with the use of Spring Boot
+|     Starter Template for easy start with Spring Boot
 └── interactive-data-spring-sample
       Sample demonstrating the use of this library with Spring Boot and various frontend libraries
 ```
@@ -34,7 +34,7 @@ Dependency to your pom.xml.
 <dependency>
     <groupId>de.schuermann.interactivedata</groupId>
     <artifactId>interactive-data-spring</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 </dependency>
 ```
 You can also make your own implementation for the generic API and make it usable with other frameworks.
@@ -47,7 +47,7 @@ everything for direct start.
 <dependency>
     <groupId>de.schuermann.interactivedata</groupId>
     <artifactId>interactive-data-spring-boot-starter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 </dependency>
 ```
 
