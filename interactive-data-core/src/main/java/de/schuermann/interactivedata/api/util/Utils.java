@@ -13,9 +13,9 @@ public class Utils {
 
     /**
      * Convert a multi value map (String array as values) to a String of format:
-     * <pre>
-     *     KEY1->[VALUE1,VALUE2,VALUE3], KEY2->[VALUE1]
-     * </pre>
+     * <pre><code>
+     *     KEY1-&gt;[VALUE1,VALUE2,VALUE3], KEY2-&gt;[VALUE1]
+     * </code></pre>
      *
      * @param map Map to stringify
      * @return Stringyfied Map
