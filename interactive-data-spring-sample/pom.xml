@@ -19,7 +19,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>de.schuermann.interactivedata.spring.sample.SampleApplication</start-class>
+        <start-class>com.github.mrgoro.interactivedata.spring.sample.SampleApplication</start-class>
         <java.version>1.8</java.version>
         <docker.image.prefix>schuermann</docker.image.prefix>
     </properties>
