@@ -4,6 +4,8 @@ Java Library for easy creation of RESTful interfaces for interactive data visual
 InteractiveData is developed by Philipp Sch&uuml;rmann for his Master Thesis hat University of Hamburg.
 The complete document will be provided here after it is finished.
 
+[Sample Project on Heroku](https://interactive-data-dev.herokuapp.com/)
+
 ## Project Structure
 InteractiveData is divided into multiple modules. See the table below for more information on every module:
 ```
