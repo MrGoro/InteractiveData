@@ -15,11 +15,11 @@
     </parent>
 
     <dependencies>
-        <dependency>
-            <groupId>com.github.mrgoro</groupId>
-            <artifactId>interactive-data-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+    <dependency>
+        <groupId>com.github.mrgoro</groupId>
+        <artifactId>interactive-data-core</artifactId>
+        <version>${project.version}</version>
+    </dependency>
 
         <!-- Spring -->
         <dependency>

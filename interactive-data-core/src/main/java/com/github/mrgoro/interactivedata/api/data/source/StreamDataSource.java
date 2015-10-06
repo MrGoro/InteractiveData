@@ -38,14 +38,17 @@ public abstract class StreamDataSource<T> implements DataSource {
         return DataObjectFactory::create;
     }
 
+    protected DataRequest dataRequest;
+
     @Override
     public List<DataObject> getData(DataRequest dataRequest) {
+        this.dataRequest = dataRequest;
         Stream<T> rawData = getDataStream();
         Stream<DataObject> dataStream = mapToDataObject(rawData);
-        return postProcess(dataStream, dataRequest);
+        return postProcess(dataStream);
     }
 
-    protected List<DataObject> postProcess(Stream<DataObject> dataStream, DataRequest dataRequest) {
+    protected List<DataObject> postProcess(Stream<DataObject> dataStream) {
         Stream<DataObject> stream = dataStream;
 
         // Apply all filters to the stream

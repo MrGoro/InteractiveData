@@ -44,7 +44,7 @@ public class ActionCharts {
         axis = {
             @Axis(
                 dataField = "time",
-                dataType = Instant.class,
+                dataType = Date.class,
                 type = Axis.Type.X,
                 filter = TimeFilter.class,
                 granularity = TimeGranularity.class

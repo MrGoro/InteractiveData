@@ -7,6 +7,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Optional;
 
 /**
  * Interface that has to be implemented by every FilterProcessor
@@ -16,6 +17,6 @@ import javax.persistence.criteria.Root;
 @Component
 public interface FilterToPredicateProcessor<T extends Filter<?,?>> {
 
-    Predicate toPredicate(Root root, CriteriaQuery<?> query, CriteriaBuilder cb, T filter);
+    Optional<Predicate> toPredicate(T filter, Root<?> root, CriteriaQuery<?> query, CriteriaBuilder cb);
 
 }
