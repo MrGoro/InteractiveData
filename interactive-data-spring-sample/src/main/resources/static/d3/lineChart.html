@@ -57,7 +57,38 @@
         .line {
             fill: none;
             stroke: steelblue;
-            stroke-width: 1.5px;
+            stroke-width: 2px;
+        }
+
+        .grid-background {
+            fill: #ddd;
+        }
+
+        .axisBrush path {
+            display: none;
+        }
+
+        .axisBrush line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .grid line,
+        .grid path {
+            fill: none;
+            stroke: #fff;
+            shape-rendering: crispEdges;
+        }
+
+        .grid .minor.tick line {
+            stroke-opacity: .5;
+        }
+
+        .brush .extent {
+            stroke: #000;
+            fill-opacity: .125;
+            shape-rendering: crispEdges;
         }
     </style>
 </head>
@@ -152,6 +183,18 @@
         return $("#granularity").val()
     }
 
+    function getStart() {
+        var start = $("#start").val();
+        if(!start) return null;
+        return Date.parse(start);
+    }
+
+    function getEnd() {
+        var end = $("#end").val();
+        if(!end) return null;
+        return Date.parse(end);
+    }
+
     function getStartAndEnd() {
         var start = $("#start").val();
         var end = $("#end").val();
@@ -186,23 +229,19 @@
 
     var margin = {top: 20, right: 20, bottom: 30, left: 50},
             width = 960 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
+            height = 500 - margin.top - margin.bottom,
+            heightBrush = 200 - margin.top - margin.bottom;
 
     var parseDate = d3.time.format("%d-%b-%y").parse;
 
-    var x = d3.time.scale()
-            .range([0, width]);
+    var x = d3.time.scale().range([0, width]),
+        y = d3.scale.linear().range([height, 0]),
+        brush;
 
-    var y = d3.scale.linear()
-            .range([height, 0]);
+    var x2 = d3.time.scale().range([0, width]);
 
-    var xAxis = d3.svg.axis()
-            .scale(x)
-            .orient("bottom");
-
-    var yAxis = d3.svg.axis()
-            .scale(y)
-            .orient("left");
+    var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+        yAxis = d3.svg.axis().scale(y).orient("left");
 
     var line = d3.svg.line()
             .x(function(d) { return x(d.date); })
@@ -214,7 +253,13 @@
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    function loadData() {
+    var svgBrush = d3.select("#graph").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", heightBrush + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    function loadData(init) {
         loading(true);
 
         var url = "/api/db/actionsline1?selected="+getGranularity()+getStartAndEnd();
@@ -224,39 +269,186 @@
 
             if (error) throw error;
 
-            data.forEach(function(d) {
-                d.date = +d.date;
-                d.value = +d.value;
-            });
-
             x.domain(d3.extent(data, function(d) { return d.date; }));
             y.domain(d3.extent(data, function(d) { return d.value; }));
 
-            svg.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + height + ")")
-                    .call(xAxis);
-
-            svg.append("g")
-                    .attr("class", "y axis")
-                    .call(yAxis)
-                    .append("text")
-                    .attr("transform", "rotate(-90)")
-                    .attr("y", 6)
-                    .attr("dy", ".71em")
-                    .style("text-anchor", "end")
-                    .text("Value");
-
-            svg.append("path")
-                    .datum(data)
-                    .attr("class", "line")
-                    .attr("d", line);
+            if(init) {
+                draw(data);
+            } else {
+                update(data);
+            }
+            loadBrush(data, init);
         });
 
         loading(false);
     }
 
-    loadData();
+    function draw(data) {
+        svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+        svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Value");
+
+        svg.append("path")
+                //.datum(data)
+                .attr("class", "line")
+                .attr("d", line(data));
+    }
+
+    function update(data) {
+        var chart = d3.select("#graph").transition();
+
+        chart.select(".x.axis")
+                .duration(750)
+                .call(xAxis);
+
+        chart.select(".y.axis")
+                .duration(750)
+                .call(yAxis);
+
+        chart.select(".line")
+                .duration(750)
+                .attr("d", line(data));
+    }
+
+    function getTicks() {
+        return getTimeLevel().range;
+    }
+
+    function getFineGrainedTicks() {
+        return getFineGrainedTimeLevel().range;
+    }
+
+    function getFineGrainedTicksCount() {
+        var granularity = getGranularity();
+        if(granularity == "YEAR") return 6;
+        if(granularity == "MONTH") return 15;
+        if(granularity == "DAY") return 12;
+        if(granularity == "HOUR") return 30;
+        return 30;
+    }
+
+    function getTimeLevel() {
+        var granularity = getGranularity();
+        if(granularity == "YEAR") return d3.time.year;
+        if(granularity == "MONTH") return d3.time.month;
+        if(granularity == "DAY") return d3.time.day;
+        if(granularity == "HOUR") return d3.time.hour;
+        return d3.time.minute;
+    }
+
+    function getFineGrainedTimeLevel() {
+        var granularity = getGranularity();
+        if(granularity == "YEAR") return d3.time.month;
+        if(granularity == "MONTH") return d3.time.day;
+        if(granularity == "DAY") return d3.time.hour;
+        if(granularity == "HOUR") return d3.time.minute;
+        return d3.time.second;
+    }
+
+    function brushended() {
+        if (!d3.event.sourceEvent) return; // only transition after input
+        var extent0 = brush.extent(),
+                extent1 = extent0.map(getTimeLevel().round);
+
+        // if empty when rounded, use floor & ceil instead
+        if (extent1[0] >= extent1[1]) {
+            extent1[0] = getTimeLevel().floor(extent0[0]);
+            extent1[1] = getTimeLevel().ceil(extent0[1]);
+        }
+
+        d3.select(this).transition()
+                .call(brush.extent(extent1))
+                .call(brush.event);
+
+        setStartAndEnd(extent1[0], extent1[1]);
+    }
+
+    function loadBrush(data, init) {
+        x2.domain(d3.extent(data, function(d) { return d.date; }));
+
+        brush =  d3.svg.brush()
+                .x(x2)
+                .extent([getStart(), getEnd()])
+                .on("brushend", brushended);
+
+        if(init) {
+            drawBrush(data);
+        } else {
+            updateBrush(data);
+        }
+    }
+
+    var xGrid = d3.svg.axis()
+            .scale(x2)
+            .orient("bottom")
+            .ticks(getFineGrainedTicks(), getFineGrainedTicksCount())
+            .tickSize(-heightBrush)
+            .tickFormat("");
+
+    var xAxisBrush = d3.svg.axis()
+            .scale(x2)
+            .orient("bottom")
+            .ticks(getTicks())
+            .tickPadding(0);
+
+    function drawBrush(data) {
+        svgBrush.append("rect")
+                .attr("class", "grid-background")
+                .attr("width", width)
+                .attr("height", heightBrush);
+
+        svgBrush.append("g")
+                .attr("class", "x grid")
+                .attr("transform", "translate(0," + heightBrush + ")")
+                .call(xGrid)
+                .selectAll(".tick")
+                .classed("minor", function(d) { return d.getHours(); });
+
+        svgBrush.append("g")
+                .attr("class", "x axisBrush")
+                .attr("transform", "translate(0," + heightBrush + ")")
+                .call(xAxisBrush)
+                .selectAll("text")
+                .attr("x", 6)
+                .style("text-anchor", null);
+
+        var gBrush = svgBrush.append("g")
+                .attr("class", "brush")
+                .call(brush)
+                .call(brush.event);
+
+        gBrush.selectAll("rect")
+                .attr("height", heightBrush);
+    }
+
+    function updateBrush(data) {
+        var chart = d3.select("#graph").transition();
+
+        chart.select(".x.grid")
+                .duration(750)
+                .call(xGrid.ticks(getFineGrainedTicks(), getFineGrainedTicksCount()));
+
+        chart.select(".x.axisBrush")
+                .duration(750)
+                .call(xAxisBrush.ticks(getTicks()));
+
+        chart.select(".brush")
+                .duration(750)
+                .call(brush.clear());
+    }
+
+    loadData(true);
 </script>
 </body>
 </html>
