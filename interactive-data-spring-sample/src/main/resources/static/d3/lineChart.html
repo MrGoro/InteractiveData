@@ -4,19 +4,6 @@
     <title>Line Chart Demo</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <style>
-        .axis path {
-            fill: none;
-            stroke: #777;
-            shape-rendering: crispEdges;
-        }
-        .axis text {
-            font-size: 12px;
-        }
-        .legend {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
         .glyphicon.spinning {
             font-size: 50px;
             animation: spin 1s infinite linear;
@@ -59,52 +46,93 @@
             left: 0;
             z-index: 10;
         }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
 
     <h1>InteractiveData - Sample</h1>
-    <h2>Line Chart with multiple Lines</h2>
+    <h2>Line chart with multiple lines, time filter and granularity</h2>
 
     <div class="form-inline">
-        <label for="filter">Filter: </label>
-        <input type="date" name="dateFrom" id="dateFrom" class="form-control" />
-        <input type="date" name="dateTo" id="dateTo" class="form-control" />
-        <button id="btnResetTimeFilter" class="btn btn-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></button>
+        <label for="start">Filter: </label>
+        <input type="date" name="start" id="start" class="form-control" />
+        <input type="date" name="end" id="end" class="form-control" />
+        <button id="btnResetTimeFilter" class="btn btn-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 
         <label for="granularity">Granularity: </label>
         <select id="granularity" name="granularity" class="form-control">
-            <option>Second</option>
-            <option>Minute</option>
-            <option>Hour</option>
-            <option>Day</option>
-            <option>Month</option>
-            <option>Year</option>
+            <option value="SECOND">Second</option>
+            <option value="MINUTE">Minute</option>
+            <option value="HOUR">Hour</option>
+            <option value="DAY">Day</option>
+            <option value="MONTH">Month</option>
+            <option value="YEAR" selected>Year</option>
         </select>
 
         <button id="btnApply" class="btn btn-primary"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
         <button id="save" class="btn btn-primary"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button>
+        <button id="btnInfo" class="btn btn-primary" type="button" data-toggle="modal" data-target="#requestInfoModal"><span class="glyphicon glyphicon-eye-open"></span></button>
     </div>
 
     <div id="spinner" class="spinner">
         <span class="glyphicon glyphicon-refresh spinning"></span>
     </div>
-    <div id="graph" class="overlay">
-        <svg id="visualisation" width="1000" height="500"></svg>
-    </div>
+    <div id="graph" class="overlay"></div>
 
-    <div id="svgdataurl" class="hidden"></div>
-    <div id="pngdataurl" class="hidden"></div>
-    <canvas width="960" height="500" class="hidden"></canvas>
+    <!-- Request Info Modal -->
+    <div class="modal fade" id="requestInfoModal" tabindex="-1" role="dialog" aria-labelledby="requestInfoModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="requestInfoModalLabel">Latest Request Info</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <tr>
+                            <th scope="row">Time</th>
+                            <td id="requestTime">no Request</td>
+                            <td>Seconds</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Size</th>
+                            <td id="requestSize">no Request</td>
+                            <td>KiB</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
-<script src="http://code.jquery.com/jquery-2.1.4.min.js" charset="utf-8"></script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js" charset="utf-8"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
 <script>
+    var lastRequestTime = null;
+    var lastRequestSize = null;
+
     $("#btnResetTimeFilter").click(function() {
-        $("#dateFrom").val("");
-        $("#dateTo").val("");
+        $("#start").val("");
+        $("#end").val("");
     });
     $("#btnApply").click(function() {
         loadData();
@@ -120,144 +148,113 @@
         }
     }
 
+    function getGranularity() {
+        return $("#granularity").val()
+    }
+
+    function getStartAndEnd() {
+        var start = $("#start").val();
+        var end = $("#end").val();
+        if(start && end) {
+            return "&start=" + start + "T00:00:00&end=" + end + "T23:59:59";
+        } else {
+            return "";
+        }
+    }
+
+    function setStartAndEnd(start, end) {
+        $("#start").val(start.getFullYear() + "-" + ("0"+(start.getMonth()+1)).slice(-2) + "-" + ("0" + start.getDate()).slice(-2) );
+        $("#end").val(end.getFullYear() + "-" +("0"+(end.getMonth()+1)).slice(-2) + "-" +("0" + end.getDate()).slice(-2) );
+        loadData();
+    }
+
+    function convertDate(dateArray) {
+        //              YEAR                       MONTH              DAY                HOUR               MINUTE             SECOND
+        return new Date(dateArray[0] || dateArray, dateArray[1] || 1, dateArray[2] || 1, dateArray[3] || 0, dateArray[4] || 0, dateArray[5] || 0);
+    }
+
+    function adjustData(data) {
+        var newData = [];
+        for (i=0; i<data.length; ++i) {
+            newData.push({
+                date: convertDate(data[i][0]),
+                value: data[i][1]
+            });
+        }
+        return newData;
+    }
+
+    var margin = {top: 20, right: 20, bottom: 30, left: 50},
+            width = 960 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
+
+    var parseDate = d3.time.format("%d-%b-%y").parse;
+
+    var x = d3.time.scale()
+            .range([0, width]);
+
+    var y = d3.scale.linear()
+            .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left");
+
+    var line = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y(d.value); });
+
+    var svg = d3.select("#graph").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
     function loadData() {
         loading(true);
-        $.ajax({
-            url: "/api/db/actionsline1?start=2015-01-01T00:00:00&end=2015-02-01T00:00:00",
-            dataType: "json",
-        })
-                .success(function(data) {
-                    drawChart(data.data);
-                })
-                .fail(function() {
-                    alert("Error Loading data...");
-                })
-                .complete(function() {
-                    loading(false);
-                });
-    }
 
-    function drawChart(data) {
-        var dataGroup = d3.nest()
-                .key(function(d) {
-                    return d.time;
-                    //return 1;
-                })
-                .entries(data);
+        var url = "/api/db/actionsline1?selected="+getGranularity()+getStartAndEnd();
 
-        var color = d3.scale.category10();
+        d3.json(url, function(error, result) {
+            var data = adjustData(result.data[0]);
 
-        var vis = d3.select("#visualisation");
-        var WIDTH = 1000;
-        var HEIGHT = 500;
-        var MARGINS = {
-            top: 50,
-            right: 20,
-            bottom: 50,
-            left: 50
-        };
+            if (error) throw error;
 
-        var lSpace = WIDTH/dataGroup.length;
+            data.forEach(function(d) {
+                d.date = +d.date;
+                d.value = +d.value;
+            });
 
-        var xScale = d3.time.scale().range([MARGINS.left, WIDTH - MARGINS.right])
-                .domain([
-                    d3.min(data, function(d) {
-                        return new Date(d.time);
-                    }),
-                    d3.max(data, function(d) {
-                        return new Date(d.time);
-                    })
-                ]);
-        var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom])
-                .domain([
-                    d3.min(data, function(d) {
-                        return d['id.count'];
-                    }),
-                    d3.max(data, function(d) {
-                        return d['id.count'];
-                    })
-                ]);
+            x.domain(d3.extent(data, function(d) { return d.date; }));
+            y.domain(d3.extent(data, function(d) { return d.value; }));
 
-        var xAxis = d3.svg.axis()
-                .scale(xScale)
-                .ticks(d3.time.second, 1)
-                .tickFormat(d3.time.format('%Y'));
-        var yAxis = d3.svg.axis()
-                .scale(yScale)
-                .orient("left");
+            svg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis);
 
-        vis.append("svg:g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-                .call(xAxis);
-        vis.append("svg:g")
-                .attr("class", "y axis")
-                .attr("transform", "translate(" + (MARGINS.left) + ",0)")
-                .call(yAxis);
-        var lineGen = d3.svg.line()
-                .x(function(d) {
-                    return xScale(new Date(d.time));
-                })
-                .y(function(d) {
-                    return yScale(d['id.count']);
-                })
-                .interpolate("basis");
+            svg.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("Value");
 
-        dataGroup.forEach(function(d, i) {
-            vis.append('svg:path')
-                    .attr('d', lineGen(d.values))
-                    .attr('stroke', function(d, j) {
-                        return "hsl(" + Math.random() * 360 + ", 100%, 50%)";
-                    })
-                    .attr('stroke-width', 2)
-                    .attr('fill', 'none')
-                    .attr('id', 'line_'+d.key);
-            vis.append("text")
-                    .attr("x", (lSpace / 2) + i * lSpace)
-                    .attr("y", HEIGHT)
-                    .style("fill", "black")
-                    .attr("class", "legend")
-                    .on('click',function(){
-                        var active   = d.active ? false : true;
-                        var opacity = active ? 0 : 1;
-                        d3.select("#line_" + d.key).style("opacity", opacity);
-                        d.active = active;
-                    })
-                    .text(d.key);
+            svg.append("path")
+                    .datum(data)
+                    .attr("class", "line")
+                    .attr("d", line);
         });
+
+        loading(false);
     }
-
-    d3.select("#save").on("click", function(){
-        var html = d3.select("svg")
-                .attr("version", 1.1)
-                .attr("xmlns", "http://www.w3.org/2000/svg")
-                .node().parentNode.innerHTML;
-
-        var imgsrc = 'data:image/svg+xml;base64,'+ btoa(html);
-        var img = '<img src="'+imgsrc+'">';
-        d3.select("#svgdataurl").html(img);
-
-
-        var canvas = document.querySelector("canvas"),
-                context = canvas.getContext("2d");
-
-        var image = new Image;
-        image.src = imgsrc;
-        image.onload = function() {
-            context.drawImage(image, 0, 0);
-
-            var canvasdata = canvas.toDataURL("image/png");
-
-            var pngimg = '<img src="'+canvasdata+'">';
-            d3.select("#pngdataurl").html(pngimg);
-
-            var a = document.createElement("a");
-            a.download = "multi-line-chart-export.png";
-            a.href = canvasdata;
-            document.body.appendChild(a);
-            a.click();
-        };
-    });
 
     loadData();
 </script>
