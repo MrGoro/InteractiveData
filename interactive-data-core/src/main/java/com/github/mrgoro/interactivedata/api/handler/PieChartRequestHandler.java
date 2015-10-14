@@ -11,11 +11,14 @@ import com.github.mrgoro.interactivedata.api.service.annotations.ChartRequestHan
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
 /**
+ * Request Handler for visual mapping of pie charts
+ *
  * @author Philipp Sch&uuml;rmann
  */
 @ChartRequestHandlerService
@@ -29,14 +32,32 @@ public class PieChartRequestHandler extends ChartRequestHandler<PieChartDefiniti
 
     @Override
     protected PieChartData convertData(List<DataObject> chartData) {
+        long detailsCount = 4;
         FieldDefinition fieldData = getChartDefinition().getField(Field.Type.DATA).get();
         FieldDefinition fieldLabel = getChartDefinition().getField(Field.Type.LABEL).orElse(fieldData);
-        List<Object[]> data = chartData.stream().map(dataObject ->
-            new Object[]{
-                dataObject.getOptionalProperty(fieldData.getDataField()).orElse("0"),
-                dataObject.getOptionalProperty(fieldLabel.getDataField()).orElse("No Data")
-            }
-        ).collect(toList());
+        List<Object[]> data = chartData.stream()
+                .sorted(Comparator.comparing(
+                    dataObject -> dataObject.getOptionalProperty(fieldData.getDataField(), Long.class).orElse(0L)
+                ))
+                .map(dataObject ->
+                    new Object[]{
+                        dataObject.getOptionalProperty(fieldData.getDataField()).orElse("0"),
+                        dataObject.getOptionalProperty(fieldLabel.getDataField()).orElse("No Data")
+                    }
+                )
+                .collect(toList());
+
+        // Group rest
+        if(data.size() > detailsCount+1) {
+            long rest = data.stream().skip(detailsCount).mapToLong(
+                array -> (Long) array[0]
+            ).sum();
+            data = data.stream().limit(detailsCount).collect(toList());
+            data.add(
+                new Object[]{rest, "Rest"}
+            );
+        }
+
         return new PieChartData(getChartDefinition().getName(), data);
     }
 }

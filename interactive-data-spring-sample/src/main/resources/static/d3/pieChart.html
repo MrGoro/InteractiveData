@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pie Chart Demo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <style>
+        .glyphicon.spinning {
+            font-size: 50px;
+            animation: spin 1s infinite linear;
+            -webkit-animation: spin2 1s infinite linear;
+        }
+
+        @keyframes spin {
+            from { transform: scale(1) rotate(0deg);}
+            to { transform: scale(1) rotate(360deg);}
+        }
+
+        @-webkit-keyframes spin2 {
+            from { -webkit-transform: rotate(0deg);}
+            to { -webkit-transform: rotate(360deg);}
+        }
+
+        .spinner{
+            position: absolute;
+            height: 100px;
+            width: 100px;
+            top: 50%;
+            left: 50%;
+            margin-left: -50px;
+            margin-top: -50px;
+            z-index: 11;
+        }
+
+        #chart {
+            height: 400px;
+            width: 400px;
+            margin-top: 20px;
+        }
+
+        .overlay {
+            opacity: .5;
+            filter:Alpha(Opacity=50);
+            background-color: #f6f6f6;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .chart-legend {
+            font-size: 12px;
+        }
+
+        .chart-tooltip {
+            background: #eee;
+            box-shadow: 0 0 5px #999999;
+            color: #333;
+            display: none;
+            font-size: 12px;
+            left: 130px;
+            padding: 10px;
+            position: absolute;
+            text-align: center;
+            top: 95px;
+            width: 80px;
+            z-index: 10;
+        }
+
+        rect {
+            cursor: pointer;
+            stroke-width: 2;
+        }
+        rect.disabled {
+            fill: transparent !important;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>InteractiveData - Sample</h1>
+    <h2>Pie chart with with time filter</h2>
+
+    <div class="form-inline">
+        <label for="start">Filter: </label>
+        <input type="date" name="start" id="start" class="form-control" />
+        <input type="date" name="end" id="end" class="form-control" />
+        <button id="btnResetTimeFilter" class="btn btn-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+
+        <button id="btnApply" class="btn btn-primary"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+        <button id="save" class="btn btn-primary"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button>
+    </div>
+
+    <div id="spinner" class="spinner">
+        <span class="glyphicon glyphicon-refresh spinning"></span>
+    </div>
+    <div id="chart"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+<script>
+    var width = 400;
+    var height = 400;
+    var donutWidth = 75;
+    var radius = Math.min(width, height) / 2;
+
+    var color = d3.scale.category10();
+
+    var tooltip = d3.select('#chart')
+            .append('div')
+            .attr('class', 'chart-tooltip');
+
+    tooltip.append('div')
+            .attr('class', 'chart-label');
+
+    tooltip.append('div')
+            .attr('class', 'count');
+
+    tooltip.append('div')
+            .attr('class', 'percent');
+
+    var svg = d3.select('#chart')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr('transform', 'translate(' + (width / 2) +
+            ',' + (height / 2) + ')');
+
+    var arc = d3.svg.arc()
+            .outerRadius(radius)
+            .innerRadius(radius - donutWidth);
+
+    var pie = d3.layout.pie()
+            .value(function(d) { return d[0]; })
+            .sort(null);
+
+    $("#btnResetTimeFilter").click(function() {
+        $("#start").val("");
+        $("#end").val("");
+    });
+    $("#btnApply").click(function() {
+        loadData();
+    });
+
+    function loading(state) {
+        if(state) {
+            $("#spinner").show();
+            $("#graph").addClass("overlay");
+        } else {
+            $("#spinner").hide();
+            $("#graph").removeClass("overlay");
+        }
+    }
+
+    function getGranularity() {
+        return $("#granularity").val()
+    }
+
+    function getStartAndEnd() {
+        var start = $("#start").val();
+        var end = $("#end").val();
+        if(start && end) {
+            return "start=" + start + "T00:00:00&end=" + end + "T23:59:59";
+        } else {
+            return "";
+        }
+    }
+
+    function setStartAndEnd(start, end) {
+        $("#start").val(start.getFullYear() + "-" + ("0"+(start.getMonth()+1)).slice(-2) + "-" + ("0" + start.getDate()).slice(-2) );
+        $("#end").val(end.getFullYear() + "-" +("0"+(end.getMonth()+1)).slice(-2) + "-" +("0" + end.getDate()).slice(-2) );
+        loadData();
+    }
+
+    function getLabel(data) {
+        var labelText = data[1];
+        if(labelText != "Rest") {
+            labelText = labelText.firstName + " " + labelText.lastName;
+        }
+        return labelText;
+    }
+
+    function loadData() {
+        loading(true);
+        var url = "/api/db/actionspie1?" + getStartAndEnd();
+
+        d3.json(url, function(error, data) {
+            var dataset = data.data;
+
+            dataset.forEach(function(d) {
+                d[0] = +d[0];
+                d.enabled = true;
+            });
+
+            var path = svg.selectAll('path')
+                    .data(pie(dataset))
+                    .enter()
+                    .append('path')
+                    .attr('d', arc)
+                    .attr('fill', function(d, i) {
+                        return color(getLabel(d.data));
+                    })
+                    .each(function(d) { this._current = d; });
+
+            path.on('mouseover', function(d) {
+                var total = d3.sum(dataset.map(function(d) {
+                    return (d.enabled) ? d[0] : 0;
+                }));
+                var percent = Math.round(1000 * d.data[0] / total) / 10;
+                tooltip.select('.chart-label').html(getLabel(d.data));
+                tooltip.select('.count').html(d.data[0]);
+                tooltip.select('.percent').html(percent + '%');
+                tooltip.style('display', 'block');
+            });
+
+            path.on('mouseout', function(d) {
+                tooltip.style('display', 'none');
+            });
+
+            path.on('mousemove', function(d) {
+                tooltip.style('top', (d3.event.pageY+10) + 'px')
+                        .style('left', (d3.event.pageX+10) + 'px');
+            });
+
+            var legendRectSize = 18;
+            var legendSpacing = 4;
+
+            var legend = svg.selectAll('.chart-legend')
+                    .data(color.domain())
+                    .enter()
+                    .append('g')
+                    .attr('class', 'chart-legend')
+                    .attr('transform', function(d, i) {
+                        var height = legendRectSize + legendSpacing;
+                        var offset =  height * color.domain().length / 2;
+                        var horz = -2 * legendRectSize;
+                        var vert = i * height - offset;
+                        return 'translate(' + horz + ',' + vert + ')';
+                    });
+
+            legend.append('rect')
+                    .attr('width', legendRectSize)
+                    .attr('height', legendRectSize)
+                    .style('fill', color)
+                    .style('stroke', color)
+                    .on('click', function(label) {
+                        var rect = d3.select(this);
+                        var enabled = true;
+                        var totalEnabled = d3.sum(dataset.map(function(d) {
+                            return (d.enabled) ? 1 : 0;
+                        }));
+
+                        if (rect.attr('class') === 'disabled') {
+                            rect.attr('class', '');
+                        } else {
+                            if (totalEnabled < 2) return;
+                            rect.attr('class', 'disabled');
+                            enabled = false;
+                        }
+
+                        pie.value(function(d) {
+                            if (getLabel(d) === label) d.enabled = enabled;
+                            return (d.enabled) ? d[0] : 0;
+                        });
+
+                        path = path.data(pie(dataset));
+
+                        path.transition()
+                                .duration(750)
+                                .attrTween('d', function(d) {
+                                    var interpolate = d3.interpolate(this._current, d);
+                                    this._current = interpolate(0);
+                                    return function(t) {
+                                        return arc(interpolate(t));
+                                    };
+                                });
+                    });
+
+            legend.append('text')
+                    .attr('x', legendRectSize + legendSpacing)
+                    .attr('y', legendRectSize - legendSpacing)
+                    .text(function(d) {
+                        return d;
+                    });
+
+            loading(false);
+        });
+    }
+
+    (function(d3) {
+        loadData();
+
+    })(window.d3);
+</script>
+</body>
+</html>
