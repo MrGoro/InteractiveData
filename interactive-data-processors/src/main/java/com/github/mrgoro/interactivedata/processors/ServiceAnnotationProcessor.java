@@ -53,7 +53,6 @@ public class ServiceAnnotationProcessor extends AbstractProcessor {
                 public Void visitType(TypeElement typeElement, Void o) {
                     for (AnnotationMirror mirror : typeElement.getAnnotationMirrors()) {
                         final TypeElement annotationElement = (TypeElement) mirror.getAnnotationType().asElement();
-                        annotationElement.getQualifiedName();
                         storeAnnotation(annotationElement, typeElement);
                     }
                     return super.visitType(typeElement, o);

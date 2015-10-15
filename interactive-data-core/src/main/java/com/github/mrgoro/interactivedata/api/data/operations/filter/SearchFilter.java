@@ -21,13 +21,30 @@ import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
  */
 public class SearchFilter extends Filter<SearchFilter.SearchFilterData, EmptyOperationData> {
 
+    private Object searchObject;
+
     public SearchFilter(String fieldName, Class fieldClass, SearchFilterData requestData, EmptyOperationData options) {
         super(fieldName, fieldClass, requestData, options);
+        // Cache Search Object
+        if(fieldName != null && fieldClass != null && requestData != null && options != null && requestData.hasData()) {
+            searchObject = getSearch(getFieldClass());
+        }
+    }
+
+    private <T> T getSearch(Class<T> type) {
+        String search = getRequestData().getSearch();
+        Object typed = search;
+        if(type.equals(Long.class)) {
+            typed = Long.valueOf(search);
+        } else if(type.equals(Integer.class)) {
+            typed = Integer.valueOf(search);
+        }
+        return type.cast(typed);
     }
 
     @Override
     protected boolean test(DataObject dataObject) {
-        return getProperty(dataObject).equals(getRequestData().getSearch()) ^ getRequestData().isInvert();
+        return getProperty(dataObject).equals(searchObject) ^ getRequestData().isInvert();
     }
 
     /**

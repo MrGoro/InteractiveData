@@ -9,13 +9,14 @@ import java.lang.annotation.Annotation;
 import java.util.Collection;
 
 /**
- * Service Locator that uses Springs ClassPathScanningCandidateComponentProvider to find Classes.
+ * Service Locator that uses Springs ClassPathScanningCandidateComponentProvider to find services.
  *
  * @author Philipp Sch&uuml;rmann
  */
 @Service
 public class SpringAnnotatedServiceLocator extends AnnotatedServiceLocator {
 
+    // Base path configuration for improved performance
     private String path;
 
     @Autowired
