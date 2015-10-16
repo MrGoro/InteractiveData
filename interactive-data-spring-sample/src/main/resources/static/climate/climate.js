@@ -5,16 +5,20 @@ var margin = {top: 20, right: 20, bottom: 30, left: 50},
 
 var parseDate = d3.time.format("%d-%b-%y").parse;
 
+var brush;
+
 var x = d3.time.scale().range([0, width]),
-    y = d3.scale.linear().range([height, 0]),
-    brush;
+    y = d3.scale.linear().range([height, 0]);
 
 var x2 = d3.time.scale().range([0, width]);
 
 var xAxis = d3.svg.axis().scale(x).orient("bottom"),
     yAxis = d3.svg.axis().scale(y).orient("left");
 
+var color = d3.scale.category10();
+
 var line = d3.svg.line()
+    .interpolate("basis")
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d.value); });
 
@@ -31,8 +35,34 @@ var svgBrush = d3.select("#graph").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 function showChart(data, chartInit) {
-    x.domain(d3.extent(data, function(d) { return d.date; }));
-    y.domain(d3.extent(data, function(d) { return d.value; }));
+    color.domain(d3.keys(["Hamburg", "Munich"]));
+
+    x.domain([
+        d3.min(data, function(c) { return d3.min(c.data, function(v) { return v.date; }); }),
+        d3.max(data, function(c) { return d3.max(c.data, function(v) { return v.date; }); })
+    ]);
+    y.domain([
+        d3.min(data, function(c) { return d3.min(c.data, function(v) { return v.value; }); }),
+        d3.max(data, function(c) { return d3.max(c.data, function(v) { return v.value; }); })
+    ]);
+
+    var city = svg.selectAll(".city.g")
+        .data(data, function(d) {
+            return d.name;
+        });
+
+    city.enter().append("g")
+        .attr("class", "city")
+        .append("path")
+        .attr("class", "line")
+        .attr("d", function(d) {
+            return line(d.data);
+        })
+        .style("stroke", function(d) {
+            return color(d.name);
+        });
+
+    city.exit().remove();
 
     if(chartInit) {
         draw(data);
@@ -56,10 +86,6 @@ function draw(data) {
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text("Temperature");
-
-    svg.append("path")
-        .attr("class", "line")
-        .attr("d", line(data));
 }
 
 function update(data) {
@@ -72,10 +98,6 @@ function update(data) {
     chart.select(".y.axis")
         .duration(750)
         .call(yAxis);
-
-    chart.select(".line")
-        .duration(750)
-        .attr("d", line(data));
 }
 
 var brushInit = false;

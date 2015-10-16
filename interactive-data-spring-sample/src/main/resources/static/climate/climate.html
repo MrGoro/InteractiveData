@@ -157,9 +157,16 @@
         alert("Error! Something went wrong. Try again later.")
     };
 
-    var success = function(result, init) {
-        var data = result.data[0];
-        data = adjustData(data);
+    var success = function(result1, result2, init) {
+        var data = [
+            {
+                name: "Hamburg",
+                data: adjustData(result1.data[0])
+            }, {
+                name: "Munich",
+                data: adjustData(result2.data[0])
+            }
+        ];
 
         showChart(data, init);
     };

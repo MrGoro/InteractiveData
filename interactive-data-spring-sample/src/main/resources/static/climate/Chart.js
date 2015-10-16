@@ -60,20 +60,34 @@ function Chart(apiUrl, success, error, status, defaultPicker) {
     this.loadData = function(init) {
         statusCallback(true);
 
-        var xhr = $.ajax({
-            url: this.getUrl(),
+        var path1 = this.getUrl() + '&search=1975';
+        var path2 = this.getUrl() + '&search=3390';
+
+        $.ajax({
+            url: path1,
             dataType: "json"
         })
-        .success(function(result) {
-            data = result;
-            successCallback(data, init);
+        .success(function(result1) {
+                $.ajax({
+                    url: path2,
+                    dataType: "json"
+                })
+                .success(function(result2) {
+                    successCallback(result1, result2, init);
+                })
+                .fail(function(error) {
+                    errorCallback(error);
+                    statusCallback(false);
+                })
+                .complete(function() {
+                    statusCallback(false);
+                });
         })
         .fail(function(error) {
             errorCallback(error);
-        })
-        .complete(function() {
             statusCallback(false);
         });
     };
+
     this.loadData(true);
 }
