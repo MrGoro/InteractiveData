@@ -1,9 +1,9 @@
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = 960 - margin.left - margin.right,
+var margin = {top: 20, right: 80, bottom: 30, left: 50},
+    width = 1140 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom,
     heightBrush = 200 - margin.top - margin.bottom;
 
-var parseDate = d3.time.format("%d-%b-%y").parse;
+//var parseDate = d3.time.format("%d-%b-%y").parse;
 
 var brush;
 
@@ -46,14 +46,15 @@ function showChart(data, chartInit) {
         d3.max(data, function(c) { return d3.max(c.data, function(v) { return v.value; }); })
     ]);
 
-    var city = svg.selectAll(".city.g")
+    var node = svg.selectAll("g.city")
         .data(data, function(d) {
             return d.name;
         });
 
-    city.enter().append("g")
-        .attr("class", "city")
-        .append("path")
+    var enter = node.enter().append("g")
+        .attr("class", "city");
+
+    enter.append("path")
         .attr("class", "line")
         .attr("d", function(d) {
             return line(d.data);
@@ -62,7 +63,14 @@ function showChart(data, chartInit) {
             return color(d.name);
         });
 
-    city.exit().remove();
+    enter.append("text")
+        .datum(function(d) { return {name: d.name, value: d.data[d.data.length - 1]}; })
+        .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.value) + ")"; })
+        .attr("x", 3)
+        .attr("dy", ".35em")
+        .text(function(d) { return d.name; });
+
+    var remove = node.exit().remove();
 
     if(chartInit) {
         draw(data);
@@ -98,6 +106,12 @@ function update(data) {
     chart.select(".y.axis")
         .duration(750)
         .call(yAxis);
+
+/*    chart.selectAll(".line")
+        .duration(750)
+        .attr("d", function(d) {
+            return line(d.data);
+        })*/
 }
 
 var brushInit = false;
@@ -143,7 +157,7 @@ function drawBrush(coarseTicks, fineTicks, fineTicksCount) {
     svgBrush.append("g")
         .attr("class", "x axisBrush")
         .attr("transform", "translate(0," + heightBrush + ")")
-        .call(xAxisBrush.ticks(coarseTicks).tickPadding(0))
+        .call(xAxisBrush.ticks(coarseTicks))
         .selectAll("text")
         .attr("x", 6)
         .style("text-anchor", null);

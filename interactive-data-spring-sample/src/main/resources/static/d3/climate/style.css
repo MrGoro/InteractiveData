@@ -1,0 +1,102 @@
+.glyphicon.spinning {
+    font-size: 50px;
+    animation: spin 1s infinite linear;
+    -webkit-animation: spin2 1s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+.spinner{
+    position: absolute;
+    height: 100px;
+    width: 100px;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+    z-index: 11;
+}
+
+#graph {
+    position: relative;
+}
+
+.overlay {
+    opacity: .5;
+    filter: Alpha(Opacity=50);
+    background-color: #f6f6f6;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+}
+
+.grid-background {
+    fill: #ddd;
+}
+
+.axisBrush path {
+    display: none;
+}
+
+.axisBrush line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.grid line,
+.grid path {
+    fill: none;
+    stroke: #fff;
+    shape-rendering: crispEdges;
+}
+
+.grid .minor.tick line {
+    stroke-opacity: .5;
+}
+
+.brush .extent {
+    stroke: #000;
+    fill-opacity: .125;
+    shape-rendering: crispEdges;
+}
+
+.toggle {
+    position: fixed;
+    top: 50%;
+    height: 100px;
+    width: 50px;
+    font-size: 5em;
+}
+
+.next {
+    right: 50px;
+}
+
+.previous {
+    left: 20px;
+}
