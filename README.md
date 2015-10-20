@@ -4,7 +4,7 @@ Java Library for easy creation of RESTful interfaces for interactive data visual
 InteractiveData is developed by Philipp Sch&uuml;rmann for his Master Thesis hat University of Hamburg.
 The complete document will be provided here after it is finished.
 
-[Sample Project on Heroku](https://interactive-data-dev.herokuapp.com/)
+[Sample Project on Heroku](https://interactive-data-prod.herokuapp.com/)
 
 ## Project Structure
 InteractiveData is divided into multiple modules. See the table below for more information on every module:
@@ -62,7 +62,8 @@ everything for direct start. Add the following dependency to your Spring Boot Pr
 ```
 To start a new project from scatch use [start.spring.io](https://start.spring.io/) to initzialize a Spring Boot project.
 ### Wiki
-You can find more information on using and developing with InteractiveData in the wiki. Below you can find some examples:
+You can find more information on using and developing with InteractiveData in the wiki. See some examples below:
 
-Develop custom chart types
-Develop custom library representations
+* [Integrate Framework](https://github.com/MrGoro/InteractiveData/wiki/Integrate-Framework)
+* [Define Charts](https://github.com/MrGoro/InteractiveData/wiki/Define-Charts)
+* [Data Source](https://github.com/MrGoro/InteractiveData/wiki/Data-Source)
