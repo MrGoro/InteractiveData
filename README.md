@@ -4,7 +4,7 @@ Java Library for easy creation of RESTful interfaces for interactive data visual
 InteractiveData is developed by Philipp Sch&uuml;rmann for his Master Thesis hat University of Hamburg.
 The complete document will be provided here after it is finished.
 
-[Sample Project on Heroku](https://interactive-data-prod.herokuapp.com/)
+[Sample Project on Heroku](https://interactive-data.herokuapp.com/)
 
 ## Project Structure
 InteractiveData is divided into multiple modules. See the table below for more information on every module:
@@ -21,12 +21,12 @@ InteractiveData is divided into multiple modules. See the table below for more i
 ```
 
 ## Usage
-The following code snippets will show the basic usage of InteractiveData. For additional information see the sample 
-project or JavaDoc.
+The following code snippets will show the basic usage of InteractiveData. For additional information see the [Sample 
+App](https://github.com/MrGoro/interactive-data-sample) or JavaDoc.
 
 ### Maven Dependency
 Until the release of the first stable version InteractiveData cannot deploy to Maven Central. 
-Snapshots releases are deployed to OSSRH Snapshot Repository. Add the snapshot repository to your maven project by
+Snapshot releases are deployed to OSSRH Snapshot Repository. Add the snapshot repository to your maven project by
 adding the following to your pom.xml:
 ```
 <repositories>
@@ -59,6 +59,7 @@ everything for direct start. Add the following dependency to your Spring Boot Pr
 </dependency>
 ```
 To start a new project from scatch use [start.spring.io](https://start.spring.io/) to initzialize a Spring Boot project.
+
 ### Wiki
 You can find more information on using and developing with InteractiveData in the wiki. See some examples below:
 
