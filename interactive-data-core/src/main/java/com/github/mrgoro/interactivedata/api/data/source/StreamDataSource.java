@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 /**
- * // TODO
+ * Base Implementation of a {@link DataSource} using the Java 8 Stream API for data processing.
  *
  * @author Philipp Sch&uuml;rmann
  */
@@ -76,7 +76,7 @@ public abstract class StreamDataSource<T> implements DataSource {
 
             // Extract Collectors from functions
             List<Collector<DataObject, ?, ?>> functionCollectors = operation.getFunctions().stream().map(Function::toCollector).collect(toList());
-            Collector<DataObject, List<Object>, List<Object>> multiCollector = getMultiCollector(functionCollectors);
+            Collector<DataObject, ?, ?> multiCollector = getMultiCollector(functionCollectors);
 
             // Complex Group with multiple Functions
             Map<Object, DataObject> resultMap = dataStream.collect(
@@ -86,11 +86,7 @@ public abstract class StreamDataSource<T> implements DataSource {
 
             // Build final Data Object containing group field (add to each element)
             result.add(resultMap.entrySet().stream()
-                .map(entry -> {
-                    DataObject dataObject = entry.getValue();
-                    dataObject.setProperty(operation.getGranularity().getFieldName(), entry.getKey());
-                    return dataObject;
-                })
+                .map(e -> e.getValue().setPropertyAndGet(operation.getGranularity().getFieldName(), e.getKey()))
                 .collect(toList())
             );
         }
@@ -108,24 +104,24 @@ public abstract class StreamDataSource<T> implements DataSource {
     @SuppressWarnings("unchecked")
     private Collector<DataObject, List<Object>, List<Object>> getMultiCollector(List<Collector<DataObject, ?, ?>> collectors) {
         return Collector.of(
-                () -> collectors.stream()
-                        .map(Collector::supplier)
-                        .map(Supplier::get)
-                        .collect(toList()),
-                (list, e) ->
-                    IntStream.range(0, collectors.size()).forEach(
-                        i -> ((BiConsumer<Object, DataObject>) collectors.get(i).accumulator()).accept(list.get(i), e)
-                    ),
-                (l1, l2) -> {
-                    IntStream.range(0, collectors.size()).forEach(
-                            i -> l1.set(i, ((BinaryOperator<Object>) collectors.get(i).combiner()).apply(l1.get(i), l2.get(i))));
-                    return l1;
-                },
-                list -> {
-                    IntStream.range(0, collectors.size()).forEach(
-                            i -> list.set(i, ((java.util.function.Function<Object, Object>) collectors.get(i).finisher()).apply(list.get(i))));
-                    return list;
-                });
+            () -> collectors.stream()
+                    .map(Collector::supplier)
+                    .map(Supplier::get)
+                    .collect(toList()),
+            (list, e) ->
+                IntStream.range(0, collectors.size()).forEach(
+                    i -> ((BiConsumer<Object, DataObject>) collectors.get(i).accumulator()).accept(list.get(i), e)
+                ),
+            (l1, l2) -> {
+                IntStream.range(0, collectors.size()).forEach(
+                        i -> l1.set(i, ((BinaryOperator<Object>) collectors.get(i).combiner()).apply(l1.get(i), l2.get(i))));
+                return l1;
+            },
+            list -> {
+                IntStream.range(0, collectors.size()).forEach(
+                        i -> list.set(i, ((java.util.function.Function<Object, Object>) collectors.get(i).finisher()).apply(list.get(i))));
+                return list;
+            });
     }
 
     /**

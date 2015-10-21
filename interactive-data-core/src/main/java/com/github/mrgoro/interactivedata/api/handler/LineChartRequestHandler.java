@@ -39,16 +39,16 @@ public class LineChartRequestHandler extends ChartRequestHandler<LineChartDefini
         List<AxisDefinition> axisDefinitionsY = chartDefinition.getAxis(Axis.Type.Y);
         for(AxisDefinition axisDefinitionY : axisDefinitionsY) {
             data.add(chartData.stream()
-                    .map(dataObject -> new Object[]{
-                            dataObject.getOptionalProperty(axisDefinitionX.getDataField()).orElse(""),
-                            dataObject.getOptionalProperty(axisDefinitionY.getDataField()).orElse("")
-                    })
-                    .sorted(arrayIndexComparator)
-                    .collect(toList()));
+                .map(dataObject -> new Object[]{
+                        dataObject.getOptionalProperty(axisDefinitionX.getDataField()).orElse(""),
+                        dataObject.getOptionalProperty(axisDefinitionY.getDataField()).orElse("")
+                })
+                .sorted(arrayIndexComparator)
+                .collect(toList()));
         }
         return new LineChartData(chartDefinition.getName(), data);
     }
 
     @SuppressWarnings("unchecked")
-    private Comparator<Object[]> arrayIndexComparator = (objects, otherobjects) -> ((Comparable)objects[0]).compareTo(otherobjects[0]);
+    private static final Comparator<Object[]> arrayIndexComparator = (objects, otherobjects) -> ((Comparable)objects[0]).compareTo(otherobjects[0]);
 }

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -102,12 +103,12 @@ public abstract class FileDataSource extends StreamDataSource<String> {
      */
     protected String[] getMappings() {
         try {
-            List<String[]> list = Files.lines(getPath()).limit(1).map(
-                    line -> line.split(getSeparator())
-            ).collect(toList());
-            if(list != null && list.size() == 1) {
-                return list.get(0);
-            }
+            return Files.lines(getPath())
+                    .map(line -> line.split(getSeparator()))
+                    .findFirst()
+                    .orElseThrow( // Throw Exception
+                            () -> new IllegalArgumentException("Could not get Mapping for FileDataSource of file[" + getPath().getFileName() + "]")
+                    );
         } catch (IOException e) {
             log.error("Could not read file: path[" + getPath() + "], returning zero data");
         }
@@ -144,7 +145,7 @@ public abstract class FileDataSource extends StreamDataSource<String> {
         } catch (IOException e) {
             log.error("Could not read file: path[" + getPath() + "], returning zero data");
         }
-        return new ArrayList<String>().stream();
+        return new ArrayList<String>().parallelStream();
     }
 
     @Override

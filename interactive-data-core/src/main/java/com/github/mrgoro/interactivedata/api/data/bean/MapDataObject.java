@@ -34,4 +34,10 @@ public class MapDataObject implements DataObject {
     public Map<String, Object> getAsMap() {
         return properties;
     }
+
+    @Override
+    public DataObject setPropertyAndGet(String name, Object value) {
+        setProperty(name, value);
+        return this;
+    }
 }

@@ -90,4 +90,14 @@ public interface DataObject {
      * @return Map of properties
      */
     Map<String, Object> getAsMap();
+
+    /**
+     * Set a property by its name and return the DataObject.
+     *
+     * @param name  Name of the property
+     * @param value Value of the property
+     * @see #setProperty(String, Object)
+     * @return DataObject
+     */
+    DataObject setPropertyAndGet(String name, Object value);
 }
