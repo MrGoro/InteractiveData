@@ -67,3 +67,7 @@ You can find more information on using and developing with InteractiveData in th
 * [Integrate Framework](https://github.com/MrGoro/InteractiveData/wiki/Integrate-Framework)
 * [Define Charts](https://github.com/MrGoro/InteractiveData/wiki/Define-Charts)
 * [Data Source](https://github.com/MrGoro/InteractiveData/wiki/Data-Source)
+
+
+## License
+The InteractiveData framework is released under the [MIT License](http://choosealicense.com/licenses/mit/).
