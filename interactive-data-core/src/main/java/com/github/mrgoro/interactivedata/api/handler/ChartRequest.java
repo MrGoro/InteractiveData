@@ -22,7 +22,7 @@ public class ChartRequest {
         this.name = name;
         this.data = data;
     }
-
+// getter and setter
     public String getName() {
         return name;
     }

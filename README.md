@@ -16,10 +16,8 @@ InteractiveData is divided into multiple modules. See the table below for more i
 |     Annotation Processors for JSR 269 Service Locator
 ├── interactive-data-spring
 |     Integration module for Spring Framework
-├── interactive-data-spring-boot-starter
-|     Starter Template for easy start with Spring Boot
-└── interactive-data-spring-sample
-      Sample demonstrating the use of this framework with Spring Boot and various frontend libraries
+└── interactive-data-spring-boot-starter
+      Starter Template for easy start with Spring Boot
 ```
 
 ## Usage
@@ -70,4 +68,4 @@ You can find more information on using and developing with InteractiveData in th
 
 
 ## License
-The InteractiveData framework is released under the [MIT License](http://choosealicense.com/licenses/mit/).
+The InteractiveData framework is released under the [MIT License](http://opensource.org/licenses/MIT).

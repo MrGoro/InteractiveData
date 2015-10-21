@@ -14,6 +14,7 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
@@ -35,20 +36,23 @@ public class LineChartRequestHandler extends ChartRequestHandler<LineChartDefini
     protected LineChartData convertData(List<DataObject> chartData) {
         List<List<Object[]>> data = new ArrayList<>();
         LineChartDefinition chartDefinition = getChartDefinition();
-        AxisDefinition axisDefinitionX = chartDefinition.getAxis(Axis.Type.X).get(0);
-        List<AxisDefinition> axisDefinitionsY = chartDefinition.getAxis(Axis.Type.Y);
-        for(AxisDefinition axisDefinitionY : axisDefinitionsY) {
+        AxisDefinition xAxis = chartDefinition.getAxis(Axis.Type.X).get(0);
+        List<AxisDefinition> yAxisList = chartDefinition.getAxis(Axis.Type.Y);
+        yAxisList.forEach(yAxis ->
             data.add(chartData.stream()
-                .map(dataObject -> new Object[]{
-                        dataObject.getOptionalProperty(axisDefinitionX.getDataField()).orElse(""),
-                        dataObject.getOptionalProperty(axisDefinitionY.getDataField()).orElse("")
-                })
+                .map(getMapper(xAxis.getDataField(), yAxis.getDataField()))
                 .sorted(arrayIndexComparator)
-                .collect(toList()));
-        }
+                .collect(toList())));
         return new LineChartData(chartDefinition.getName(), data);
     }
 
+    private static Function<DataObject, Object[]> getMapper(String x, String y) {
+        return (dataObject) -> new Object[] {
+                dataObject.getOptionalProperty(x).orElse(""),
+                dataObject.getOptionalProperty(y).orElse("")
+        };
+    }
+
     @SuppressWarnings("unchecked")
-    private static final Comparator<Object[]> arrayIndexComparator = (objects, otherobjects) -> ((Comparable)objects[0]).compareTo(otherobjects[0]);
+    private static final Comparator<Object[]> arrayIndexComparator = (o1, o2) -> ((Comparable)o1[0]).compareTo(o2[0]);
 }

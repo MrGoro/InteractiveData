@@ -15,7 +15,6 @@
         <module>interactive-data-processors</module>
         <module>interactive-data-spring</module>
         <module>interactive-data-spring-boot-starter</module>
-        <module>interactive-data-spring-sample</module>
     </modules>
 
     <properties>
@@ -156,8 +155,8 @@
 
     <licenses>
         <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <name>MIT License</name>
+            <url>http://opensource.org/licenses/MIT</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
