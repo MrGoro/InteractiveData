@@ -76,7 +76,7 @@ public abstract class StreamDataSource<T> implements DataSource {
 
             // Extract Collectors from functions
             List<Collector<DataObject, ?, ?>> functionCollectors = operation.getFunctions().stream().map(Function::toCollector).collect(toList());
-            Collector<DataObject, ?, ?> multiCollector = getMultiCollector(functionCollectors);
+            Collector<DataObject, ?, Object[]> multiCollector = getMultiCollector(functionCollectors);
 
             // Complex Group with multiple Functions
             Map<Object, DataObject> resultMap = dataStream.collect(
@@ -102,7 +102,7 @@ public abstract class StreamDataSource<T> implements DataSource {
      * @return Single Collector
      */
     @SuppressWarnings("unchecked")
-    private Collector<DataObject, List<Object>, List<Object>> getMultiCollector(List<Collector<DataObject, ?, ?>> collectors) {
+    private Collector<DataObject, List<Object>, Object[]> getMultiCollector(List<Collector<DataObject, ?, ?>> collectors) {
         return Collector.of(
             () -> collectors.stream()
                     .map(Collector::supplier)
@@ -120,7 +120,7 @@ public abstract class StreamDataSource<T> implements DataSource {
             list -> {
                 IntStream.range(0, collectors.size()).forEach(
                         i -> list.set(i, ((java.util.function.Function<Object, Object>) collectors.get(i).finisher()).apply(list.get(i))));
-                return list;
+                return list.toArray();
             });
     }
 
@@ -152,7 +152,7 @@ public abstract class StreamDataSource<T> implements DataSource {
          * @return DataObject
          * @throws IllegalArgumentException Exception when keys and values do not have the same size or at least one is null
          */
-        public DataObject get(Object... values) throws IllegalArgumentException {
+        public DataObject get(Object[] values) throws IllegalArgumentException {
             this.values = values;
             return build();
         }
