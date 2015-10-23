@@ -21,10 +21,9 @@ import java.util.Optional;
  *
  * @author Philipp Sch&uuml;rmann
  */
-@RestController
-public class InteractiveDataController {
+public class InteractiveDataRestController {
 
-    private static final Log log = LogFactory.getLog(InteractiveDataController.class);
+    private static final Log log = LogFactory.getLog(InteractiveDataRestController.class);
 
     private static final String SERVICE_NAME = "service";
     private static final String CHART_NAME = "name";
@@ -32,8 +31,7 @@ public class InteractiveDataController {
 
     private ChartRequestHandlerService chartRequestHandlerService;
 
-    @Autowired
-    public InteractiveDataController(ChartRequestHandlerService chartRequestHandlerService) {
+    public InteractiveDataRestController(ChartRequestHandlerService chartRequestHandlerService) {
         this.chartRequestHandlerService = chartRequestHandlerService;
     }
 

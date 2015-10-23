@@ -3,6 +3,8 @@ package com.github.mrgoro.interactivedata.spring.boot.autoconfigure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mrgoro.interactivedata.spring.config.InteractiveDataConfiguration;
 import com.github.mrgoro.interactivedata.spring.config.InteractiveDataProperties;
+import com.github.mrgoro.interactivedata.spring.service.ChartRequestHandlerService;
+import com.github.mrgoro.interactivedata.spring.web.InteractiveDataRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
