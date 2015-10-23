@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Interactive Data Framework by MrGoro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Interactive Data Framework</h1>
+      <h2 class="project-tagline">Java framework for easy creation of (RESTful-)APIs for interactive visualizations</h2>
+      <a href="https://github.com/MrGoro/InteractiveData" class="btn">View on GitHub</a>
+      <a href="https://github.com/MrGoro/InteractiveData/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/MrGoro/InteractiveData/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="interactivedata" class="anchor" href="#interactivedata" aria-hidden="true"><span class="octicon octicon-link"></span></a>InteractiveData</h1>
+
+<p>Java framework for easy creation of (RESTful-)APIs for interactive visualizations.</p>
+
+<p>InteractiveData is developed by Philipp Schürmann for his Master Thesis at University of Hamburg.
+The complete document will be provided here after it is finished.</p>
+
+<p><a href="https://interactive-data.herokuapp.com/">Sample Project on Heroku</a></p>
+
+<h2>
+<a id="project-structure" class="anchor" href="#project-structure" aria-hidden="true"><span class="octicon octicon-link"></span></a>Project Structure</h2>
+
+<p>InteractiveData is divided into multiple modules. See the table below for more information on every module:</p>
+
+<pre><code>. InteractiveData
+├── interactive-data-core
+|     Core framework with basic functionality
+├── interactive-data-processors
+|     Annotation Processors for JSR 269 Service Locator
+├── interactive-data-spring
+|     Integration module for Spring Framework
+└── interactive-data-spring-boot-starter
+      Starter Template for easy start with Spring Boot
+</code></pre>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>The following code snippets will show the basic usage of InteractiveData. For additional information see the <a href="https://github.com/MrGoro/interactive-data-sample">Sample 
+App</a> or JavaDoc.</p>
+
+<h3>
+<a id="maven-dependency" class="anchor" href="#maven-dependency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maven Dependency</h3>
+
+<p>Until the release of the first stable version, InteractiveData cannot deploy to Maven Central. 
+Snapshot releases are deployed to OSSRH Snapshot Repository. Add the snapshot repository to your maven project by
+adding the following to your pom.xml:</p>
+
+<pre><code>&lt;repositories&gt;
+    &lt;repository&gt;
+        &lt;id&gt;ossrh.sonatype.snapshots.deploy&lt;/id&gt;
+        &lt;name&gt;OSSRH snapshot repository&lt;/name&gt;
+        &lt;url&gt;https://oss.sonatype.org/content/repositories/snapshots/&lt;/url&gt;
+        &lt;snapshots&gt;
+            &lt;enabled&gt;true&lt;/enabled&gt;
+        &lt;/snapshots&gt;
+    &lt;/repository&gt;
+&lt;/repositories&gt;
+</code></pre>
+
+<h3>
+<a id="core-framework" class="anchor" href="#core-framework" aria-hidden="true"><span class="octicon octicon-link"></span></a>Core Framework</h3>
+
+<p>The core framework will provide basic functionality. It enables you to define charts and create filters and operations.
+Though the core will NOT provide an API on its own. Use one of the integration modules to integrate the framework
+into your environment. Add the following dependency to your Maven project:</p>
+
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.github.mrgoro&lt;/groupId&gt;
+    &lt;artifactId&gt;interactive-data-core&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<h3>
+<a id="spring-boot" class="anchor" href="#spring-boot" aria-hidden="true"><span class="octicon octicon-link"></span></a>Spring Boot</h3>
+
+<p>Interactive Data has a starter template for an easy start with Spring Boot. This will auto configure
+everything for direct start. Add the following dependency to your Spring Boot project:</p>
+
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.github.mrgoro&lt;/groupId&gt;
+    &lt;artifactId&gt;interactive-data-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>To start a new project from scatch use <a href="https://start.spring.io/">start.spring.io</a> to initialize a Spring Boot project.</p>
+
+<h3>
+<a id="define-charts" class="anchor" href="#define-charts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Define Charts</h3>
+
+<p>Interactive Data uses annotations to define charts whose data is than exposed over an API. The following example shows
+a very basic definition of a chart for visualizing climate data.</p>
+
+<pre><code>@ChartService("sensor")
+public class SensorCharts {
+
+    @Chart(
+        name = "temperature",
+        dataSource = TemperatureDataSource.class,
+        filter = @FilterDef(
+            filter = SearchFilter.class,
+            fieldName = "stationId",
+            fieldClass = Long.class
+        )
+    )
+    @LineChart(
+        axis = {
+            @Axis(
+                dataField = "time",
+                dataType = Date.class,
+                type = Axis.Type.X,
+                filter = TimeFilter.class,
+                granularity = TimeGranularity.class
+            ),
+            @Axis(
+                dataField = "temperature",
+                dataType = Double.class,
+                type = Axis.Type.Y,
+                functions = Average.class
+            )
+        }
+    )
+    public LineChartData temperature(LineChartData data) {
+        // Further enhance data before sending
+        return data;
+    }
+}
+</code></pre>
+
+<h2>
+<a id="wiki" class="anchor" href="#wiki" aria-hidden="true"><span class="octicon octicon-link"></span></a>Wiki</h2>
+
+<p>You can find more information on using and developing with Interactive Data in the wiki. See some examples below:</p>
+
+<ul>
+<li><a href="wiki/Integrate-Framework">Integrate Framework</a></li>
+<li><a href="wiki/Define-Charts">Define Charts</a></li>
+<li><a href="wiki/Data-Source">Data Source</a></li>
+</ul>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>The InteractiveData framework is released under the <a href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/MrGoro/InteractiveData">Interactive Data Framework</a> is maintained by <a href="https://github.com/MrGoro">MrGoro</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
