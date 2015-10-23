@@ -1,7 +1,7 @@
 package com.github.mrgoro.interactivedata.api.data.operations.filter;
 
-import com.github.mrgoro.interactivedata.api.data.operations.OperationData;
 import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
+import com.github.mrgoro.interactivedata.api.data.operations.OperationData;
 import com.github.mrgoro.interactivedata.api.util.exceptions.ChartDefinitionException;
 
 import java.util.OptionalDouble;

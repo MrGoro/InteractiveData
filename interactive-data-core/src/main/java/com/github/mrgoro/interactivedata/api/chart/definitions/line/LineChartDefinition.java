@@ -1,8 +1,8 @@
 package com.github.mrgoro.interactivedata.api.chart.definitions.line;
 
-import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import com.github.mrgoro.interactivedata.api.chart.annotations.line.Axis;
 import com.github.mrgoro.interactivedata.api.chart.data.LineChartData;
+import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
 
 import java.util.List;
 

@@ -2,9 +2,9 @@ package com.github.mrgoro.interactivedata.api.handler;
 
 import com.github.mrgoro.interactivedata.api.chart.data.ChartData;
 import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
-import com.github.mrgoro.interactivedata.api.data.DataRequest;
 import com.github.mrgoro.interactivedata.api.chart.definitions.ChartPostProcessor;
 import com.github.mrgoro.interactivedata.api.chart.definitions.operations.OperationInfo;
+import com.github.mrgoro.interactivedata.api.data.DataRequest;
 import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 import com.github.mrgoro.interactivedata.api.data.operations.Operation;
 import com.github.mrgoro.interactivedata.api.data.operations.filter.Filter;

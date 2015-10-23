@@ -6,14 +6,14 @@ import com.github.mrgoro.interactivedata.api.chart.data.ChartData;
 import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import com.github.mrgoro.interactivedata.api.chart.definitions.line.AxisDefinition;
 import com.github.mrgoro.interactivedata.api.chart.definitions.line.LineChartDefinition;
+import com.github.mrgoro.interactivedata.api.chart.definitions.operations.FilterInfo;
 import com.github.mrgoro.interactivedata.api.chart.definitions.operations.FunctionInfo;
 import com.github.mrgoro.interactivedata.api.chart.definitions.operations.OperationInfo;
 import com.github.mrgoro.interactivedata.api.data.operations.filter.Filter;
+import com.github.mrgoro.interactivedata.api.data.operations.functions.Function;
 import com.github.mrgoro.interactivedata.api.data.operations.granularity.Granularity;
 import com.github.mrgoro.interactivedata.api.service.annotations.AnnotationProcessorService;
 import com.github.mrgoro.interactivedata.api.util.exceptions.ChartDefinitionException;
-import com.github.mrgoro.interactivedata.api.chart.definitions.operations.FilterInfo;
-import com.github.mrgoro.interactivedata.api.data.operations.functions.Function;
 
 import java.util.ArrayList;
 import java.util.Arrays;

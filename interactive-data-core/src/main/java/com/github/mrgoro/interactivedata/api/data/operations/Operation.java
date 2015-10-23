@@ -1,11 +1,11 @@
 package com.github.mrgoro.interactivedata.api.data.operations;
 
-import com.github.mrgoro.interactivedata.api.data.operations.granularity.Granularity;
-import com.github.mrgoro.interactivedata.api.service.DataMapperService;
-import com.github.mrgoro.interactivedata.api.util.ReflectionUtil;
 import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 import com.github.mrgoro.interactivedata.api.data.operations.filter.Filter;
 import com.github.mrgoro.interactivedata.api.data.operations.functions.Function;
+import com.github.mrgoro.interactivedata.api.data.operations.granularity.Granularity;
+import com.github.mrgoro.interactivedata.api.service.DataMapperService;
+import com.github.mrgoro.interactivedata.api.util.ReflectionUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

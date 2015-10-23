@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.math.BigInteger;
-import java.util.Random;
 
 /**
  * Generate a cache Key based on the parameters of the http request.

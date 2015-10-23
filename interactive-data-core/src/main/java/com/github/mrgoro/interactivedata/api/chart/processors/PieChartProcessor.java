@@ -1,15 +1,15 @@
 package com.github.mrgoro.interactivedata.api.chart.processors;
 
-import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
-import com.github.mrgoro.interactivedata.api.service.annotations.AnnotationProcessorService;
 import com.github.mrgoro.interactivedata.api.chart.annotations.pie.Field;
 import com.github.mrgoro.interactivedata.api.chart.annotations.pie.PieChart;
+import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import com.github.mrgoro.interactivedata.api.chart.definitions.operations.FilterInfo;
 import com.github.mrgoro.interactivedata.api.chart.definitions.operations.FunctionInfo;
 import com.github.mrgoro.interactivedata.api.chart.definitions.operations.OperationInfo;
 import com.github.mrgoro.interactivedata.api.chart.definitions.pie.FieldDefinition;
 import com.github.mrgoro.interactivedata.api.chart.definitions.pie.PieChartDefinition;
 import com.github.mrgoro.interactivedata.api.data.operations.filter.Filter;
+import com.github.mrgoro.interactivedata.api.service.annotations.AnnotationProcessorService;
 import com.github.mrgoro.interactivedata.api.util.exceptions.ChartDefinitionException;
 
 import java.util.Collections;

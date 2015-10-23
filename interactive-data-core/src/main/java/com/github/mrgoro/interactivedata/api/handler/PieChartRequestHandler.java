@@ -4,9 +4,9 @@ import com.github.mrgoro.interactivedata.api.chart.annotations.pie.Field;
 import com.github.mrgoro.interactivedata.api.chart.data.PieChartData;
 import com.github.mrgoro.interactivedata.api.chart.definitions.pie.FieldDefinition;
 import com.github.mrgoro.interactivedata.api.chart.definitions.pie.PieChartDefinition;
+import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 import com.github.mrgoro.interactivedata.api.service.DataMapperService;
 import com.github.mrgoro.interactivedata.api.service.ServiceProvider;
-import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 import com.github.mrgoro.interactivedata.api.service.annotations.ChartRequestHandlerService;
 
 import javax.inject.Inject;

@@ -1,7 +1,7 @@
 package com.github.mrgoro.interactivedata.spring.service.locators;
 
-import com.github.mrgoro.interactivedata.spring.config.InteractiveDataProperties;
 import com.github.mrgoro.interactivedata.api.service.AnnotatedServiceLocator;
+import com.github.mrgoro.interactivedata.spring.config.InteractiveDataProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

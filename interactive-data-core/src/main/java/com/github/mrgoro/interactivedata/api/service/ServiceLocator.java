@@ -4,8 +4,8 @@ import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefi
 import com.github.mrgoro.interactivedata.api.chart.processors.AnnotationProcessor;
 import com.github.mrgoro.interactivedata.api.handler.ChartRequestHandler;
 import com.github.mrgoro.interactivedata.api.service.annotations.AnnotationProcessorService;
-import com.github.mrgoro.interactivedata.api.service.annotations.ChartService;
 import com.github.mrgoro.interactivedata.api.service.annotations.ChartRequestHandlerService;
+import com.github.mrgoro.interactivedata.api.service.annotations.ChartService;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;

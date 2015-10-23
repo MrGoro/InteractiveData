@@ -1,7 +1,7 @@
 # InteractiveData
-Java Library for easy creation of RESTful interfaces for interactive data visualization.
+Java framework for easy creation of (RESTful-)APIs for interactive visualizations.
 
-InteractiveData is developed by Philipp Sch&uuml;rmann for his Master Thesis hat University of Hamburg.
+InteractiveData is developed by Philipp Sch&uuml;rmann for his Master Thesis at University of Hamburg.
 The complete document will be provided here after it is finished.
 
 [Sample Project on Heroku](https://interactive-data.herokuapp.com/)
@@ -25,7 +25,7 @@ The following code snippets will show the basic usage of InteractiveData. For ad
 App](https://github.com/MrGoro/interactive-data-sample) or JavaDoc.
 
 ### Maven Dependency
-Until the release of the first stable version InteractiveData cannot deploy to Maven Central. 
+Until the release of the first stable version, InteractiveData cannot deploy to Maven Central. 
 Snapshot releases are deployed to OSSRH Snapshot Repository. Add the snapshot repository to your maven project by
 adding the following to your pom.xml:
 ```
@@ -40,17 +40,22 @@ adding the following to your pom.xml:
     </repository>
 </repositories>
 ```
-Alternatively you can download the source and install the current version to your local maven repository.
-Run the following commands:
+
+### Core Framework
+The core framework will provide basic functionality. It enables you to define charts and create filters and operations.
+Though the core will NOT provide an API on its own. Use one of the integration modules to integrate the framework
+into your environment. Add the following dependency to your Maven project:
 ```
-git clone https://github.com/MrGoro/InteractiveData.git
-cd InteractiveData
-mvn clean install
+<dependency>
+    <groupId>com.github.mrgoro</groupId>
+    <artifactId>interactive-data-core</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
 ```
 
 ### Spring Boot
-Interactive Data has a starter template for an easy start with Spring Boot. This will also auto configure
-everything for direct start. Add the following dependency to your Spring Boot Project.
+Interactive Data has a starter template for an easy start with Spring Boot. This will auto configure
+everything for direct start. Add the following dependency to your Spring Boot project:
 ```
 <dependency>
     <groupId>com.github.mrgoro</groupId>
@@ -58,14 +63,54 @@ everything for direct start. Add the following dependency to your Spring Boot Pr
     <version>1.0-SNAPSHOT</version>
 </dependency>
 ```
-To start a new project from scatch use [start.spring.io](https://start.spring.io/) to initzialize a Spring Boot project.
+To start a new project from scatch use [start.spring.io](https://start.spring.io/) to initialize a Spring Boot project.
 
-### Wiki
-You can find more information on using and developing with InteractiveData in the wiki. See some examples below:
+### Define Charts
+Interactive Data uses annotations to define charts whose data is than exposed over an API. The following example shows
+a very basic definition of a chart for visualizing climate data.
+```
+@ChartService("sensor")
+public class SensorCharts {
 
-* [Integrate Framework](https://github.com/MrGoro/InteractiveData/wiki/Integrate-Framework)
-* [Define Charts](https://github.com/MrGoro/InteractiveData/wiki/Define-Charts)
-* [Data Source](https://github.com/MrGoro/InteractiveData/wiki/Data-Source)
+    @Chart(
+        name = "temperature",
+        dataSource = TemperatureDataSource.class,
+        filter = @FilterDef(
+            filter = SearchFilter.class,
+            fieldName = "stationId",
+            fieldClass = Long.class
+        )
+    )
+    @LineChart(
+        axis = {
+            @Axis(
+                dataField = "time",
+                dataType = Date.class,
+                type = Axis.Type.X,
+                filter = TimeFilter.class,
+                granularity = TimeGranularity.class
+            ),
+            @Axis(
+                dataField = "temperature",
+                dataType = Double.class,
+                type = Axis.Type.Y,
+                functions = Average.class
+            )
+        }
+    )
+    public LineChartData temperature(LineChartData data) {
+        // Further enhance data before sending
+        return data;
+    }
+}
+```
+
+## Wiki
+You can find more information on using and developing with Interactive Data in the wiki. See some examples below:
+
+* [Integrate Framework](wiki/Integrate-Framework)
+* [Define Charts](wiki/Define-Charts)
+* [Data Source](wiki/Data-Source)
 
 
 ## License

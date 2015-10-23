@@ -1,12 +1,11 @@
 package com.github.mrgoro.interactivedata.spring.web;
 
-import com.github.mrgoro.interactivedata.spring.service.ChartRequestHandlerService;
 import com.github.mrgoro.interactivedata.api.handler.ChartRequest;
 import com.github.mrgoro.interactivedata.api.util.exceptions.ChartDefinitionException;
 import com.github.mrgoro.interactivedata.api.util.exceptions.RequestDataException;
+import com.github.mrgoro.interactivedata.spring.service.ChartRequestHandlerService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 /**
- * Controller for handling RESTful request and forwarding a request to a ChartRequestHandler.
+ * Controller for exposing visualization data over a RESTful api.
  *
  * @author Philipp Sch&uuml;rmann
  */

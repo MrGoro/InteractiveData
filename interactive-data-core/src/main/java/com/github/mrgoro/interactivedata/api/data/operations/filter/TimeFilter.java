@@ -1,9 +1,9 @@
 package com.github.mrgoro.interactivedata.api.data.operations.filter;
 
+import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 import com.github.mrgoro.interactivedata.api.data.operations.OperationData;
 import com.github.mrgoro.interactivedata.api.data.operations.common.TimeFormatOptions;
 import com.github.mrgoro.interactivedata.api.util.exceptions.ChartDefinitionException;
-import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 
 import java.time.Instant;
 import java.time.LocalDate;

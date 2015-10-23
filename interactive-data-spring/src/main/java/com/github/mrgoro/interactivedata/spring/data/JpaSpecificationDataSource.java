@@ -7,7 +7,6 @@ import com.github.mrgoro.interactivedata.api.util.ReflectionUtil;
 import com.github.mrgoro.interactivedata.spring.data.processors.FilterToPredicateProcessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -60,7 +59,6 @@ public abstract class JpaSpecificationDataSource<T> extends StreamDataSource {
 
     private static final Log log = LogFactory.getLog(JpaSpecificationDataSource.class);
 
-    @Autowired
     private List<FilterToPredicateProcessor<? extends Filter<?, ?>>> filterToPredicateProcessors;
 
     /**
@@ -82,9 +80,8 @@ public abstract class JpaSpecificationDataSource<T> extends StreamDataSource {
      * @see #getRepository()
      * @see #getSpecification()
      */
-    @SuppressWarnings("unchecked")
-    protected List<Object> getData() {
-        return (List<Object>) getRepository().findAll(getSpecification());
+    protected List<T> getData() {
+        return getRepository().findAll(getSpecification());
     }
 
     /**

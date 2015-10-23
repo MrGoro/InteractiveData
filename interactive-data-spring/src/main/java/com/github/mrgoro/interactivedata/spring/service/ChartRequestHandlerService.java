@@ -1,11 +1,11 @@
 package com.github.mrgoro.interactivedata.spring.service;
 
 import com.github.mrgoro.interactivedata.api.chart.annotations.Chart;
-import com.github.mrgoro.interactivedata.api.service.annotations.ChartService;
 import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import com.github.mrgoro.interactivedata.api.handler.ChartRequestHandler;
 import com.github.mrgoro.interactivedata.api.service.ChartDefinitionService;
 import com.github.mrgoro.interactivedata.api.service.ServiceProvider;
+import com.github.mrgoro.interactivedata.api.service.annotations.ChartService;
 import com.github.mrgoro.interactivedata.api.util.exceptions.RequestDataException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

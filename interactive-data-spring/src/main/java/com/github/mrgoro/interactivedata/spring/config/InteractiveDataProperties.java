@@ -7,7 +7,6 @@ package com.github.mrgoro.interactivedata.spring.config;
  */
 public class InteractiveDataProperties {
 
-    // TODO Bad performance => find better path
     private String path = "com.github.mrgoro.interactivedata";
 
     public String getPath() {

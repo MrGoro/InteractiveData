@@ -1,8 +1,8 @@
 package com.github.mrgoro.interactivedata.api.data.operations.filter;
 
+import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 import com.github.mrgoro.interactivedata.api.data.operations.EmptyOperationData;
 import com.github.mrgoro.interactivedata.api.data.operations.OperationData;
-import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 
 /**
  * Filter that searches for equality of the data and the parameter.

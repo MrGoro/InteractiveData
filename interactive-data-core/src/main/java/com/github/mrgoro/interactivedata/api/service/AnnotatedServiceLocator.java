@@ -5,9 +5,9 @@ import com.github.mrgoro.interactivedata.api.chart.processors.AnnotationProcesso
 import com.github.mrgoro.interactivedata.api.handler.ChartRequestHandler;
 import com.github.mrgoro.interactivedata.api.service.annotations.AnnotationProcessorService;
 import com.github.mrgoro.interactivedata.api.service.annotations.AnnotationToLongFunction;
+import com.github.mrgoro.interactivedata.api.service.annotations.ChartRequestHandlerService;
 import com.github.mrgoro.interactivedata.api.service.annotations.ChartService;
 import com.github.mrgoro.interactivedata.api.util.ReflectionUtil;
-import com.github.mrgoro.interactivedata.api.service.annotations.ChartRequestHandlerService;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
