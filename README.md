@@ -110,9 +110,13 @@ public class SensorCharts {
 ## Wiki
 You can find more information on using and developing with Interactive Data in the wiki. See some examples below:
 
-* [Integrate Framework](wiki/Integrate-Framework)
-* [Define Charts](wiki/Define-Charts)
-* [Data Source](wiki/Data-Source)
+[1. Integrate Framework](https://github.com/MrGoro/InteractiveData/wiki/Integrate-Framework)
+
+[2. Create a Data Source](https://github.com/MrGoro/InteractiveData/wiki/Create-a-Data-Source)
+
+[3. Define Charts](https://github.com/MrGoro/InteractiveData/wiki/Define-Charts)
+
+[4. Use the API](https://github.com/MrGoro/InteractiveData/wiki/Use-the-API)
 
 
 ## License
