@@ -1,13 +1,15 @@
 # InteractiveData
 Java framework for easy creation of (RESTful-)APIs for interactive visualizations.
 
-InteractiveData is developed by Philipp Sch&uuml;rmann for his Master Thesis at University of Hamburg.
+Interactive Data is developed by Philipp Sch&uuml;rmann for his Master Thesis at University of Hamburg.
 The complete document will be provided here after it is finished.
 
-[Sample Project on Heroku](https://interactive-data.herokuapp.com/)
+[Sample App on Heroku](https://interactive-data.herokuapp.com/)
+
+[Sample App Source Code](https://github.com/MrGoro/interactive-data-sample)
 
 ## Project Structure
-InteractiveData is divided into multiple modules. See the table below for more information on every module:
+Interactive Data is divided into multiple modules. See the table below for more information on modules:
 ```
 . InteractiveData
 ├── interactive-data-core
@@ -63,11 +65,11 @@ everything for direct start. Add the following dependency to your Spring Boot pr
     <version>1.0-SNAPSHOT</version>
 </dependency>
 ```
-To start a new project from scatch use [start.spring.io](https://start.spring.io/) to initialize a Spring Boot project.
+To start a new project from scratch use [start.spring.io](https://start.spring.io/) to initialize a Spring Boot project.
 
 ### Define Charts
 Interactive Data uses annotations to define charts whose data is than exposed over an API. The following example shows
-a very basic definition of a chart for visualizing climate data.
+a very basic definition of a line chart for visualizing climate data.
 ```
 @ChartService("sensor")
 public class SensorCharts {
