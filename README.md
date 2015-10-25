@@ -1,4 +1,4 @@
-# InteractiveData
+# InteractiveData [![Build Status](https://travis-ci.org/MrGoro/InteractiveData.svg?branch=master)](https://travis-ci.org/MrGoro/InteractiveData)
 Java framework for easy creation of (RESTful-)APIs for interactive visualizations.
 
 Interactive Data is developed by Philipp Sch&uuml;rmann for his Master Thesis at University of Hamburg.
