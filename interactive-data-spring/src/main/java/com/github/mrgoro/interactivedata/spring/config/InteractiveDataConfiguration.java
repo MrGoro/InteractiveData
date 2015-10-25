@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.github.mrgoro.interactivedata.api.service.ServiceProvider;
 import com.github.mrgoro.interactivedata.api.service.ChartDefinitionService;
+import com.github.mrgoro.interactivedata.api.service.ServiceProvider;
+import com.github.mrgoro.interactivedata.spring.service.ChartRequestHandlerService;
+import com.github.mrgoro.interactivedata.spring.web.InteractiveDataRestController;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Bean;
@@ -78,6 +80,11 @@ public class InteractiveDataConfiguration {
     public ChartDefinitionService chartDefinitionService(ServiceProvider serviceProvider) {
         log.info("Creating ChartDefinitionService");
         return new ChartDefinitionService(serviceProvider);
+    }
+
+    @Bean
+    public InteractiveDataRestController restController(ChartRequestHandlerService chartRequestHandlerService) {
+        return new InteractiveDataRestController(chartRequestHandlerService);
     }
 
 }

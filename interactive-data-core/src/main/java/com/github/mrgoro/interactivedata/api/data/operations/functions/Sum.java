@@ -1,8 +1,8 @@
 package com.github.mrgoro.interactivedata.api.data.operations.functions;
 
+import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 import com.github.mrgoro.interactivedata.api.data.operations.EmptyOperationData;
 import com.github.mrgoro.interactivedata.api.util.exceptions.ChartDefinitionException;
-import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 
 import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;

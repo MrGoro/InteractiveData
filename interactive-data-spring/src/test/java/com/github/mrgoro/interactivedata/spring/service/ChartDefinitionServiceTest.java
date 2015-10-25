@@ -1,9 +1,9 @@
 package com.github.mrgoro.interactivedata.spring.service;
 
-import com.github.mrgoro.interactivedata.spring.config.InteractiveDataTestConfiguration;
-import com.github.mrgoro.interactivedata.spring.service.controllers.ChartController;
 import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import com.github.mrgoro.interactivedata.api.service.ChartDefinitionService;
+import com.github.mrgoro.interactivedata.spring.config.InteractiveDataTestConfiguration;
+import com.github.mrgoro.interactivedata.spring.service.controllers.ChartController;
 import com.github.mrgoro.interactivedata.spring.web.ResourceNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;

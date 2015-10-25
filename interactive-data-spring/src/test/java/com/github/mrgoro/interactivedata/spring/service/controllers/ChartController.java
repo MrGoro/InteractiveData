@@ -5,11 +5,11 @@ import com.github.mrgoro.interactivedata.api.chart.annotations.line.Axis;
 import com.github.mrgoro.interactivedata.api.chart.annotations.line.LineChart;
 import com.github.mrgoro.interactivedata.api.chart.data.LineChartData;
 import com.github.mrgoro.interactivedata.api.data.DataRequest;
-import com.github.mrgoro.interactivedata.api.data.source.DataSource;
+import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 import com.github.mrgoro.interactivedata.api.data.operations.filter.TimeFilter;
 import com.github.mrgoro.interactivedata.api.data.operations.functions.Count;
 import com.github.mrgoro.interactivedata.api.data.operations.granularity.TimeGranularity;
-import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
+import com.github.mrgoro.interactivedata.api.data.source.DataSource;
 import com.github.mrgoro.interactivedata.api.service.annotations.ChartService;
 import org.springframework.stereotype.Service;
 

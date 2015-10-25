@@ -1,11 +1,11 @@
 package com.github.mrgoro.interactivedata.api.service;
 
-import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
-import com.github.mrgoro.interactivedata.api.chart.processors.AnnotationProcessor;
 import com.github.mrgoro.interactivedata.api.chart.annotations.Chart;
 import com.github.mrgoro.interactivedata.api.chart.data.ChartData;
+import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import com.github.mrgoro.interactivedata.api.chart.definitions.ChartPostProcessor;
 import com.github.mrgoro.interactivedata.api.chart.processors.AnnotationProcessHelper;
+import com.github.mrgoro.interactivedata.api.chart.processors.AnnotationProcessor;
 import com.github.mrgoro.interactivedata.api.service.annotations.ChartService;
 import com.github.mrgoro.interactivedata.api.util.ReflectionUtil;
 import com.github.mrgoro.interactivedata.api.util.exceptions.ChartDefinitionException;

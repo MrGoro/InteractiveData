@@ -1,8 +1,8 @@
 package com.github.mrgoro.interactivedata.api.chart.annotations.line;
 
-import com.github.mrgoro.interactivedata.api.data.operations.granularity.Granularity;
 import com.github.mrgoro.interactivedata.api.data.operations.filter.Filter;
 import com.github.mrgoro.interactivedata.api.data.operations.functions.Function;
+import com.github.mrgoro.interactivedata.api.data.operations.granularity.Granularity;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,8 +1,8 @@
 package com.github.mrgoro.interactivedata.api.chart.processors;
 
+import com.github.mrgoro.interactivedata.api.chart.data.ChartData;
 import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import com.github.mrgoro.interactivedata.api.service.annotations.AnnotationProcessorService;
-import com.github.mrgoro.interactivedata.api.chart.data.ChartData;
 
 import java.lang.annotation.Annotation;
 

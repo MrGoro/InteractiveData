@@ -1,8 +1,8 @@
 package com.github.mrgoro.interactivedata.api.chart.definitions.pie;
 
-import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
 import com.github.mrgoro.interactivedata.api.chart.annotations.pie.Field;
 import com.github.mrgoro.interactivedata.api.chart.data.PieChartData;
+import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
 
 import java.util.Optional;
 

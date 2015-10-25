@@ -1,9 +1,9 @@
 package com.github.mrgoro.interactivedata.api.data.operations.functions;
 
+import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 import com.github.mrgoro.interactivedata.api.data.operations.Operation;
 import com.github.mrgoro.interactivedata.api.data.operations.OperationData;
 import com.github.mrgoro.interactivedata.api.data.operations.granularity.Granularity;
-import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 
 import java.util.stream.Collector;
 

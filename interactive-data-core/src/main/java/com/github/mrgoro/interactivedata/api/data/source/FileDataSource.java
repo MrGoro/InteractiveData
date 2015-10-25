@@ -1,7 +1,7 @@
 package com.github.mrgoro.interactivedata.api.data.source;
 
-import com.github.mrgoro.interactivedata.api.data.bean.DataObjectFactory;
 import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
+import com.github.mrgoro.interactivedata.api.data.bean.DataObjectFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -10,12 +10,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.reducing;
-import static java.util.stream.Collectors.toList;
 
 /**
  * DataSource that uses a data file with separated values in each line.

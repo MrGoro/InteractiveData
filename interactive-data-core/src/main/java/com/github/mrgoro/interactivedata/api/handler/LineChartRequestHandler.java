@@ -1,12 +1,12 @@
 package com.github.mrgoro.interactivedata.api.handler;
 
 import com.github.mrgoro.interactivedata.api.chart.annotations.line.Axis;
+import com.github.mrgoro.interactivedata.api.chart.data.LineChartData;
 import com.github.mrgoro.interactivedata.api.chart.definitions.line.AxisDefinition;
 import com.github.mrgoro.interactivedata.api.chart.definitions.line.LineChartDefinition;
+import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 import com.github.mrgoro.interactivedata.api.service.DataMapperService;
 import com.github.mrgoro.interactivedata.api.service.ServiceProvider;
-import com.github.mrgoro.interactivedata.api.chart.data.LineChartData;
-import com.github.mrgoro.interactivedata.api.data.bean.DataObject;
 import com.github.mrgoro.interactivedata.api.service.annotations.ChartRequestHandlerService;
 
 import javax.inject.Inject;
@@ -16,9 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
-import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * @author Philipp Sch&uuml;rmann
