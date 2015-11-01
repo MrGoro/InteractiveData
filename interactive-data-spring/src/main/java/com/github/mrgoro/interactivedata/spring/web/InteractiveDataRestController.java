@@ -6,6 +6,7 @@ import com.github.mrgoro.interactivedata.api.util.exceptions.RequestDataExceptio
 import com.github.mrgoro.interactivedata.spring.service.ChartRequestHandlerService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +21,7 @@ import java.util.Optional;
  *
  * @author Philipp Sch&uuml;rmann
  */
+@RestController
 public class InteractiveDataRestController {
 
     private static final Log log = LogFactory.getLog(InteractiveDataRestController.class);
@@ -28,11 +30,8 @@ public class InteractiveDataRestController {
     private static final String CHART_NAME = "name";
     private static final String BASE_MAPPING = "/api/{"+SERVICE_NAME+"}/{"+CHART_NAME+"}";
 
+    @Autowired
     private ChartRequestHandlerService chartRequestHandlerService;
-
-    public InteractiveDataRestController(ChartRequestHandlerService chartRequestHandlerService) {
-        this.chartRequestHandlerService = chartRequestHandlerService;
-    }
 
     @RequestMapping(
         value = BASE_MAPPING,

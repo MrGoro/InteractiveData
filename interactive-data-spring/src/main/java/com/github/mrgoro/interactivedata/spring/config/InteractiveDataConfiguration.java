@@ -14,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Base Configuration for interactive-data-spring
@@ -80,11 +81,6 @@ public class InteractiveDataConfiguration {
     public ChartDefinitionService chartDefinitionService(ServiceProvider serviceProvider) {
         log.info("Creating ChartDefinitionService");
         return new ChartDefinitionService(serviceProvider);
-    }
-
-    @Bean
-    public InteractiveDataRestController restController(ChartRequestHandlerService chartRequestHandlerService) {
-        return new InteractiveDataRestController(chartRequestHandlerService);
     }
 
 }
