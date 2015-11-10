@@ -1,6 +1,7 @@
 package com.github.mrgoro.interactivedata.api.util;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -116,6 +117,14 @@ public class ReflectionUtil {
             throw new IllegalArgumentException("No generic type at the specified position");
         }
         return type.getActualTypeArguments()[index];
+    }
+
+    public static Class<?> getGenericClass(Class clazz, int index) throws IllegalArgumentException {
+        Type type = getGenericType(clazz, index);
+        if(type instanceof Class<?>) {
+            return (Class<?>) type;
+        }
+        throw new IllegalArgumentException("Generic parameter is not of type Class");
     }
 
     /**

@@ -21,21 +21,10 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 @Configuration
 public class SpringBootInteractiveDataConfiguration extends InteractiveDataConfiguration {
 
-    @Autowired(required = false)
-    private Jackson2ObjectMapperBuilder objectMapperBuilder;
-
     @Bean
     @ConfigurationProperties(prefix = "interactive-data")
     @Override
     public InteractiveDataProperties properties() {
         return super.properties();
     }
-
-    @Override
-    protected void configureJacksonObjectMapper(ObjectMapper objectMapper) {
-        if (this.objectMapperBuilder != null) {
-            this.objectMapperBuilder.configure(objectMapper);
-        }
-    }
-
 }

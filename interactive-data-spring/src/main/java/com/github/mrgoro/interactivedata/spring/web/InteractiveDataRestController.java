@@ -59,25 +59,6 @@ public class InteractiveDataRestController {
             );
     }
 
-    @RequestMapping(
-        value = BASE_MAPPING,
-        method = RequestMethod.OPTIONS,
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<?> getInformation(@PathVariable(SERVICE_NAME) String serviceName, @PathVariable(CHART_NAME) String chartName) {
-
-        log.info("Requesting info for chart: service[" + serviceName + "] chart[" + chartName + "]");
-
-        return Optional.ofNullable(chartRequestHandlerService.getChartRequestHandler(serviceName, chartName))
-            .map(
-                chartRequestHandler -> new ResponseEntity<>(
-                        chartRequestHandler.handleInfoRequest(),
-                        HttpStatus.OK)
-            ).orElse(
-                new ResponseEntity<>(HttpStatus.NOT_FOUND)
-            );
-    }
-
     @ResponseStatus(
             value= HttpStatus.BAD_REQUEST, // 400
             reason="Your request to a chart was invalid."
