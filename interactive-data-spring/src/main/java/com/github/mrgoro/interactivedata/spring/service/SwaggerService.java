@@ -82,10 +82,15 @@ public class SwaggerService {
 
         // Add paths from Chart Definitions
         for(AbstractChartDefinition chartDefinition : chartDefinitionService.getChartDefinitions().values()) {
-            String name = chartDefinition.getName();
-            String tagName = name.split("/")[0];
-            swagger.tag(new Tag().name(tagName).description("APIs for the " + tagName + " Service"));
-            swagger.path("/"+name, getPath(chartDefinition, tagName));
+            String name = chartDefinition.getServiceName();
+            String serviceName = chartDefinition.getServiceDefinition().getName();
+            String serviceDescription = chartDefinition.getServiceDefinition().getDescription();
+            if(serviceDescription == null || serviceDescription.isEmpty()) {
+                serviceDescription = "APIs for the " + serviceName + " Service";
+            }
+
+            swagger.tag(new Tag().name(serviceName).description(serviceDescription));
+            swagger.path("/"+name, getPath(chartDefinition));
         }
     }
 
@@ -94,17 +99,19 @@ public class SwaggerService {
      * {@link AbstractChartDefinition ChartDefinition}.
      *
      * @param chartDefinition Chart Definition
-     * @param tagName Name of the tag to add
      * @return Swagger Path
      */
-    private Path getPath(AbstractChartDefinition<?, ?> chartDefinition, String tagName) {
+    private Path getPath(AbstractChartDefinition<?, ?> chartDefinition) {
         Class dataClass = ReflectionUtil.getGenericClass(chartDefinition.getClass(), 1);
         String dataClassString = dataClass.getSimpleName();
 
+        String summary = chartDefinition.getDescription();
+        if(summary == null || summary.isEmpty()) {
+            summary = dataClassString + " for " + chartDefinition.getName();
+        }
         Operation operation = new Operation()
-            .tag(tagName)
-            .summary(dataClassString + " for " + chartDefinition.getName())
-            .description("")
+            .tag(chartDefinition.getServiceDefinition().getName())
+            .summary(summary)
             .response(200, new Response()
                 .description(dataClassString)
                 .schema(ModelConverters.getInstance().readAsProperty(dataClass))
@@ -206,8 +213,7 @@ public class SwaggerService {
      * @return Swagger Property
      */
     private Property getProperty(Class<?> clazz) {
-        Property property = ModelConverters.getInstance().readAsProperty(clazz);
-        return property;
+        return ModelConverters.getInstance().readAsProperty(clazz);
     }
 
     /**

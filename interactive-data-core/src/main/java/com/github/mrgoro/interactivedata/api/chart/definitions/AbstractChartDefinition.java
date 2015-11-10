@@ -1,11 +1,14 @@
 package com.github.mrgoro.interactivedata.api.chart.definitions;
 
+import com.github.mrgoro.interactivedata.api.chart.annotations.Chart;
 import com.github.mrgoro.interactivedata.api.chart.data.ChartData;
 import com.github.mrgoro.interactivedata.api.chart.definitions.operations.FilterInfo;
 import com.github.mrgoro.interactivedata.api.chart.definitions.operations.OperationInfo;
 import com.github.mrgoro.interactivedata.api.data.source.DataSource;
 import com.github.mrgoro.interactivedata.api.service.ServiceProvider;
+import com.github.mrgoro.interactivedata.api.service.annotations.ChartService;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,11 +32,17 @@ import java.util.List;
 public abstract class AbstractChartDefinition<T extends AbstractDimension, D extends ChartData> {
 
     private String name;
+    private ServiceDefinition serviceDefinition;
+    private String description;
     private Class<? extends DataSource> dataSource;
     private ChartPostProcessor<D, ?> chartPostProcessor;
     private List<T> dimensions = new ArrayList<>();
     private List<FilterInfo> filters = new ArrayList<>();
     private List<OperationInfo> operations = new ArrayList<>();
+
+    public String getServiceName() {
+        return getServiceDefinition().getName() + "/" + getName();
+    }
 
     /**
      * Get the name of the chart.
@@ -51,6 +60,22 @@ public abstract class AbstractChartDefinition<T extends AbstractDimension, D ext
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public ServiceDefinition getServiceDefinition() {
+        return serviceDefinition;
+    }
+
+    public void setServiceDefinition(ServiceDefinition serviceDefinition) {
+        this.serviceDefinition = serviceDefinition;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**

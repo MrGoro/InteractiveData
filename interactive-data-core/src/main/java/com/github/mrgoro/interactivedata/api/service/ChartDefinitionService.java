@@ -125,7 +125,7 @@ public class ChartDefinitionService {
                         .process(chartAnnotation);
                 chartDefinition.setChartPostProcessor(chartPostProcessor);
                 AnnotationProcessHelper.processChartAnnotation(chartDefinition, chart, serviceAnnotation);
-                chartDefinitions.put(chartDefinition.getName(), chartDefinition);
+                chartDefinitions.put(chartDefinition.getServiceName(), chartDefinition);
                 log.info("Chart of type [" + chartTypeName + "] with id [" + chartDefinition.getName() + "]");
             } catch (IllegalArgumentException | ChartDefinitionException e) {
                 log.warn("Error Processing Annotation [" + chartAnnotation.annotationType().getSimpleName() + "]", e);

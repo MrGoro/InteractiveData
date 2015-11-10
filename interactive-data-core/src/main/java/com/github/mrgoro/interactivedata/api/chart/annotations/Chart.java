@@ -67,6 +67,15 @@ public @interface Chart {
     String name();
 
     /**
+     * Description of the chart.
+     *
+     * Description is only used for documentation. Automatically generated when empty.
+     *
+     * @return Description String
+     */
+    String description() default "";
+
+    /**
      * Data source to use for querying data.
      *
      * @return Class of the data source

@@ -25,4 +25,13 @@ public @interface ChartService {
      * @return Path String
      */
     String value();
+
+    /**
+     * Description of the service. Summary of charts inside the service.
+     *
+     * Description is only used for documentation. Automatically generated when empty.
+     *
+     * @return Description String
+     */
+    String description() default "";
 }

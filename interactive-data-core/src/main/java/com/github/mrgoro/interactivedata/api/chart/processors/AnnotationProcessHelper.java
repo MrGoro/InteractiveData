@@ -2,6 +2,7 @@ package com.github.mrgoro.interactivedata.api.chart.processors;
 
 import com.github.mrgoro.interactivedata.api.chart.annotations.*;
 import com.github.mrgoro.interactivedata.api.chart.definitions.AbstractChartDefinition;
+import com.github.mrgoro.interactivedata.api.chart.definitions.ServiceDefinition;
 import com.github.mrgoro.interactivedata.api.chart.definitions.operations.FilterInfo;
 import com.github.mrgoro.interactivedata.api.chart.definitions.operations.FunctionInfo;
 import com.github.mrgoro.interactivedata.api.chart.definitions.operations.OperationInfo;
@@ -20,8 +21,21 @@ import java.util.Map;
  */
 public class AnnotationProcessHelper {
 
+    private static Map<String, ServiceDefinition> serviceDefinitions = new HashMap<>();
+
     public static <T extends AbstractChartDefinition<?, ?>> T processChartAnnotation(T chartDefinition, Chart annotation, ChartService serviceAnnotation) {
-        chartDefinition.setName(serviceAnnotation.value() + "/" + annotation.name());
+        // Add Service Definition if not exists
+        if(!serviceDefinitions.containsKey(serviceAnnotation.value())) {
+            ServiceDefinition serviceDefinition = new ServiceDefinition(serviceAnnotation.value());
+            serviceDefinition.setDescription(serviceAnnotation.description());
+            serviceDefinitions.put(serviceAnnotation.value(), serviceDefinition);
+        }
+
+        chartDefinition.setServiceDefinition(serviceDefinitions.get(serviceAnnotation.value()));
+
+        chartDefinition.setName(annotation.name());
+        chartDefinition.setDescription(annotation.description());
+
         chartDefinition.setDataSource(annotation.dataSource());
 
         for (FilterDef filterDef : annotation.filter()) {
