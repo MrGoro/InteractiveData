@@ -25,6 +25,11 @@ public class InteractiveDataConfiguration {
 
     private static final Log log = LogFactory.getLog(InteractiveDataConfiguration.class);
 
+    /**
+     * Provide Properties as a Bean.
+     *
+     * @return Properties for Interactive Data Framework with Spring
+     */
     @Bean
     public InteractiveDataProperties properties() {
         InteractiveDataProperties properties = new InteractiveDataProperties();
@@ -34,12 +39,13 @@ public class InteractiveDataConfiguration {
 
     /**
      * Configure properties.
-     *
+     * <p>
      * Override this method to customize properties.
      *
      * @param properties Properties
      */
-    public void configureProperties(InteractiveDataProperties properties) {}
+    public void configureProperties(InteractiveDataProperties properties) {
+    }
 
     /**
      * The Jackson {@link ObjectMapper} used for serialization.
@@ -52,24 +58,30 @@ public class InteractiveDataConfiguration {
     }
 
     /**
-     * Customize object serialization and deserialization.
-     *
-     * Override this method to customize the object mapper.
+     * Configure an {@link ObjectMapper}.
      *
      * @param objectMapper Object mapper to configure
      */
     @Autowired(required = true)
-    public void configureJackson(ObjectMapper objectMapper) {
+    public final void configureJackson(ObjectMapper objectMapper) {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.registerModule(new Jdk8Module());
         objectMapper.registerModule(new Swagger2JacksonModule());
 
-        objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        configureObjectMapper(objectMapper);
+    }
+
+    /**
+     * Custom configuration on {@link ObjectMapper}.
+     * <p>
+     * Override this method to customize the object mapper.
+     *
+     * @param objectMapper Object mapper to configure
+     */
+    protected void configureObjectMapper(ObjectMapper objectMapper) {
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-        objectMapper.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
     }
 
     @Bean
