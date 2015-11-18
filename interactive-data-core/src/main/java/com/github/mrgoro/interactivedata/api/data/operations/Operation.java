@@ -19,7 +19,7 @@ import java.util.Map;
  * <p>
  * Operation is the base type of {@link Filter}, {@link Granularity} and {@link Function}.
  * <p>
- * Operations are parameterized with request data and options. Options are set once. Request data originates from
+ * Operations are parametrized with request data and options. Options are set once. Request data originates from
  * a specific request and is therefore set per request. {@link Operation.Builder} helps creating these instances
  * with changing request data. The Framework automatically populates the data for options
  * and requests. Filters only have to specify the form of the data with custom {@link OperationData} classes.
