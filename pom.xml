@@ -4,8 +4,9 @@
 
     <groupId>com.github.mrgoro</groupId>
     <artifactId>interactive-data</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
+    <url>https://github.com/MrGoro/InteractiveData</url>
 
     <name>Interactive Data</name>
     <description>Root project of Interactive Data framework</description>

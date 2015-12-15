@@ -4,8 +4,6 @@ Java framework for easy creation of (RESTful-)APIs for interactive visualization
 Interactive Data is developed by Philipp Sch&uuml;rmann for his Master Thesis at University of Hamburg.
 The complete document will be provided here after it is finished.
 
-[Sample App on Heroku](https://interactive-data.herokuapp.com/)
-
 [Sample App Source Code](https://github.com/MrGoro/interactive-data-sample)
 
 ## Project Structure
@@ -51,7 +49,7 @@ into your environment. Add the following dependency to your Maven project:
 <dependency>
     <groupId>com.github.mrgoro</groupId>
     <artifactId>interactive-data-core</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 </dependency>
 ```
 
@@ -62,7 +60,7 @@ everything for direct start. Add the following dependency to your Spring Boot pr
 <dependency>
     <groupId>com.github.mrgoro</groupId>
     <artifactId>interactive-data-spring-boot-starter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 </dependency>
 ```
 To start a new project from scratch use [start.spring.io](https://start.spring.io/) to initialize a Spring Boot project.
